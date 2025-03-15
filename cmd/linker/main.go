@@ -3,29 +3,26 @@ package main
 import (
 	"log"
 	"net/http"
-	"os"
 
+	"github.com/Oxygenss/linker/internal/config"
 	"github.com/Oxygenss/linker/internal/handler"
 	"github.com/Oxygenss/linker/internal/router"
 	"github.com/Oxygenss/linker/pkg/telegram/bot"
-	"github.com/joho/godotenv"
 )
 
 func main() {
-	log.Println("Starting API service")
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
 
-	log.Printf("TELEGRAM_BOT_TOKEN: %s", os.Getenv("TELEGRAM_BOT_TOKEN"))
-	log.Printf("TELEGRAM_WEB_APP_URL: %s", os.Getenv("TELEGRAM_WEB_APP_URL"))
+	config := config.MustLoad()
 
-	bot := bot.NewBot(os.Getenv("TELEGRAM_BOT_TOKEN"))
+	bot := bot.NewBot(config.Telegram.BotToken)
 
 	handler := handler.NewHandler(bot)
 
-	router := router.NewRouter(handler, os.Getenv("TELEGRAM_WEB_APP_URL"))
+	router := router.NewRouter(handler, config.Telegram.AppURL)
 
-	log.Fatal(http.ListenAndServe(":8080", router.InitRoutes()))
+	serve := config.Server.Host + ":" + config.Server.Port
+
+	log.Println("Serve start:", serve)
+
+	log.Fatal(http.ListenAndServe(serve, router.InitRoutes()))
 }
