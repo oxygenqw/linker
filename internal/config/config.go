@@ -10,6 +10,7 @@ import (
 type Config struct {
 	Telegram Telegram `yaml:"TELEGRAM"`
 	Server   Server   `yaml:"SERVER"`
+	Database Database `yaml:"DATABASE"`
 }
 
 type Telegram struct {
@@ -20,6 +21,14 @@ type Telegram struct {
 type Server struct {
 	Host string `yaml:"HOST" env:"HOST"`
 	Port string `yaml:"PORT" env:"PORT" env-required:"true"`
+}
+
+type Database struct {
+	Host     string `yaml:"HOST"     env:"DB_HOST"     env-required:"true"`
+	Port     string `yaml:"PORT"     env:"DB_PORT"     env-required:"true"`
+	User     string `yaml:"USER"     env:"DB_USER"     env-required:"true"`
+	Password string `yaml:"PASSWORD" env:"DB_PASSWORD" env-required:"true"`
+	Name     string `yaml:"NAME"     env:"DB_NAME"     env-required:"true"`
 }
 
 func MustLoad() *Config {

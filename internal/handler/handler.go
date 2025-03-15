@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/Oxygenss/linker/pkg/telegram/bot"
 	"github.com/PaulSonOfLars/gotgbot/v2"
 )
 
@@ -18,10 +19,10 @@ type UserInfo struct {
 }
 
 type Handler struct {
-	bot *gotgbot.Bot
+	bot *bot.Bot
 }
 
-func NewHandler(bot *gotgbot.Bot) *Handler {
+func NewHandler(bot *bot.Bot) *Handler {
 	return &Handler{bot: bot}
 }
 
@@ -49,7 +50,7 @@ func (h *Handler) CreateBotEndpointHandler(appURL string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Println("CreateBotEndpointHandler called")
 		log.Printf("Serving %s route", r.URL.Path)
-		
+
 		body, err := io.ReadAll(r.Body)
 		if err != nil {
 			log.Printf("Error reading request body: %v", err)

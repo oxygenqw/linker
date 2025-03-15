@@ -15,6 +15,7 @@ func main() {
 	config := config.MustLoad()
 
 	bot := bot.NewBot(config.Telegram.BotToken)
+	bot.SetWebhook(config.Telegram.AppURL + "/bot")
 
 	handler := handler.NewHandler(bot)
 

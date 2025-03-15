@@ -4,3 +4,9 @@ TELEGRAM:
 SERVER:
   HOST: ""
   PORT: "8080"
+DATABASE:
+  HOST: "postgres"
+  PORT: "5432"
+  USER: "linker"
+  PASSWORD: "linker_password"
+  NAME: "linker_db"
