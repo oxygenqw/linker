@@ -6,7 +6,9 @@ import (
 
 	"github.com/Oxygenss/linker/internal/config"
 	"github.com/Oxygenss/linker/internal/handler"
+	"github.com/Oxygenss/linker/internal/repository"
 	"github.com/Oxygenss/linker/internal/router"
+	"github.com/Oxygenss/linker/internal/service"
 	"github.com/Oxygenss/linker/pkg/telegram/bot"
 )
 
@@ -17,7 +19,14 @@ func main() {
 	bot := bot.NewBot(config.Telegram.BotToken)
 	bot.SetWebhook(config.Telegram.AppURL + "/bot")
 
-	handler := handler.NewHandler(bot)
+	repository, err := repository.New(config)
+	if err != nil {
+		log.Fatalf("init error: %v", err)
+	}
+
+	service := service.NewService(repository)
+
+	handler := handler.NewHandler(*service, bot)
 
 	router := router.NewRouter(handler, config.Telegram.AppURL)
 

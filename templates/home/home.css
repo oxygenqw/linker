@@ -6,6 +6,15 @@ body {
     padding: 0;
 }
 
+button {
+    padding: 10px; 
+    margin-top: 20px;
+}
+
+li {
+    color: white;
+}
+
 p {
     color:chocolate;
 }

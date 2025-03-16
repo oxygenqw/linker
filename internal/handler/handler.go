@@ -8,6 +8,8 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/Oxygenss/linker/internal/models"
+	"github.com/Oxygenss/linker/internal/service"
 	"github.com/Oxygenss/linker/pkg/telegram/bot"
 	"github.com/PaulSonOfLars/gotgbot/v2"
 )
@@ -19,11 +21,52 @@ type UserInfo struct {
 }
 
 type Handler struct {
-	bot *bot.Bot
+	service service.Service
+	bot     *bot.Bot
 }
 
-func NewHandler(bot *bot.Bot) *Handler {
-	return &Handler{bot: bot}
+func NewHandler(service service.Service, bot *bot.Bot) *Handler {
+	return &Handler{service: service, bot: bot}
+}
+
+func (h *Handler) Initialize(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		http.Error(w, "Failed to parse form", http.StatusBadRequest)
+		return
+	}
+
+	user := models.User{
+		FirstName: r.FormValue("first_name"),
+		LastName:  r.FormValue("last_name"),
+		SureName:  r.FormValue("surename"),
+	}
+
+	if err := h.service.AddUser(user); err != nil {
+		http.Error(w, fmt.Sprintf("Failed to add user: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	http.Redirect(w, r, "/list", http.StatusFound)
+}
+
+func (h *Handler) List(w http.ResponseWriter, r *http.Request) {
+	users, err := h.service.GetAllUsers()
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Failed to retrieve users: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	tmpl, err := template.ParseFiles("templates/home/list.html")
+	if err != nil {
+		http.Error(w, "Error loading template", http.StatusInternalServerError)
+		return
+	}
+
+	if err := tmpl.Execute(w, users); err != nil {
+		http.Error(w, "Error executing template", http.StatusInternalServerError)
+		return
+	}
 }
 
 func (h *Handler) Home(w http.ResponseWriter, r *http.Request) {
