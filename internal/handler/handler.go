@@ -76,8 +76,15 @@ func (h *Handler) Home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	userName := r.URL.Query().Get("user_name")
+	data := struct {
+		UserName string
+	}{
+		UserName: userName,
+	}
+
 	w.Header().Set("Content-Type", "text/html")
-	if err := tmpl.Execute(w, nil); err != nil {
+	if err := tmpl.Execute(w, data); err != nil {
 		http.Error(w, "Error executing template", http.StatusInternalServerError)
 		return
 	}

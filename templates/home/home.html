@@ -6,6 +6,9 @@
     <link rel="stylesheet" href="home.css">
 </head>
 <body>
+    <div class="header">
+        <h1>Добро пожаловать, {{ .UserName }}!</h1>
+    </div>
     <div>
         <form action="/initialize" method="POST">
             <div class="form-group">
