@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/Oxygenss/linker/internal/handler"
-	"github.com/go-chi/chi/v5"
 )
 
 type Router struct {
@@ -16,17 +15,14 @@ func NewRouter(handler *handler.Handler, appURL string) *Router {
 	return &Router{handler: handler, appURL: appURL}
 }
 
-func (r *Router) InitRoutes() *chi.Mux {
-	router := chi.NewRouter()
+func (r *Router) InitRoutes() *http.ServeMux {
 
-	router.Get("/", r.handler.Home)
-	router.Get("/list", r.handler.List)
-	router.Post("/initialize", r.handler.Initialize)
+	router := http.NewServeMux()
 
-
-
-	router.Post("/bot", r.handler.CreateBotEndpointHandler(r.appURL))
-	
+	router.HandleFunc("/", r.handler.Home)
+	router.HandleFunc("/list", r.handler.List)
+	router.HandleFunc("/initialize", r.handler.Initialize)
+	router.HandleFunc("/bot", r.handler.CreateBotEndpointHandler(r.appURL))
 
 	fs := http.FileServer(http.Dir("./templates/home"))
 	router.Handle("/*", http.StripPrefix("/", fs))
