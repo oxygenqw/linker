@@ -45,7 +45,8 @@ func main() {
 
 	go func() {
 		log.Println("Serve start:", serve)
-		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		err := srv.ListenAndServe()
+		if  err != nil && err != http.ErrServerClosed {
 			log.Fatalf("listen: %s\n", err)
 		}
 	}()
@@ -54,10 +55,11 @@ func main() {
 
 	log.Println("Server stopping...")
 
-	ctxShutdown, cancelShutdown := context.WithTimeout(context.Background(), 3*time.Second)
-	defer cancelShutdown()
+	ctx, cancel = context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
 
-	if err := srv.Shutdown(ctxShutdown); err != nil {
+	err = srv.Shutdown(ctx)
+	if err != nil {
 		log.Fatalf("server shutdown failed: %v", err)
 	}
 
