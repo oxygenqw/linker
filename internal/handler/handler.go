@@ -30,6 +30,11 @@ func NewHandler(service service.Service, bot *bot.Bot) *Handler {
 }
 
 func (h *Handler) Initialize(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
 	err := r.ParseForm()
 	if err != nil {
 		http.Error(w, "Failed to parse form", http.StatusBadRequest)
@@ -51,6 +56,11 @@ func (h *Handler) Initialize(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) List(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
 	users, err := h.service.GetAllUsers()
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Failed to retrieve users: %v", err), http.StatusInternalServerError)
@@ -70,6 +80,11 @@ func (h *Handler) List(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) Home(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
 	tmpl, err := template.ParseFiles("templates/home/home.html")
 	if err != nil {
 		http.Error(w, "Error loading template", http.StatusInternalServerError)
@@ -112,6 +127,11 @@ func (h *Handler) Home(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) CreateBotEndpointHandler(appURL string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+			return
+		}
+		
 		log.Println("CreateBotEndpointHandler called")
 		log.Printf("Serving %s route", r.URL.Path)
 
