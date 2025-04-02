@@ -1,8 +1,12 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net/http"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/Oxygenss/linker/internal/config"
 	"github.com/Oxygenss/linker/internal/handler"
@@ -13,7 +17,6 @@ import (
 )
 
 func main() {
-
 	config := config.MustLoad()
 
 	bot := bot.NewBot(config.Telegram.BotToken)
@@ -32,7 +35,31 @@ func main() {
 
 	serve := config.Server.Host + ":" + config.Server.Port
 
-	log.Println("Serve start:", serve)
+	srv := &http.Server{
+		Addr:    serve,
+		Handler: router.InitRoutes(),
+	}
 
-	log.Fatal(http.ListenAndServe(serve, router.InitRoutes()))
+	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	defer cancel()
+
+	go func() {
+		log.Println("Serve start:", serve)
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			log.Fatalf("listen: %s\n", err)
+		}
+	}()
+
+	<-ctx.Done()
+
+	log.Println("Server stopping...")
+
+	ctxShutdown, cancelShutdown := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancelShutdown()
+
+	if err := srv.Shutdown(ctxShutdown); err != nil {
+		log.Fatalf("server shutdown failed: %v", err)
+	}
+
+	log.Println("Server stopped")
 }
