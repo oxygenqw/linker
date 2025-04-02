@@ -24,8 +24,11 @@ func (r *Router) InitRoutes() *http.ServeMux {
 	router.HandleFunc("/initialize", r.handler.Initialize)
 	router.HandleFunc("/bot", r.handler.CreateBotEndpointHandler(r.appURL))
 
-	fs := http.FileServer(http.Dir("./templates/home"))
-	router.Handle("/*", http.StripPrefix("/", fs))
+	fileServer := http.FileServer(http.Dir("./ui/static/"))
+	router.Handle("/static/", http.StripPrefix("/static", fileServer))
+
+	// fs := http.FileServer(http.Dir("ui/static"))
+	// router.Handle("/*", http.StripPrefix("/", fs))
 
 	return router
 }

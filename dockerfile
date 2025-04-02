@@ -18,7 +18,7 @@ WORKDIR /app
 
 COPY --from=builder /usr/local/app/linker /bin/linker
 COPY --from=builder /usr/local/app/config.yaml .
-COPY --from=builder /usr/local/app/templates ./templates
+COPY --from=builder /usr/local/app/ui ./ui
 
 ENTRYPOINT ["/bin/linker"]
 
