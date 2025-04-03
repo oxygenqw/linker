@@ -29,12 +29,35 @@ func NewHandler(service service.Service, bot *bot.Bot) *Handler {
 	return &Handler{service: service, bot: bot}
 }
 
-func (h *Handler) Initialize(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
+func (h *Handler) Home(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
+	tmpl, err := template.ParseFiles("./ui/pages/home.html")
+	if err != nil {
+		http.Error(w, "Error loading template", http.StatusInternalServerError)
+		return
+	}
+
+	
+
+	userName := r.URL.Query().Get("user_name")
+	data := struct {
+		UserName string
+	}{
+		UserName: userName,
+	}
+
+	w.Header().Set("Content-Type", "text/html")
+	if err := tmpl.Execute(w, data); err != nil {
+		http.Error(w, "Error executing template", http.StatusInternalServerError)
+		return
+	}
+}
+
+func (h *Handler) Initialize(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
 		http.Error(w, "Failed to parse form", http.StatusBadRequest)
@@ -79,59 +102,8 @@ func (h *Handler) List(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h *Handler) Home(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
-	tmpl, err := template.ParseFiles("./ui/pages/home.html")
-	if err != nil {
-		http.Error(w, "Error loading template", http.StatusInternalServerError)
-		return
-	}
-
-	userName := r.URL.Query().Get("user_name")
-	data := struct {
-		UserName string
-	}{
-		UserName: userName,
-	}
-
-	w.Header().Set("Content-Type", "text/html")
-	if err := tmpl.Execute(w, data); err != nil {
-		http.Error(w, "Error executing template", http.StatusInternalServerError)
-		return
-	}
-}
-
-// func (h *Handler) Welcome(w http.ResponseWriter, r *http.Request) {
-// 	userInfo := UserInfo{
-// 		FirstName: r.URL.Query().Get("first_name"),
-// 		LastName:  r.URL.Query().Get("last_name"),
-// 		UserName:  r.URL.Query().Get("user_name"),
-// 	}
-
-// 	tmpl, err := template.ParseFiles("templates/index.html")
-// 	if err != nil {
-// 		http.Error(w, "Error loading template", http.StatusInternalServerError)
-// 		return
-// 	}
-
-// 	w.Header().Set("Content-Type", "text/html")
-// 	if err := tmpl.Execute(w, userInfo); err != nil {
-// 		http.Error(w, "Error executing template", http.StatusInternalServerError)
-// 		return
-// 	}
-// }
-
 func (h *Handler) CreateBotEndpointHandler(appURL string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		if r.Method != http.MethodPost {
-			http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
-			return
-		}
-		
 		log.Println("CreateBotEndpointHandler called")
 		log.Printf("Serving %s route", r.URL.Path)
 
