@@ -51,3 +51,25 @@ func (r *Repository) AddUser(user models.User) error {
 
 	return nil
 }
+
+func (r *Repository) GetByTelegramID(telegramID int64) (models.User, error) {
+	if r.db == nil {
+		return models.User{}, fmt.Errorf("database connection is not initialized")
+	}
+
+	query := `SELECT id, telegram_id, first_name, last_name, sure_name FROM users WHERE telegram_id = $1`
+	var user models.User
+	err := r.db.QueryRow(query, telegramID).Scan(&user.ID, &user.TelegramID, &user.FirstName, &user.LastName, &user.SureName)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			fmt.Println("Пользователь не найден")
+			return models.User{}, nil // Возвращаем пустого пользователя без ошибки
+		}
+		fmt.Println("Ошибка при получении пользователя:", err)
+		return models.User{}, fmt.Errorf("failed to retrieve user: %w", err)
+	}
+
+	fmt.Println("Полученный пользователь:", user)
+
+	return user, nil
+}

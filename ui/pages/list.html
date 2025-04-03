@@ -6,16 +6,15 @@
     <link rel="stylesheet" href="./static/home.css">
 </head>
 <body>
-    <h1>Список пользователей</h1>
-    <p>Привет, {{ .UserName }}!</p>
+
     <ul>
-        {{range .Users}}
-        <li>{{.FirstName}} {{.LastName}} {{.SureName}}</li>
-        {{end}}
+        {{ range .Users }}
+        <li>{{ .FirstName }} {{ .LastName }} {{ .SureName }}</li>
+        {{ end }}
     </ul>
-    
-    <a href="/home">
-        <button>Назад</button>
+
+    <a href="/?telegram_id={{ .CurrentUser.TelegramID }}">
+        <button>В профиль</button>
     </a>
 
 </body>

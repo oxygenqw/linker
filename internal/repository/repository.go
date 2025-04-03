@@ -11,6 +11,7 @@ import (
 type Repository interface {
 	AddUser(user models.User) error
 	GetAllUsers() ([]models.User, error)
+	GetByTelegramID(telegramID int64) (models.User, error)
 }
 
 func New(config *config.Config) (Repository, error) {

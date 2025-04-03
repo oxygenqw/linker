@@ -23,7 +23,8 @@
                 <label for="surename">Отчество</label>
                 <input type="text" id="surename" name="surename" required>
             </div>
-            <button type="submit">Продолжить </button>
+            <input type="hidden" id="telegram_id" name="telegram_id" value="{{ .TelegramID }}">
+            <button type="submit">Продолжить</button>
         </form>
     </div>
 </body>

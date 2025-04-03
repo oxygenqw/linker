@@ -31,3 +31,11 @@ func (s *UserService) AddUser(user models.User) error {
 
 	return nil
 }
+
+func (s *UserService) GetByTelegramID(telegramID int64) (models.User, error) {
+	fmt.Println("SERIVE ID", telegramID)
+	user, err := s.repository.GetByTelegramID(telegramID)
+
+	fmt.Println("SERVICE USER", user)
+	return user, err
+}
