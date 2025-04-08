@@ -3,7 +3,7 @@ package router
 import (
 	"net/http"
 
-	"github.com/Oxygenss/linker/internal/handler"
+	handler "github.com/Oxygenss/linker/internal/handlers"
 )
 
 type Router struct {
@@ -26,9 +26,6 @@ func (r *Router) InitRoutes() *http.ServeMux {
 
 	fileServer := http.FileServer(http.Dir("./ui/static/"))
 	router.Handle("/static/", http.StripPrefix("/static", fileServer))
-
-	// fs := http.FileServer(http.Dir("ui/static"))
-	// router.Handle("/*", http.StripPrefix("/", fs))
 
 	return router
 }

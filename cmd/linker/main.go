@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/Oxygenss/linker/internal/config"
-	"github.com/Oxygenss/linker/internal/handler"
+	"github.com/Oxygenss/linker/internal/handlers"
 	"github.com/Oxygenss/linker/internal/repository"
 	"github.com/Oxygenss/linker/internal/router"
 	"github.com/Oxygenss/linker/internal/service"
@@ -29,7 +29,7 @@ func main() {
 
 	service := service.NewService(repository)
 
-	handler := handler.NewHandler(*service, bot)
+	handler := handlers.NewHandler(service, bot)
 
 	router := router.NewRouter(handler, config.Telegram.AppURL)
 
@@ -46,7 +46,7 @@ func main() {
 	go func() {
 		log.Println("Serve start:", serve)
 		err := srv.ListenAndServe()
-		if  err != nil && err != http.ErrServerClosed {
+		if err != nil && err != http.ErrServerClosed {
 			log.Fatalf("listen: %s\n", err)
 		}
 	}()
