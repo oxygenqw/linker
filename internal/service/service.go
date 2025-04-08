@@ -5,16 +5,16 @@ import (
 	"github.com/Oxygenss/linker/internal/repository"
 )
 
-type User interface {
-	CreateUser(user models.User) error
-	GetAllUsers() ([]models.User, error)
+type Users interface {
+	Create(user models.User) error
+	GetAll() ([]models.User, error)
 	GetByTelegramID(telegramID int64) (models.User, error)
 }
 
 type Service struct {
-	User
+	Users
 }
 
 func NewService(repository repository.Repository) *Service {
-	return &Service{User: NewUserService(repository)}
+	return &Service{Users: NewUserService(repository)}
 }

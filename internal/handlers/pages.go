@@ -72,7 +72,6 @@ func (h *PagesHandler) Initialize(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-
 // После заполнения первоначальных данных парсим форму и переходим в профиль
 // @router POST /users
 func (h *PagesHandler) NewUser(w http.ResponseWriter, r *http.Request) {
@@ -97,7 +96,7 @@ func (h *PagesHandler) NewUser(w http.ResponseWriter, r *http.Request) {
 		SureName:   r.FormValue("surename"),
 	}
 
-	if err := h.service.CreateUser(user); err != nil {
+	if err := h.service.Users.Create(user); err != nil {
 		http.Error(w, fmt.Sprintf("Failed to add user: %v", err), http.StatusInternalServerError)
 		return
 	}
@@ -123,7 +122,7 @@ func (h *PagesHandler) List(w http.ResponseWriter, r *http.Request) {
 	}
 
 	telegramIDStr := r.FormValue("telegram_id")
-	users, err := h.service.GetAllUsers()
+	users, err := h.service.Users.GetAll()
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Failed to retrieve users: %v", err), http.StatusInternalServerError)
 		return

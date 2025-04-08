@@ -15,11 +15,11 @@ func NewUserService(repository repository.Repository) *UserService {
 	return &UserService{repository: repository}
 }
 
-func (s *UserService) GetAllUsers() ([]models.User, error) {
+func (s *UserService) GetAll() ([]models.User, error) {
 	return s.repository.GetAllUsers()
 }
 
-func (s *UserService) CreateUser(user models.User) error {
+func (s *UserService) Create(user models.User) error {
 	if s == nil {
 		return fmt.Errorf("UserService is not initialized")
 	}
