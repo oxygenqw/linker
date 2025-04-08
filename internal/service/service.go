@@ -6,7 +6,7 @@ import (
 )
 
 type User interface {
-	AddUser(user models.User) error
+	CreateUser(user models.User) error
 	GetAllUsers() ([]models.User, error)
 	GetByTelegramID(telegramID int64) (models.User, error)
 }

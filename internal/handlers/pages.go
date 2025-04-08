@@ -23,16 +23,15 @@ func NewPagesHandler(service *service.Service) *PagesHandler {
 	}
 }
 
-func (h *PagesHandler) Home(w http.ResponseWriter, r *http.Request) {
+func (h *PagesHandler) Initialize(w http.ResponseWriter, r *http.Request) {
+	log.Println("Initialize URL:", r.URL)
 	telegramIDStr := r.URL.Query().Get("telegram_id")
-	fmt.Println("telegramIDSTR", telegramIDStr)
+
 	telegramID, err := strconv.ParseInt(telegramIDStr, 10, 64)
 	if err != nil {
 		http.Error(w, "Invalid Telegram ID", http.StatusBadRequest)
 		return
 	}
-
-	fmt.Println("TelegramINT:", telegramID)
 
 	user, err := h.service.GetByTelegramID(telegramID)
 	if err != nil && err != sql.ErrNoRows {
@@ -41,7 +40,6 @@ func (h *PagesHandler) Home(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if user.ID == uuid.Nil || user.TelegramID == 0 {
-		log.Println("Нет пользователя")
 		userName := r.URL.Query().Get("user_name")
 		tmpl, err := template.ParseFiles("./ui/pages/login.html")
 		if err != nil {
@@ -60,7 +58,6 @@ func (h *PagesHandler) Home(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	} else {
-		log.Println("Есть пользователя")
 		tmpl, err := template.ParseFiles("./ui/pages/profile.html")
 		if err != nil {
 			http.Error(w, "Error loading template", http.StatusInternalServerError)
@@ -75,15 +72,19 @@ func (h *PagesHandler) Home(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h *PagesHandler) Initialize(w http.ResponseWriter, r *http.Request) {
+
+// После заполнения первоначальных данных парсим форму и переходим в профиль
+// @router POST /users
+func (h *PagesHandler) NewUser(w http.ResponseWriter, r *http.Request) {
+	log.Println("SaveInfo URL", r.URL.Path)
+
 	err := r.ParseForm()
 	if err != nil {
 		http.Error(w, "Failed to parse form", http.StatusBadRequest)
 		return
 	}
 
-	telegramIDStr := r.FormValue("telegram_id")
-	telegramID, err := strconv.ParseInt(telegramIDStr, 10, 64)
+	telegramID, err := strconv.ParseInt(r.FormValue("telegram_id"), 10, 64)
 	if err != nil {
 		http.Error(w, "Invalid Telegram ID", http.StatusBadRequest)
 		return
@@ -96,7 +97,7 @@ func (h *PagesHandler) Initialize(w http.ResponseWriter, r *http.Request) {
 		SureName:   r.FormValue("surename"),
 	}
 
-	if err := h.service.AddUser(user); err != nil {
+	if err := h.service.CreateUser(user); err != nil {
 		http.Error(w, fmt.Sprintf("Failed to add user: %v", err), http.StatusInternalServerError)
 		return
 	}

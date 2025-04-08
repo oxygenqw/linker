@@ -60,7 +60,7 @@ func (h *TelegramHandler) CreateBotEndpointHandler(appURL string) http.HandlerFu
 
 		appURLWithParams := fmt.Sprintf("%s?first_name=%s&last_name=%s&user_name=%s&telegram_id=%s", appURL, firstName, lastName, userName, strconv.FormatInt(telegramID, 10))
 
-		//log.Printf("WebApp URL: %s", appURLWithParams)
+		log.Printf("WebApp URL: %s", appURLWithParams)
 
 		message := "Welcome to the Telegram Mini App Template Bot"
 		opts := &gotgbot.SendMessageOpts{

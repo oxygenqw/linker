@@ -12,7 +12,7 @@ type Telegram interface {
 }
 
 type Pages interface {
-	Home(w http.ResponseWriter, r *http.Request)
+	NewUser(w http.ResponseWriter, r *http.Request)
 	Initialize(w http.ResponseWriter, r *http.Request)
 	List(w http.ResponseWriter, r *http.Request)
 }
