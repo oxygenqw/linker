@@ -7,15 +7,15 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func NewPostgresDB(dsn string) (*sql.DB, error) {
+func NewPostgresConnection(dsn string) (*sql.DB, error) {
 	db, err := sql.Open("postgres", dsn)
 	if err != nil {
-		return nil, fmt.Errorf("ошибка открытия соединения: %w", err)
+		return nil, fmt.Errorf("failed to open connection: %w", err)
 	}
 
 	err = db.Ping()
 	if err != nil {
-		return nil, fmt.Errorf("ошибка проверки соединения: %w", err)
+		return nil, fmt.Errorf("failed to ping connection: %w", err)
 	}
 
 	return db, nil

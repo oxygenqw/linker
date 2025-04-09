@@ -20,8 +20,16 @@
                 <input type="text" id="last_name" name="last_name" required>
             </div>
             <div class="form-group">
-                <label for="surename">Отчество</label>
-                <input type="text" id="surename" name="surename" required>
+                <label for="middle_name">Отчество</label>
+                <input type="text" id="middle_name" name="middle_name" required>
+            </div>
+            <div class="form-group">
+                <label for="role">Роль</label>
+                <select id="role" name="role" required>
+                    <option value="">Выберите роль</option>
+                    <option value="student">Студент</option>
+                    <option value="teacher">Преподаватель</option>
+                </select>
             </div>
             <input type="hidden" id="telegram_id" name="telegram_id" value="{{ .TelegramID }}">
             <button type="submit">Продолжить</button>

@@ -19,17 +19,20 @@ func NewRouter(handler *handler.Handler, appURL string) *Router {
 func (r *Router) InitRoutes() *httprouter.Router {
 	router := httprouter.New()
 
-	router.GET("/", wrapHandler(r.handler.Initialize))
-	router.GET("/list", wrapHandler(r.handler.List))
-	router.POST("/users", wrapHandler(r.handler.NewUser))
 	router.POST("/bot", wrapHandler(r.handler.CreateBotEndpointHandler(r.appURL)))
 
+	router.GET("/", wrapHandler(r.handler.Input))
+
+	router.POST("/users", wrapHandler(r.handler.NewUser))
+
+	router.GET("/home", wrapHandler(r.handler.Home))
+
+	//router.GET("/list", wrapHandler(r.handler.List))
 
 	router.ServeFiles("/static/*filepath", http.Dir("./ui/static/"))
 
 	return router
 }
-
 
 func wrapHandler(h http.HandlerFunc) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {

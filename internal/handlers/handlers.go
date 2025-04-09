@@ -13,8 +13,9 @@ type Telegram interface {
 
 type Pages interface {
 	NewUser(w http.ResponseWriter, r *http.Request)
-	Initialize(w http.ResponseWriter, r *http.Request)
-	List(w http.ResponseWriter, r *http.Request)
+	Input(w http.ResponseWriter, r *http.Request)
+	//List(w http.ResponseWriter, r *http.Request)
+	Home(w http.ResponseWriter, r *http.Request)
 }
 
 type Handler struct {

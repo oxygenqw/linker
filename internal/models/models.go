@@ -2,12 +2,20 @@ package models
 
 import "github.com/google/uuid"
 
-type User struct {
+type Student struct {
 	ID         uuid.UUID
 	TelegramID int64
 	FirstName  string
 	LastName   string
-	SureName   string
+	MiddleName string
+}
+
+type Teacher struct {
+	ID         uuid.UUID
+	TelegramID int64
+	FirstName  string
+	LastName   string
+	MiddleName string
 }
 
 type TemplateData struct {
@@ -15,9 +23,9 @@ type TemplateData struct {
 	TelegramID string
 }
 
-type TemplateDataUsers struct {
-	Users []User
-}
+// type TemplateDataUsers struct {
+// 	Users []User
+// }
 
 type UserInfo struct {
 	FirstName string

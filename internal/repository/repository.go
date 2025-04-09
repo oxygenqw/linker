@@ -8,13 +8,12 @@ import (
 	"github.com/Oxygenss/linker/internal/repository/postgres"
 )
 
-type Repository interface {
-	AddUser(user models.User) error
-	GetAllUsers() ([]models.User, error)
-	GetByTelegramID(telegramID int64) (models.User, error)
+type Repository struct {
+	Student Student
+	Teacher Teacher
 }
 
-func New(config *config.Config) (Repository, error) {
+func NewRepository(config *config.Config) (*Repository, error) {
 	dsn := fmt.Sprintf(
 		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		config.Database.Host,
@@ -24,11 +23,27 @@ func New(config *config.Config) (Repository, error) {
 		config.Database.Name,
 	)
 
-	db, err := postgres.NewPostgresDB(dsn)
+	db, err := postgres.NewPostgresConnection(dsn)
 	if err != nil {
 		return nil, fmt.Errorf("ошибка подключения к БД: %w", err)
 	}
 
-	repo := postgres.New(db)
-	return repo, nil
+	repo := postgres.NewPostgresRepository(db)
+
+	return &Repository{
+		Student: repo.Student,
+		Teacher: repo.Teacher,
+	}, nil
+}
+
+type Student interface {
+	GetByTelegramID(telegramID int64) (models.Student, error)
+	GetAll() ([]models.Student, error)
+	Create(student models.Student) error
+}
+
+type Teacher interface {
+	GetByTelegramID(telegramID int64) (models.Teacher, error)
+	GetAll() ([]models.Teacher, error)
+	Create(teacher models.Teacher) error
 }

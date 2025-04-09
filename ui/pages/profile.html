@@ -8,10 +8,10 @@
 <body>
     <h1>Профиль пользователя</h1>
     <div>
-        <p>Имя: {{ .FirstName }}</p>
-        <p>Фамилия: {{ .LastName }}</p>
-        <p>Отчество: {{ .SureName }}</p>
-        <p>telegramId: {{ .TelegramID }}</p>
+        <p>Имя: {{ .User.FirstName }}</p>
+        <p>Фамилия: {{ .User.LastName }}</p>
+        <p>Отчество: {{ .User.MiddleName }}</p>
+        <p>telegramId: {{ .User.TelegramID }}</p>
     </div>
    
     <div>

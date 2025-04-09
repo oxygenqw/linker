@@ -22,12 +22,12 @@ func main() {
 	bot := bot.NewBot(config.Telegram.BotToken)
 	bot.SetWebhook(config.Telegram.AppURL + "/bot")
 
-	repository, err := repository.New(config)
+	storage, err := repository.NewRepository(config)
 	if err != nil {
-		log.Fatalf("init error: %v", err)
+		log.Fatalf("error init storage: %v", err)
 	}
 
-	service := service.NewService(repository)
+	service := service.NewService(storage)
 
 	handler := handlers.NewHandler(service, bot)
 

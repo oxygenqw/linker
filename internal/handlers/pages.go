@@ -10,7 +10,6 @@ import (
 
 	"github.com/Oxygenss/linker/internal/models"
 	"github.com/Oxygenss/linker/internal/service"
-	"github.com/google/uuid"
 )
 
 type PagesHandler struct {
@@ -23,8 +22,17 @@ func NewPagesHandler(service *service.Service) *PagesHandler {
 	}
 }
 
-func (h *PagesHandler) Initialize(w http.ResponseWriter, r *http.Request) {
-	log.Println("Initialize URL:", r.URL)
+func (h *PagesHandler) Home(w http.ResponseWriter, r *http.Request) {
+	telegramIDStr := r.URL.Query().Get("telegram_id")
+	role := r.URL.Query().Get("role")
+	fmt.Println("Home ", telegramIDStr, role)
+	// Обработка и отображение информации на основе Telegram ID
+}
+
+// При запуске приложения пытаемся найти пользователя или преподавателя, если не нашли то открываем login, иначе редиректим в home
+// @router GET /
+func (h *PagesHandler) Input(w http.ResponseWriter, r *http.Request) {
+	log.Println("Input URL:", r.URL)
 	telegramIDStr := r.URL.Query().Get("telegram_id")
 
 	telegramID, err := strconv.ParseInt(telegramIDStr, 10, 64)
@@ -33,13 +41,31 @@ func (h *PagesHandler) Initialize(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := h.service.GetByTelegramID(telegramID)
+	var role string
+	var userFound bool
+	_, err = h.service.Student.GetByTelegramID(telegramID)
 	if err != nil && err != sql.ErrNoRows {
 		http.Error(w, "Error retrieving user", http.StatusInternalServerError)
 		return
 	}
 
-	if user.ID == uuid.Nil || user.TelegramID == 0 {
+	if err != sql.ErrNoRows {
+		userFound = true
+		role = "student"
+	}
+
+	_, err = h.service.Teacher.GetByTelegramID(telegramID)
+	if err != nil && err != sql.ErrNoRows {
+		http.Error(w, "Error retrieving user", http.StatusInternalServerError)
+		return
+	}
+
+	if err != sql.ErrNoRows {
+		userFound = true
+		role = "teacher"
+	}
+
+	if !userFound {
 		userName := r.URL.Query().Get("user_name")
 		tmpl, err := template.ParseFiles("./ui/pages/login.html")
 		if err != nil {
@@ -47,9 +73,9 @@ func (h *PagesHandler) Initialize(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		data := models.TemplateData{
-			UserName:   userName,
-			TelegramID: telegramIDStr,
+		data := map[string]any{
+			"UserName":   userName,
+			"TelegramID": telegramIDStr,
 		}
 
 		w.Header().Set("Content-Type", "text/html")
@@ -58,96 +84,90 @@ func (h *PagesHandler) Initialize(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	} else {
-		tmpl, err := template.ParseFiles("./ui/pages/profile.html")
-		if err != nil {
-			http.Error(w, "Error loading template", http.StatusInternalServerError)
-			return
-		}
-
-		w.Header().Set("Content-Type", "text/html")
-		if err := tmpl.Execute(w, user); err != nil {
-			http.Error(w, "Error executing template", http.StatusInternalServerError)
-			return
-		}
+		http.Redirect(w, r, fmt.Sprintf("/home?telegram_id=%s&role=%s", telegramIDStr, role), http.StatusFound)
 	}
 }
 
 // После заполнения первоначальных данных парсим форму и переходим в профиль
 // @router POST /users
 func (h *PagesHandler) NewUser(w http.ResponseWriter, r *http.Request) {
-	log.Println("SaveInfo URL", r.URL.Path)
-
-	err := r.ParseForm()
-	if err != nil {
-		http.Error(w, "Failed to parse form", http.StatusBadRequest)
-		return
-	}
-
 	telegramID, err := strconv.ParseInt(r.FormValue("telegram_id"), 10, 64)
 	if err != nil {
 		http.Error(w, "Invalid Telegram ID", http.StatusBadRequest)
 		return
 	}
 
-	user := models.User{
-		TelegramID: telegramID,
-		FirstName:  r.FormValue("first_name"),
-		LastName:   r.FormValue("last_name"),
-		SureName:   r.FormValue("surename"),
-	}
-
-	if err := h.service.Users.Create(user); err != nil {
-		http.Error(w, fmt.Sprintf("Failed to add user: %v", err), http.StatusInternalServerError)
-		return
-	}
-
-	tmpl, err := template.ParseFiles("./ui/pages/profile.html")
-	if err != nil {
-		http.Error(w, "Error loading template", http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "text/html")
-	if err := tmpl.Execute(w, user); err != nil {
-		http.Error(w, "Error executing template", http.StatusInternalServerError)
-		return
-	}
-}
-
-func (h *PagesHandler) List(w http.ResponseWriter, r *http.Request) {
-	err := r.ParseForm()
+	err = r.ParseForm()
 	if err != nil {
 		http.Error(w, "Failed to parse form", http.StatusBadRequest)
 		return
 	}
 
-	telegramIDStr := r.FormValue("telegram_id")
-	users, err := h.service.Users.GetAll()
-	if err != nil {
-		http.Error(w, fmt.Sprintf("Failed to retrieve users: %v", err), http.StatusInternalServerError)
-		return
-	}
+	role := r.FormValue("role")
 
-	tmpl, err := template.ParseFiles("./ui/pages/list.html")
-	if err != nil {
-		http.Error(w, "Error loading template", http.StatusInternalServerError)
-		return
-	}
-
-	data := struct {
-		Users       []models.User
-		CurrentUser struct {
-			TelegramID string
+	switch role {
+	case "student":
+		student := models.Student{
+			TelegramID: telegramID,
+			FirstName:  r.FormValue("first_name"),
+			LastName:   r.FormValue("last_name"),
+			MiddleName: r.FormValue("middle_name"),
 		}
-	}{
-		Users: users,
-		CurrentUser: struct {
-			TelegramID string
-		}{TelegramID: telegramIDStr},
+
+		err := h.service.Student.Create(student)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("Failed to add user: %v", err), http.StatusInternalServerError)
+		}
+	case "teacher":
+		teacher := models.Teacher{
+			TelegramID: telegramID,
+			FirstName:  r.FormValue("first_name"),
+			LastName:   r.FormValue("last_name"),
+			MiddleName: r.FormValue("middle_name"),
+		}
+		err := h.service.Teacher.Create(teacher)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("Failed to add user: %v", err), http.StatusInternalServerError)
+		}
 	}
 
-	if err := tmpl.Execute(w, data); err != nil {
-		http.Error(w, "Error executing template", http.StatusInternalServerError)
-		return
-	}
+	http.Redirect(w, r, fmt.Sprintf("/home?telegram_id=%s", strconv.FormatInt(telegramID, 10)), http.StatusFound)
 }
+
+// func (h *PagesHandler) List(w http.ResponseWriter, r *http.Request) {
+// 	err := r.ParseForm()
+// 	if err != nil {
+// 		http.Error(w, "Failed to parse form", http.StatusBadRequest)
+// 		return
+// 	}
+
+// 	telegramIDStr := r.FormValue("telegram_id")
+// 	users, err := h.service.Users.GetAll()
+// 	if err != nil {
+// 		http.Error(w, fmt.Sprintf("Failed to retrieve users: %v", err), http.StatusInternalServerError)
+// 		return
+// 	}
+
+// 	tmpl, err := template.ParseFiles("./ui/pages/list.html")
+// 	if err != nil {
+// 		http.Error(w, "Error loading template", http.StatusInternalServerError)
+// 		return
+// 	}
+
+// 	data := struct {
+// 		Users       []models.User
+// 		CurrentUser struct {
+// 			TelegramID string
+// 		}
+// 	}{
+// 		Users: users,
+// 		CurrentUser: struct {
+// 			TelegramID string
+// 		}{TelegramID: telegramIDStr},
+// 	}
+
+// 	if err := tmpl.Execute(w, data); err != nil {
+// 		http.Error(w, "Error executing template", http.StatusInternalServerError)
+// 		return
+// 	}
+// }
