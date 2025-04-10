@@ -22,14 +22,20 @@ func (r *StudentRepository) GetByTelegramID(telegramID int64) (models.Student, e
 	}
 
 	query := `SELECT id, telegram_id, first_name, middle_name, last_name FROM students WHERE telegram_id = $1`
+
 	var student models.Student
-	err := r.db.QueryRow(query, telegramID).Scan(&student.ID, &student.TelegramID, &student.FirstName, &student.LastName, &student.MiddleName)
+	err := r.db.QueryRow(query, telegramID).Scan(
+		&student.ID,
+		&student.TelegramID,
+		&student.FirstName,
+		&student.LastName,
+		&student.MiddleName,
+	)
+
 	if err != nil {
 		if err == sql.ErrNoRows {
-			fmt.Println("Студент не найден")
-			return models.Student{}, err // Возвращаем пустого пользователя без ошибки
+			return models.Student{}, fmt.Errorf("student not found")
 		}
-		fmt.Println("Ошибка при получении пользователя:", err)
 		return models.Student{}, fmt.Errorf("failed to retrieve student: %w", err)
 	}
 

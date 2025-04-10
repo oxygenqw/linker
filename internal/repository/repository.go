@@ -6,11 +6,14 @@ import (
 	"github.com/Oxygenss/linker/internal/config"
 	"github.com/Oxygenss/linker/internal/models"
 	"github.com/Oxygenss/linker/internal/repository/postgres"
+	"github.com/Oxygenss/linker/pkg/logger"
 )
 
 type Repository struct {
+	logger  logger.Logger
 	Student Student
 	Teacher Teacher
+	User    User
 }
 
 type Student interface {
@@ -25,7 +28,11 @@ type Teacher interface {
 	Create(teacher models.Teacher) error
 }
 
-func New(config *config.Config) (*Repository, error) {
+type User interface {
+	CheckByTelegramID(telegramID int64) (bool, error)
+}
+
+func New(config *config.Config, logger logger.Logger) (*Repository, error) {
 	dsn := fmt.Sprintf(
 		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		config.Database.Host,
@@ -37,13 +44,15 @@ func New(config *config.Config) (*Repository, error) {
 
 	db, err := postgres.NewPostgresConnection(dsn)
 	if err != nil {
-		return nil, fmt.Errorf("ошибка подключения к БД: %w", err)
+		return nil, fmt.Errorf("failed to connect to PostgreSQL: %w", err)
 	}
 
-	repo := postgres.NewPostgresRepository(db)
+	repository := postgres.NewPostgresRepository(db)
 
 	return &Repository{
-		Student: repo.Student,
-		Teacher: repo.Teacher,
+		logger:  logger,
+		Student: repository.Student,
+		Teacher: repository.Teacher,
+		User:    repository.User,
 	}, nil
 }

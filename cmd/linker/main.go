@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"log"
 	"net/http"
 	"os/signal"
 	"syscall"
@@ -19,7 +18,6 @@ import (
 
 func main() {
 	config := config.MustLoad()
-
 	logger := logger.GetLogger()
 
 	bot, err := bot.New(config.Telegram.BotToken, config.Telegram.AppURL+"/bot")
@@ -27,15 +25,13 @@ func main() {
 		logger.Fatalf("error init telegram bot: %v", err)
 	}
 
-	storage, err := repository.New(config)
+	storage, err := repository.New(config, logger)
 	if err != nil {
 		logger.Fatalf("error init storage: %v", err)
 	}
 
 	service := service.New(storage)
-
 	handler := handler.New(service, bot)
-
 	router := router.New(handler, config.Telegram.AppURL)
 
 	serve := config.Server.Host + ":" + config.Server.Port
@@ -49,10 +45,10 @@ func main() {
 	defer cancel()
 
 	go func() {
-		logger.Info("Serve start:", serve)
+		logger.Info("Server start:", serve)
 		err := srv.ListenAndServe()
 		if err != nil && err != http.ErrServerClosed {
-			log.Fatalf("listen: %s\n", err)
+			logger.Fatalf("listen: %s\n", err)
 		}
 	}()
 

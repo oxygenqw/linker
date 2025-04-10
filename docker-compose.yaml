@@ -4,10 +4,6 @@ services:
     container_name: postgres
     ports:
       - "5432:5432"
-    environment:
-      POSTGRES_USER: linker
-      POSTGRES_PASSWORD: linker_password
-      POSTGRES_DB: linker_db
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:

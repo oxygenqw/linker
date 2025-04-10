@@ -22,18 +22,24 @@ func (r *TeacherRepository) GetByTelegramID(telegramID int64) (models.Teacher, e
 	}
 
 	query := `SELECT id, telegram_id, first_name, middle_name, last_name FROM teachers WHERE telegram_id = $1`
-	var Teacher models.Teacher
-	err := r.db.QueryRow(query, telegramID).Scan(&Teacher.ID, &Teacher.TelegramID, &Teacher.FirstName, &Teacher.LastName, &Teacher.MiddleName)
+
+	var teacher models.Teacher
+	err := r.db.QueryRow(query, telegramID).Scan(
+		&teacher.ID,
+		&teacher.TelegramID,
+		&teacher.FirstName,
+		&teacher.LastName,
+		&teacher.MiddleName,
+	)
+
 	if err != nil {
 		if err == sql.ErrNoRows {
-			fmt.Println("Преподаватель не найден")
-			return models.Teacher{}, err
+			return models.Teacher{}, fmt.Errorf("teacher not found")
 		}
-		fmt.Println("Ошибка при получении пользователя:", err)
-		return models.Teacher{}, fmt.Errorf("failed to retrieve Teacher: %w", err)
+		return models.Teacher{}, fmt.Errorf("failed to retrieve student: %w", err)
 	}
 
-	return Teacher, nil
+	return teacher, nil
 }
 
 func (r *TeacherRepository) GetAll() ([]models.Teacher, error) {

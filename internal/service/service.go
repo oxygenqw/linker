@@ -8,6 +8,7 @@ import (
 type Service struct {
 	Student
 	Teacher
+	User
 }
 
 type Student interface {
@@ -22,9 +23,14 @@ type Teacher interface {
 	Create(teacher models.Teacher) error
 }
 
-func New(storage *repository.Repository) *Service {
+type User interface {
+	CheckByTelegramID(telegramID int64) (bool, error)
+}
+
+func New(repository *repository.Repository) *Service {
 	return &Service{
-		Student: NewStudentService(storage.Student),
-		Teacher: NewTeacherService(storage.Teacher),
+		Student: NewStudentService(repository.Student),
+		Teacher: NewTeacherService(repository.Teacher),
+		User:    NewUserService(repository.User),
 	}
 }

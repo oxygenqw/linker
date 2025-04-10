@@ -110,28 +110,9 @@ func (h *PagesHandler) Input(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var role string
-	var userFound bool
-	_, err = h.service.Student.GetByTelegramID(telegramID)
-	if err != nil && err != sql.ErrNoRows {
-		http.Error(w, "Error retrieving user", http.StatusInternalServerError)
-		return
-	}
+	userFound, err := h.service.User.CheckByTelegramID(telegramID)
+	if err != nil {
 
-	if err != sql.ErrNoRows {
-		userFound = true
-		role = "student"
-	}
-
-	_, err = h.service.Teacher.GetByTelegramID(telegramID)
-	if err != nil && err != sql.ErrNoRows {
-		http.Error(w, "Error retrieving user", http.StatusInternalServerError)
-		return
-	}
-
-	if err != sql.ErrNoRows {
-		userFound = true
-		role = "teacher"
 	}
 
 	if !userFound {
@@ -153,7 +134,7 @@ func (h *PagesHandler) Input(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	} else {
-		http.Redirect(w, r, fmt.Sprintf("/home?telegram_id=%s&role=%s", telegramIDStr, role), http.StatusFound)
+		http.Redirect(w, r, fmt.Sprintf("/home?telegram_id=%s", telegramIDStr), http.StatusFound)
 	}
 }
 
