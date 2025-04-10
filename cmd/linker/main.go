@@ -13,18 +13,22 @@ import (
 	"github.com/Oxygenss/linker/internal/repository"
 	"github.com/Oxygenss/linker/internal/router"
 	"github.com/Oxygenss/linker/internal/service"
+	"github.com/Oxygenss/linker/pkg/logger"
 	"github.com/Oxygenss/linker/pkg/telegram/bot"
 )
 
 func main() {
 	config := config.MustLoad()
 
+	logger := logger.GetLogger()
+
+
 	bot := bot.NewBot(config.Telegram.BotToken)
 	bot.SetWebhook(config.Telegram.AppURL + "/bot")
 
 	storage, err := repository.NewRepository(config)
 	if err != nil {
-		log.Fatalf("error init storage: %v", err)
+		logger.Fatalf("error init storage: %v", err)
 	}
 
 	service := service.NewService(storage)
@@ -44,7 +48,7 @@ func main() {
 	defer cancel()
 
 	go func() {
-		log.Println("Serve start:", serve)
+		logger.Info("Serve start:", serve)
 		err := srv.ListenAndServe()
 		if err != nil && err != http.ErrServerClosed {
 			log.Fatalf("listen: %s\n", err)
@@ -53,15 +57,15 @@ func main() {
 
 	<-ctx.Done()
 
-	log.Println("Server stopping...")
+	logger.Info("Server stopping...")
 
 	ctx, cancel = context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
 	err = srv.Shutdown(ctx)
 	if err != nil {
-		log.Fatalf("server shutdown failed: %v", err)
+		logger.Fatalf("server shutdown failed: %v", err)
 	}
 
-	log.Println("Server stopped")
+	logger.Println("Server stopped")
 }
