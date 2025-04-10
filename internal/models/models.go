@@ -17,18 +17,3 @@ type Teacher struct {
 	LastName   string
 	MiddleName string
 }
-
-type TemplateData struct {
-	UserName   string
-	TelegramID string
-}
-
-// type TemplateDataUsers struct {
-// 	Users []User
-// }
-
-type UserInfo struct {
-	FirstName string
-	LastName  string
-	UserName  string
-}

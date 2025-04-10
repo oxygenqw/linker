@@ -14,8 +14,10 @@ type Telegram interface {
 type Pages interface {
 	NewUser(w http.ResponseWriter, r *http.Request)
 	Input(w http.ResponseWriter, r *http.Request)
-	//List(w http.ResponseWriter, r *http.Request)
 	Home(w http.ResponseWriter, r *http.Request)
+	Students(w http.ResponseWriter, r *http.Request)
+	Teachers(w http.ResponseWriter, r *http.Request)
+	Profile(w http.ResponseWriter, r *http.Request)
 }
 
 type Handler struct {

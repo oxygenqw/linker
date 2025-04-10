@@ -21,7 +21,7 @@ func (r *StudentRepository) GetByTelegramID(telegramID int64) (models.Student, e
 		return models.Student{}, fmt.Errorf("database connection is not initialized")
 	}
 
-	query := `SELECT id, telegram_id, first_name, last_name, middle_name FROM students WHERE telegram_id = $1`
+	query := `SELECT id, telegram_id, first_name, middle_name, last_name FROM students WHERE telegram_id = $1`
 	var student models.Student
 	err := r.db.QueryRow(query, telegramID).Scan(&student.ID, &student.TelegramID, &student.FirstName, &student.LastName, &student.MiddleName)
 	if err != nil {
@@ -37,7 +37,7 @@ func (r *StudentRepository) GetByTelegramID(telegramID int64) (models.Student, e
 }
 
 func (r *StudentRepository) GetAll() ([]models.Student, error) {
-	query := `SELECT id, telegram_id, first_name, last_name, middle_name FROM students`
+	query := `SELECT id, telegram_id, first_name, middle_name, last_name FROM students`
 	rows, err := r.db.Query(query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to retrieve students: %w", err)
@@ -63,7 +63,7 @@ func (r *StudentRepository) Create(student models.Student) error {
 
 	student.ID = uuid.New()
 
-	query := `INSERT INTO students (id, telegram_id, first_name, last_name, middle_name) VALUES ($1, $2, $3, $4, $5)`
+	query := `INSERT INTO students (id, telegram_id, first_name, middle_name, last_name) VALUES ($1, $2, $3, $4, $5)`
 	_, err := r.db.Exec(query, student.ID, student.TelegramID, student.FirstName, student.LastName, student.MiddleName)
 	if err != nil {
 		return fmt.Errorf("failed to insert student: %w", err)

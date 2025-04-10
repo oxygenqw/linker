@@ -25,9 +25,13 @@ func (r *Router) InitRoutes() *httprouter.Router {
 
 	router.POST("/users", wrapHandler(r.handler.NewUser))
 
+	router.GET("/students", wrapHandler(r.handler.Students))
+	router.GET("/teachers", wrapHandler(r.handler.Teachers))
+
 	router.GET("/home", wrapHandler(r.handler.Home))
 
-	//router.GET("/list", wrapHandler(r.handler.List))
+	router.GET("/profile", wrapHandler(r.handler.Profile))
+
 
 	router.ServeFiles("/static/*filepath", http.Dir("./ui/static/"))
 
