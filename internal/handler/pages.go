@@ -1,4 +1,4 @@
-package handlers
+package handler
 
 import (
 	"database/sql"
@@ -23,58 +23,57 @@ func NewPagesHandler(service *service.Service) *PagesHandler {
 }
 
 func (h *PagesHandler) Profile(w http.ResponseWriter, r *http.Request) {
-    telegramIDStr := r.URL.Query().Get("telegram_id")
-    telegramID, err := strconv.ParseInt(telegramIDStr, 10, 64)
-    if err != nil {
-        http.Error(w, "Invalid Telegram ID", http.StatusBadRequest)
-        return
-    }
+	telegramIDStr := r.URL.Query().Get("telegram_id")
+	telegramID, err := strconv.ParseInt(telegramIDStr, 10, 64)
+	if err != nil {
+		http.Error(w, "Invalid Telegram ID", http.StatusBadRequest)
+		return
+	}
 
-    var userFound bool
-    var data map[string]any
+	var userFound bool
+	var data map[string]any
 
-    student, err := h.service.Student.GetByTelegramID(telegramID)
-    if err == nil {
-        userFound = true
-        data = map[string]any{
-            "user": student,
-        }
-    } else if err != sql.ErrNoRows {
-        http.Error(w, "Error retrieving user", http.StatusInternalServerError)
-        return
-    }
+	student, err := h.service.Student.GetByTelegramID(telegramID)
+	if err == nil {
+		userFound = true
+		data = map[string]any{
+			"user": student,
+		}
+	} else if err != sql.ErrNoRows {
+		http.Error(w, "Error retrieving user", http.StatusInternalServerError)
+		return
+	}
 
-    if !userFound {
-        teacher, err := h.service.Teacher.GetByTelegramID(telegramID)
-        if err != nil && err != sql.ErrNoRows {
-            http.Error(w, "Error retrieving user", http.StatusInternalServerError)
-            return
-        }
+	if !userFound {
+		teacher, err := h.service.Teacher.GetByTelegramID(telegramID)
+		if err != nil && err != sql.ErrNoRows {
+			http.Error(w, "Error retrieving user", http.StatusInternalServerError)
+			return
+		}
 
-        if err == nil {
-            data = map[string]any{
-                "user": teacher,
-            }
-        }
-    }
+		if err == nil {
+			data = map[string]any{
+				"user": teacher,
+			}
+		}
+	}
 
-    if data != nil {
-        tmpl, err := template.ParseFiles("./ui/pages/profile.html")
-        if err != nil {
-            http.Error(w, "Error loading template", http.StatusInternalServerError)
-            return
-        }
+	if data != nil {
+		tmpl, err := template.ParseFiles("./ui/pages/profile.html")
+		if err != nil {
+			http.Error(w, "Error loading template", http.StatusInternalServerError)
+			return
+		}
 
-        w.Header().Set("Content-Type", "text/html")
-        if err := tmpl.Execute(w, data); err != nil {
-            http.Error(w, "Error executing template", http.StatusInternalServerError)
-            return
-        }
-    } else {
-        http.Error(w, "User not found", http.StatusNotFound)
-    }
+		w.Header().Set("Content-Type", "text/html")
+		if err := tmpl.Execute(w, data); err != nil {
+			http.Error(w, "Error executing template", http.StatusInternalServerError)
+			return
+		}
+	} else {
+		http.Error(w, "User not found", http.StatusNotFound)
+	}
 }
-
 
 func (h *PagesHandler) Home(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Home")

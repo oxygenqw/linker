@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/Oxygenss/linker/internal/config"
-	"github.com/Oxygenss/linker/internal/handlers"
+	"github.com/Oxygenss/linker/internal/handler"
 	"github.com/Oxygenss/linker/internal/repository"
 	"github.com/Oxygenss/linker/internal/router"
 	"github.com/Oxygenss/linker/internal/service"
@@ -34,7 +34,7 @@ func main() {
 
 	service := service.New(storage)
 
-	handler := handlers.New(service, bot)
+	handler := handler.New(service, bot)
 
 	router := router.New(handler, config.Telegram.AppURL)
 

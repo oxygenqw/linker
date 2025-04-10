@@ -3,7 +3,7 @@ package router
 import (
 	"net/http"
 
-	handler "github.com/Oxygenss/linker/internal/handlers"
+	"github.com/Oxygenss/linker/internal/handler"
 	"github.com/julienschmidt/httprouter"
 )
 
