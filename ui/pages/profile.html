@@ -1,24 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./static/home.css">
+    <link rel="stylesheet" href="./static/style.css">
 </head>
 <body>
-    <h1>Профиль пользователя</h1>
+
+    <h1>Профиль</h1>
+
+    <a class="button" href="/home">Назад на главную</a>
+
     <div>
-        <p>Имя: {{ .User.FirstName }}</p>
-        <p>Фамилия: {{ .User.LastName }}</p>
-        <p>Отчество: {{ .User.MiddleName }}</p>
-        <p>telegramId: {{ .User.TelegramID }}</p>
+        <p>Telegram ID: {{ .user.TelegramID }}</p>
+        <p>Имя: {{ .user.FirstName }}</p>
+        <p>Фамилия: {{ .user.LastName }}</p>
+        <p>Отчество: {{ .user.MiddleName }}</p>
     </div>
-   
-    <div>
-        <form action="/list" method="GET">
-            <input type="hidden" name="telegram_id" value="{{ .TelegramID }}">
-            <button type="submit">Список всех пользователей</button>
-        </form>
-    </div>
+
 </body>
 </html>
