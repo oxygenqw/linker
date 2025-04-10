@@ -5,6 +5,11 @@ import (
 	"github.com/Oxygenss/linker/internal/repository"
 )
 
+type Service struct {
+	Student
+	Teacher
+}
+
 type Student interface {
 	GetByTelegramID(telegramID int64) (models.Student, error)
 	GetAll() ([]models.Student, error)
@@ -17,12 +22,7 @@ type Teacher interface {
 	Create(teacher models.Teacher) error
 }
 
-type Service struct {
-	Student
-	Teacher
-}
-
-func NewService(storage *repository.Repository) *Service {
+func New(storage *repository.Repository) *Service {
 	return &Service{
 		Student: NewStudentService(storage.Student),
 		Teacher: NewTeacherService(storage.Teacher),

@@ -7,6 +7,11 @@ import (
 	"github.com/Oxygenss/linker/pkg/telegram/bot"
 )
 
+type Handler struct {
+	Telegram
+	Pages
+}
+
 type Telegram interface {
 	CreateBotEndpointHandler(appURL string) http.HandlerFunc
 }
@@ -20,12 +25,7 @@ type Pages interface {
 	Profile(w http.ResponseWriter, r *http.Request)
 }
 
-type Handler struct {
-	Telegram
-	Pages
-}
-
-func NewHandler(service *service.Service, bot *bot.Bot) *Handler {
+func New(service *service.Service, bot *bot.Bot) *Handler {
 	return &Handler{
 		Telegram: NewTelegramHandler(bot),
 		Pages:    NewPagesHandler(service),

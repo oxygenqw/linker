@@ -13,7 +13,19 @@ type Repository struct {
 	Teacher Teacher
 }
 
-func NewRepository(config *config.Config) (*Repository, error) {
+type Student interface {
+	GetByTelegramID(telegramID int64) (models.Student, error)
+	GetAll() ([]models.Student, error)
+	Create(student models.Student) error
+}
+
+type Teacher interface {
+	GetByTelegramID(telegramID int64) (models.Teacher, error)
+	GetAll() ([]models.Teacher, error)
+	Create(teacher models.Teacher) error
+}
+
+func New(config *config.Config) (*Repository, error) {
 	dsn := fmt.Sprintf(
 		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		config.Database.Host,
@@ -34,16 +46,4 @@ func NewRepository(config *config.Config) (*Repository, error) {
 		Student: repo.Student,
 		Teacher: repo.Teacher,
 	}, nil
-}
-
-type Student interface {
-	GetByTelegramID(telegramID int64) (models.Student, error)
-	GetAll() ([]models.Student, error)
-	Create(student models.Student) error
-}
-
-type Teacher interface {
-	GetByTelegramID(telegramID int64) (models.Teacher, error)
-	GetAll() ([]models.Teacher, error)
-	Create(teacher models.Teacher) error
 }

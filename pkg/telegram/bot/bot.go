@@ -2,7 +2,6 @@ package bot
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
 )
@@ -11,27 +10,40 @@ type Bot struct {
 	*gotgbot.Bot
 }
 
-func NewBot(token string) *Bot {
+// New creates a new bot instance and sets up the webhook
+// token - bot token provided by BotFather
+// webhookURL - full URL for receiving updates (e.g., "https://example.com/bot")
+func New(token string, webhookURL string) (*Bot, error) {
 	bot, err := gotgbot.NewBot(token, nil)
 	if err != nil {
-		log.Fatalf("Telegram Bot API initialization error: %v", err)
+		return nil, fmt.Errorf("telegram Bot API init error: %w", err)
 	}
-	return &Bot{Bot: bot}
+
+	b := &Bot{Bot: bot}
+
+	if err := b.setWebhook(webhookURL); err != nil {
+		return nil, fmt.Errorf("set webhook failed: %w", err)
+	}
+
+	return b, nil
+
 }
 
-func (b *Bot) SetWebhook(url string) error {
+// setWebhook private method for webhook setup
+func (b *Bot) setWebhook(url string) error {
+	// Очищаем историю сообщений, пока бот не работал
 	opts := &gotgbot.SetWebhookOpts{
 		DropPendingUpdates: true,
 	}
+
 	success, err := b.Bot.SetWebhook(url, opts)
 	if err != nil {
-		log.Printf("Error setting webhook: %v", err)
-		return err
+		return fmt.Errorf("telegram API error: %w", err)
 	}
+
 	if !success {
-		log.Printf("Telegram rejected webhook URL: %s", url)
-		return fmt.Errorf("webhook not set")
+		return fmt.Errorf("telegram rejected webhook URL: %s", url)
 	}
-	log.Printf("Webhook successfully set to: %s", url)
+
 	return nil
 }
