@@ -26,7 +26,7 @@ func init() {
 	l.Formatter = &logrus.TextFormatter{
 		CallerPrettyfier: func(frame *runtime.Frame) (function string, file string) {
 			filename := path.Base(frame.File)
-			return fmt.Sprintf("%s()", frame.Function), fmt.Sprintf("%s:%d", filename, frame.Line)
+			return "", fmt.Sprintf("%s:%d", filename, frame.Line) // Убрали вывод функции
 		},
 		FullTimestamp: true,
 	}

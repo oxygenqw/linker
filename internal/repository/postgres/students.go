@@ -2,21 +2,59 @@ package postgres
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 
 	"github.com/Oxygenss/linker/internal/models"
+	"github.com/Oxygenss/linker/pkg/logger"
 	"github.com/google/uuid"
 )
 
 type StudentRepository struct {
-	db *sql.DB
+	logger *logger.Logger
+	db     *sql.DB
 }
 
-func NewStudentRepository(db *sql.DB) *StudentRepository {
-	return &StudentRepository{db: db}
+func NewStudentRepository(db *sql.DB, logger *logger.Logger) *StudentRepository {
+	return &StudentRepository{
+		db:     db,
+		logger: logger,
+	}
+}
+
+func (r *StudentRepository) GetByID(id string) (models.Student, error) {
+	if r.db == nil {
+		return models.Student{}, fmt.Errorf("database connection is not initialized")
+	}
+
+	_, err := uuid.Parse(id)
+	if err != nil {
+		return models.Student{}, fmt.Errorf("invalid UUID format: %w", err)
+	}
+
+	query := `SELECT id, telegram_id, first_name, middle_name, last_name FROM students WHERE id = $1`
+
+	var student models.Student
+	err = r.db.QueryRow(query, id).Scan(
+		&student.ID,
+		&student.TelegramID,
+		&student.FirstName,
+		&student.LastName,
+		&student.MiddleName,
+	)
+
+	switch {
+	case err == nil:
+		return student, nil
+	case errors.Is(err, sql.ErrNoRows):
+		return models.Student{}, fmt.Errorf("student not found: %w", err)
+	default:
+		return models.Student{}, fmt.Errorf("failed to get student: %w", err)
+	}
 }
 
 func (r *StudentRepository) GetByTelegramID(telegramID int64) (models.Student, error) {
+	r.logger.Info("[R: GetByTelegramID]")
 	if r.db == nil {
 		return models.Student{}, fmt.Errorf("database connection is not initialized")
 	}
@@ -36,6 +74,7 @@ func (r *StudentRepository) GetByTelegramID(telegramID int64) (models.Student, e
 		if err == sql.ErrNoRows {
 			return models.Student{}, fmt.Errorf("student not found")
 		}
+		r.logger.Errorf("E: GetByTelegramID: %v", err)
 		return models.Student{}, fmt.Errorf("failed to retrieve student: %w", err)
 	}
 
@@ -62,18 +101,25 @@ func (r *StudentRepository) GetAll() ([]models.Student, error) {
 	return students, nil
 }
 
-func (r *StudentRepository) Create(student models.Student) error {
+func (r *StudentRepository) Create(student models.Student) (uuid.UUID, error) {
 	if r.db == nil {
-		return fmt.Errorf("database connection is not initialized")
+		return uuid.Nil, fmt.Errorf("database connection is not initialized")
 	}
 
 	student.ID = uuid.New()
 
-	query := `INSERT INTO students (id, telegram_id, first_name, middle_name, last_name) VALUES ($1, $2, $3, $4, $5)`
-	_, err := r.db.Exec(query, student.ID, student.TelegramID, student.FirstName, student.LastName, student.MiddleName)
+	query := `INSERT INTO students (id, telegram_id, first_name, middle_name, last_name) 
+              VALUES ($1, $2, $3, $4, $5)`
+	_, err := r.db.Exec(query,
+		student.ID,
+		student.TelegramID,
+		student.FirstName,
+		student.MiddleName,
+		student.LastName)
+
 	if err != nil {
-		return fmt.Errorf("failed to insert student: %w", err)
+		return uuid.Nil, fmt.Errorf("failed to insert student: %w", err)
 	}
 
-	return nil
+	return student.ID, nil
 }

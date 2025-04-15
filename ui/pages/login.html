@@ -7,31 +7,30 @@
 </head>
 <body>
     <div class="header">
-        <h1>Добро пожаловать, {{ .UserName }}!</h1>
+        <h1>Добро пожаловать, {{ .user_name }}!</h1>
     </div>
     <div>
-        <form action="/users" method="POST">
+        <form action="/users/{{ .telegram_id }}" method="POST">
             <div class="form-group">
-                <label for="first_name">Имя</label>
+                <label for="first_name">Имя*</label>
                 <input type="text" id="first_name" name="first_name" required>
             </div>
             <div class="form-group">
-                <label for="last_name">Фамилия</label>
+                <label for="last_name">Фамилия*</label>
                 <input type="text" id="last_name" name="last_name" required>
             </div>
             <div class="form-group">
-                <label for="middle_name">Отчество</label>
+                <label for="middle_name">Отчество*</label>
                 <input type="text" id="middle_name" name="middle_name" required>
             </div>
             <div class="form-group">
-                <label for="role">Роль</label>
+                <label for="role">Роль*</label>
                 <select id="role" name="role" required>
                     <option value="">Выберите роль</option>
                     <option value="student">Студент</option>
                     <option value="teacher">Преподаватель</option>
                 </select>
             </div>
-            <input type="hidden" id="telegram_id" name="telegram_id" value="{{ .TelegramID }}">
             <button type="submit" class="button">Продолжить</button>
         </form>
     </div>

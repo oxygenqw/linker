@@ -25,13 +25,13 @@ func main() {
 		logger.Fatalf("error init telegram bot: %v", err)
 	}
 
-	storage, err := repository.New(config, logger)
+	storage, err := repository.New(config, &logger)
 	if err != nil {
 		logger.Fatalf("error init storage: %v", err)
 	}
 
 	service := service.New(storage)
-	handler := handler.New(service, bot)
+	handler := handler.New(service, &logger, bot)
 	router := router.New(handler, config.Telegram.AppURL)
 
 	serve := config.Server.Host + ":" + config.Server.Port

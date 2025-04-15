@@ -8,17 +8,24 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/Oxygenss/linker/pkg/logger"
 	"github.com/Oxygenss/linker/pkg/telegram/bot"
 	"github.com/PaulSonOfLars/gotgbot/v2"
 )
 
-type TelegramHandler struct {
-	bot *bot.Bot
+type Telegram interface {
+	CreateBotEndpointHandler(appURL string) http.HandlerFunc
 }
 
-func NewTelegramHandler(bot *bot.Bot) *TelegramHandler {
+type TelegramHandler struct {
+	logger *logger.Logger
+	bot    *bot.Bot
+}
+
+func NewTelegramHandler(bot *bot.Bot, logger *logger.Logger) *TelegramHandler {
 	return &TelegramHandler{
-		bot: bot,
+		logger: logger,
+		bot:    bot,
 	}
 }
 
