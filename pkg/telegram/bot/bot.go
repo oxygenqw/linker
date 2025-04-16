@@ -16,7 +16,7 @@ type Bot struct {
 func New(token string, webhookURL string) (*Bot, error) {
 	bot, err := gotgbot.NewBot(token, nil)
 	if err != nil {
-		return nil, fmt.Errorf("telegram Bot API init error: %w", err)
+		return nil, err
 	}
 
 	b := &Bot{Bot: bot}

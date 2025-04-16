@@ -3,7 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./static/style.css">
+    <link rel="stylesheet" href="/static/style.css">
+    <script>
+        if (window.Telegram?.WebApp) {
+            Telegram.WebApp.setHeaderColor('#6A5ACD');
+            Telegram.WebApp.setBackgroundColor('#6A5ACD');
+            Telegram.WebApp.expand();
+        }
+    </script>
 </head>
 <body>
     <div class="header">
@@ -11,22 +18,22 @@
     </div>
     <div>
         <form action="/users/{{ .telegram_id }}" method="POST">
-            <div class="form-group">
-                <label for="first_name">Имя*</label>
+            <div class="form">
+                <label for="first_name">Имя</label>
                 <input type="text" id="first_name" name="first_name" required>
             </div>
-            <div class="form-group">
-                <label for="last_name">Фамилия*</label>
+            <div class="form">
+                <label for="last_name">Фамилия</label>
                 <input type="text" id="last_name" name="last_name" required>
             </div>
-            <div class="form-group">
-                <label for="middle_name">Отчество*</label>
+            <div class="form">
+                <label for="middle_name">Отчество</label>
                 <input type="text" id="middle_name" name="middle_name" required>
             </div>
-            <div class="form-group">
-                <label for="role">Роль*</label>
+            <div class="form">
+                <label for="role">Выберите роль</label>
                 <select id="role" name="role" required>
-                    <option value="">Выберите роль</option>
+                    <option value="" selected></option>
                     <option value="student">Студент</option>
                     <option value="teacher">Преподаватель</option>
                 </select>

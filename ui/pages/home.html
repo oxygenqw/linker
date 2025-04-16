@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./static/style.css">
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
 
-    <h1>HOME PAGE</h1>
+    <h1>Home</h1>
 
-    <div>
-        <a class="btn" href="/teachers/{{ .id }}/{{ .role }}">Преподаватели</a>
-    </div>
+    <form action="/teachers/{{ .id }}/{{ .role }}" method="GET">
+        <button type="submit" class="button">Преподаватели</button>
+    </form>
 
-    <div>
-        <a class="btn" href="/students/{{ .id }}/{{ .role }}">Студенты</a>
-    </div>
+    <form action="/students/{{ .id }}/{{ .role }}" method="GET">
+        <button type="submit" class="button">Студенты</button>
+    </form>
 
-    <div>
-        <a class="btn" href="/profile/{{ .id }}/{{ .role }}">Профиль</a>
-    </div>
+    <form action="/profile/{{ .id }}/{{ .role }}" method="GET">
+        <button type="submit" class="button">Профиль</button>
+    </form>
 
 </body>
 </html>
