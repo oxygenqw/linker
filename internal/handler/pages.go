@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"html/template"
 	"net/http"
 
@@ -85,11 +84,10 @@ func (h *PagesHandler) Home(w http.ResponseWriter, r *http.Request, ps httproute
 // Рендерит profile.html и передает туда информацию о пользователе
 // @router GET /profile/:id/:role
 func (h *PagesHandler) Profile(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	h.logger.Info("[H]: Profile]", " URL: ", r.URL)
+	h.logger.Info("[H: Profile]", " URL: ", r.URL)
+
 	id := ps.ByName("id")
 	role := ps.ByName("role")
-
-	fmt.Println("ID , ROLE", id, role)
 
 	var data map[string]any
 	var err error
@@ -102,6 +100,8 @@ func (h *PagesHandler) Profile(w http.ResponseWriter, r *http.Request, ps httpro
 		}
 		data = map[string]any{
 			"user": student,
+			"id":   id,
+			"role": "student",
 		}
 
 	case "teacher":
@@ -111,6 +111,8 @@ func (h *PagesHandler) Profile(w http.ResponseWriter, r *http.Request, ps httpro
 		}
 		data = map[string]any{
 			"user": teacher,
+			"id":   id,
+			"role": "teacher",
 		}
 	default:
 		http.Error(w, "Invalid role specified", http.StatusBadRequest)
@@ -130,9 +132,12 @@ func (h *PagesHandler) Profile(w http.ResponseWriter, r *http.Request, ps httpro
 }
 
 // Рендерит students.html и передает туда список студентов
-// @router GET /students
+// @router GET /students/:id/:role
 func (h *PagesHandler) Students(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	h.logger.Info("[H: Students] ", "URL: ", r.URL)
+
+	id := ps.ByName("id")
+	role := ps.ByName("role")
 
 	students, err := h.service.Student.GetAll()
 	if err != nil {
@@ -142,6 +147,8 @@ func (h *PagesHandler) Students(w http.ResponseWriter, r *http.Request, ps httpr
 
 	data := map[string]any{
 		"students": students,
+		"id":       id,
+		"role":     role,
 	}
 
 	tmpl, err := template.ParseFiles("./ui/pages/students.html")
@@ -158,9 +165,12 @@ func (h *PagesHandler) Students(w http.ResponseWriter, r *http.Request, ps httpr
 }
 
 // Рендерит teachers.html и передает туда список преподавателей
-// @router GET /teachers
+// @router GET /teachers/:id/:role
 func (h *PagesHandler) Teachers(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	h.logger.Info("[H: Teachers] ", "URL: ", r.URL)
+
+	id := ps.ByName("id")
+	role := ps.ByName("role")
 
 	teachers, err := h.service.Teacher.GetAll()
 	if err != nil {
@@ -170,6 +180,8 @@ func (h *PagesHandler) Teachers(w http.ResponseWriter, r *http.Request, ps httpr
 
 	data := map[string]any{
 		"teachers": teachers,
+		"id":       id,
+		"role":     role,
 	}
 
 	tmpl, err := template.ParseFiles("./ui/pages/teachers.html")

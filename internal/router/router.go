@@ -29,8 +29,8 @@ func (r *Router) InitRoutes() *httprouter.Router {
 	// html pages
 	router.GET("/login/:user_name/:telegram_id", r.handler.Login)
 	router.GET("/home/:id/:role", r.handler.Home)
-	router.GET("/students", r.handler.Students)
-	router.GET("/teachers", r.handler.Teachers)
+	router.GET("/students/:id/:role", r.handler.Students)
+	router.GET("/teachers/:id/:role", r.handler.Teachers)
 	router.GET("/profile/:id/:role", r.handler.Profile)
 
 	// static
