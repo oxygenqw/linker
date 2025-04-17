@@ -8,9 +8,10 @@ import (
 
 type Student interface {
 	GetByTelegramID(telegramID int64) (models.Student, error)
-	GetAll() ([]models.Student, error)
-	Create(student models.Student) (uuid.UUID, error)
 	GetByID(id string) (models.Student, error)
+	Create(student models.Student) (uuid.UUID, error)
+	Update(student models.Student) error
+	GetAll() ([]models.Student, error)
 }
 
 type StudentService struct {
@@ -37,4 +38,8 @@ func (s *StudentService) GetAll() ([]models.Student, error) {
 
 func (s *StudentService) Create(student models.Student) (uuid.UUID, error) {
 	return s.repository.Create(student)
+}
+
+func (s *StudentService) Update(student models.Student) error {
+	return s.repository.Update(student)
 }

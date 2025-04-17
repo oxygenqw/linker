@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <title>Редактирование профиля преподавателя</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Редактирование профиля преподавателя</h1>
+        <form action="/teacher/update/{{ .user.ID }}" method="POST">
+            <div class="form-group">
+                <label for="first_name">Имя</label>
+                <input type="text" id="first_name" name="first_name" 
+                       value="{{ .user.FirstName }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="last_name">Фамилия</label>
+                <input type="text" id="last_name" name="last_name" 
+                       value="{{ .user.LastName }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="middle_name">Отчество</label>
+                <input type="text" id="middle_name" name="middle_name" 
+                       value="{{ .user.MiddleName }}">
+            </div>
+            
+            <div class="form-group">
+                <label for="degree">Ученая степень</label>
+                <input type="text" id="degree" name="degree" 
+                       value="{{ .user.Degree }}">
+            </div>
+            
+            <div class="form-group">
+                <label for="position">Должность</label>
+                <input type="text" id="position" name="position" 
+                       value="{{ .user.Position }}">
+            </div>
+            
+            <div class="form-group">
+                <label for="department">Кафедра/Факультет</label>
+                <input type="text" id="department" name="department" 
+                       value="{{ .user.Department }}">
+            </div>
+            
+            <div class="form-group">
+                <label for="is_free">
+                    <input type="checkbox" id="is_free" name="is_free" 
+                           {{ if .user.IsFree }}checked{{ end }}>
+                    Свободен для проектов
+                </label>
+            </div>
+            
+            <div class="form-group">
+                <label for="idea">Идеи для проектов</label>
+                <textarea id="idea" name="idea">{{ .user.Idea }}</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="about">О себе</label>
+                <textarea id="about" name="about">{{ .user.About }}</textarea>
+            </div>
+            
+            <button type="submit" class="button">Сохранить изменения</button>
+        </form>
+    </div>
+</body>
+</html>

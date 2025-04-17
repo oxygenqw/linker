@@ -15,6 +15,8 @@ import (
 type Redirect interface {
 	NewUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 	Input(w http.ResponseWriter, r *http.Request)
+	UpdateStudent(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
+	UpdateTeacher(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 }
 
 type RedirectHandler struct {
@@ -59,7 +61,7 @@ func (h *RedirectHandler) Input(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, fmt.Sprintf("/home/%s/%s", student.ID, role), http.StatusFound)
 		return
 	case "teacher":
-		teacher, err := h.service.Student.GetByTelegramID(telegramID)
+		teacher, err := h.service.Teacher.GetByTelegramID(telegramID)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -71,6 +73,7 @@ func (h *RedirectHandler) Input(w http.ResponseWriter, r *http.Request) {
 
 // После заполнения первоначальных данных парсим форму и переходим в профиль
 // @router POST /users/:telegram_id
+// TODO: Заменить на CreateUser
 func (h *RedirectHandler) NewUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	h.logger.Info("[H: NewUser] ", "URL: ", r.URL)
 
@@ -118,4 +121,79 @@ func (h *RedirectHandler) NewUser(w http.ResponseWriter, r *http.Request, ps htt
 	}
 
 	http.Redirect(w, r, fmt.Sprintf("/home/%s/%s", id, role), http.StatusFound)
+}
+
+func (h *RedirectHandler) UpdateStudent(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	h.logger.Info("[H: UpdateStudent] ", "URL: ", r.URL)
+
+	id, err := uuid.Parse(ps.ByName("id"))
+	if err != nil {
+		http.Error(w, "Invalid student ID format", http.StatusBadRequest)
+		return
+	}
+
+	err = r.ParseForm()
+	if err != nil {
+		http.Error(w, "Failed to parse form", http.StatusBadRequest)
+		return
+	}
+
+	student := models.Student{
+		ID:         id,
+		FirstName:  r.FormValue("first_name"),
+		LastName:   r.FormValue("last_name"),
+		MiddleName: r.FormValue("middle_name"),
+		GitHub:     r.FormValue("github"),
+		Job:        r.FormValue("job"),
+		Idea:       r.FormValue("idea"),
+		About:      r.FormValue("about"),
+	}
+
+	err = h.service.Student.Update(student)
+	if err != nil {
+		http.Error(w, "Failed to update student profile", http.StatusInternalServerError)
+		return
+	}
+
+	http.Redirect(w, r, fmt.Sprintf("/profile/%s/%s", id, "student"), http.StatusFound)
+}
+
+func (h *RedirectHandler) UpdateTeacher(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	h.logger.Info("[H: UpdateTeacher] ", "URL: ", r.URL)
+
+	id, err := uuid.Parse(ps.ByName("id"))
+	if err != nil {
+		http.Error(w, "Invalid student ID format", http.StatusBadRequest)
+		return
+	}
+
+	err = r.ParseForm()
+	if err != nil {
+		http.Error(w, "Failed to parse form", http.StatusBadRequest)
+		return
+	}
+
+	teacher := models.Teacher{
+		ID:         id,
+		FirstName:  r.FormValue("first_name"),
+		LastName:   r.FormValue("last_name"),
+		MiddleName: r.FormValue("middle_name"),
+		Degree:     r.FormValue("degree"),
+		Position:   r.FormValue("position"),
+		Department: r.FormValue("department"),
+		Idea:       r.FormValue("idea"),
+		About:      r.FormValue("about"),
+	}
+
+	// Обрабатываем checkbox is_free
+	isFree := r.FormValue("is_free") == "on"
+	teacher.IsFree = isFree
+
+	err = h.service.Teacher.Update(teacher)
+	if err != nil {
+		http.Error(w, "Failed to update teacher profile", http.StatusInternalServerError)
+		return
+	}
+
+	http.Redirect(w, r, fmt.Sprintf("/profile/%s/%s", id, "teacher"), http.StatusFound)
 }

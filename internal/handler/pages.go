@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"html/template"
 	"net/http"
 	"path/filepath"
@@ -13,9 +14,14 @@ import (
 type Pages interface {
 	Login(w http.ResponseWriter, r *http.Request, params httprouter.Params)
 	Home(w http.ResponseWriter, r *http.Request, params httprouter.Params)
+
 	Profile(w http.ResponseWriter, r *http.Request, params httprouter.Params)
+
 	Students(w http.ResponseWriter, r *http.Request, params httprouter.Params)
 	Teachers(w http.ResponseWriter, r *http.Request, params httprouter.Params)
+
+	EditStudentProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params)
+	EditTeacherProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params)
 }
 
 type PagesHandler struct {
@@ -104,9 +110,9 @@ func (h *PagesHandler) Profile(w http.ResponseWriter, r *http.Request, params ht
 
 		data = map[string]any{
 			"user": student,
-			"id":   id,
-			"role": "student",
 		}
+
+		h.renderTemplate(w, "student_profile.html", data)
 
 	case "teacher":
 		teacher, err := h.service.Teacher.GetByID(id)
@@ -116,15 +122,55 @@ func (h *PagesHandler) Profile(w http.ResponseWriter, r *http.Request, params ht
 		}
 		data = map[string]any{
 			"user": teacher,
-			"id":   id,
-			"role": "teacher",
 		}
+
+		h.renderTemplate(w, "teacher_profile.html", data)
 	default:
 		http.Error(w, "Invalid role specified", http.StatusBadRequest)
 		return
 	}
+}
 
-	h.renderTemplate(w, "profile.html", data)
+func (h *PagesHandler) EditStudentProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	h.logger.Info("[H: EditStudentProfile]", " URL: ", r.URL)
+
+	id := params.ByName("id")
+
+	var data map[string]any
+
+	student, err := h.service.Student.GetByID(id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	data = map[string]any{
+		"user": student,
+	}
+
+	h.renderTemplate(w, "student_editor.html", data)
+}
+
+func (h *PagesHandler) EditTeacherProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	h.logger.Info("[H: EditTeacherProfile]", " URL: ", r.URL)
+
+	id := params.ByName("id")
+
+	var data map[string]any
+
+	teacher, err := h.service.Teacher.GetByID(id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	data = map[string]any{
+		"user": teacher,
+	}
+
+	fmt.Println("DATA", data)
+
+	h.renderTemplate(w, "teacher_editor.html", data)
 }
 
 // Рендерит students.html и передает туда список студентов

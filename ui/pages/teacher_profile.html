@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <title>Профиль преподавателя</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Профиль преподавателя</h1>
+        
+        <div class="profile-section">
+            <h2>Основная информация</h2>
+            <div class="profile-field">
+                <span class="field-label">ID:</span>
+                <span class="field-value">{{ .user.ID }}</span>
+            </div>
+            <div class="profile-field">
+                <span class="field-label">Telegram ID:</span>
+                <span class="field-value">{{ .user.TelegramID }}</span>
+            </div>
+            <div class="profile-field">
+                <span class="field-label">Имя:</span>
+                <span class="field-value">{{ .user.FirstName }}</span>
+            </div>
+            <div class="profile-field">
+                <span class="field-label">Фамилия:</span>
+                <span class="field-value">{{ .user.LastName }}</span>
+            </div>
+            <div class="profile-field">
+                <span class="field-label">Отчество:</span>
+                <span class="field-value">{{ .user.MiddleName }}</span>
+            </div>
+        </div>
+
+        <div class="profile-section">
+            <h2>Профессиональная информация</h2>
+            <div class="profile-field">
+                <span class="field-label">Ученая степень:</span>
+                <span class="field-value">{{ .user.Degree }}</span>
+            </div>
+            <div class="profile-field">
+                <span class="field-label">Должность:</span>
+                <span class="field-value">{{ .user.Position }}</span>
+            </div>
+            <div class="profile-field">
+                <span class="field-label">Кафедра/Факультет:</span>
+                <span class="field-value">{{ .user.Department }}</span>
+            </div>
+            <div class="profile-field">
+                <span class="field-label">Статус:</span>
+                <span class="field-value">
+                    {{ if .user.IsFree }}Свободен для проектов{{ else }}Занят{{ end }}
+                </span>
+            </div>
+        </div>
+
+        <div class="profile-section">
+            <h2>Проекты и интересы</h2>
+            <div class="profile-field">
+                <span class="field-label">Идеи для проектов:</span>
+                <p class="field-value">{{ .user.Idea }}</p>
+            </div>
+            <div class="profile-field">
+                <span class="field-label">О себе:</span>
+                <p class="field-value">{{ .user.About }}</p>
+            </div>
+        </div>
+
+        <div class="actions">
+            <form action="/teacher/edit/{{ .user.ID }}" method="GET">
+                <button type="submit" class="button">Редактировать профиль</button>
+            </form>
+            <form action="/home/{{ .user.ID }}/teacher" method="GET">
+                <button type="submit" class="button">На главную</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

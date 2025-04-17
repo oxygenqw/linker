@@ -19,16 +19,18 @@ type Repository struct {
 
 type Student interface {
 	GetByTelegramID(telegramID int64) (models.Student, error)
-	GetAll() ([]models.Student, error)
-	Create(student models.Student) (uuid.UUID, error)
 	GetByID(id string) (models.Student, error)
+	Create(student models.Student) (uuid.UUID, error)
+	Update(student models.Student) error
+	GetAll() ([]models.Student, error)
 }
 
 type Teacher interface {
 	GetByTelegramID(telegramID int64) (models.Teacher, error)
-	GetAll() ([]models.Teacher, error)
-	Create(teacher models.Teacher) (uuid.UUID, error)
 	GetByID(id string) (models.Teacher, error)
+	Update(teacher models.Teacher) error
+	Create(teacher models.Teacher) (uuid.UUID, error)
+	GetAll() ([]models.Teacher, error)
 }
 
 type User interface {

@@ -8,6 +8,10 @@ type Student struct {
 	FirstName  string
 	LastName   string
 	MiddleName string
+	GitHub     string
+	Job        string
+	Idea       string
+	About      string
 }
 
 type Teacher struct {
@@ -16,4 +20,10 @@ type Teacher struct {
 	FirstName  string
 	LastName   string
 	MiddleName string
+	Degree     string
+	Position   string
+	Department string
+	IsFree     bool
+	Idea       string
+	About      string
 }

@@ -3,7 +3,11 @@ CREATE TABLE students (
     telegram_id BIGINT,
     first_name VARCHAR(50),
     middle_name VARCHAR(50),
-    last_name VARCHAR(50)
+    last_name VARCHAR(50),
+    github VARCHAR(100),
+    job VARCHAR(100),
+    idea TEXT,
+    about TEXT
 );
 
 CREATE TABLE teachers (
@@ -11,5 +15,11 @@ CREATE TABLE teachers (
     telegram_id BIGINT,
     first_name VARCHAR(50),
     middle_name VARCHAR(50),
-    last_name VARCHAR(50)
+    last_name VARCHAR(50),
+    degree VARCHAR(50),
+    position VARCHAR(50),
+    department VARCHAR(50),
+    is_free BOOLEAN,
+    idea TEXT,
+    about TEXT
 );
