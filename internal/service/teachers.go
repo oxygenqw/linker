@@ -7,11 +7,11 @@ import (
 )
 
 type Teacher interface {
+	Create(teacher models.Teacher) (uuid.UUID, error)
 	GetByTelegramID(telegramID int64) (models.Teacher, error)
 	GetByID(id string) (models.Teacher, error)
-	Create(teacher models.Teacher) (uuid.UUID, error)
-	Update(teacher models.Teacher) error
 	GetAll() ([]models.Teacher, error)
+	Update(teacher models.Teacher) error
 }
 
 type TeacherService struct {
@@ -24,20 +24,20 @@ func NewTeacherService(repository repository.Teacher) *TeacherService {
 	}
 }
 
-func (s *TeacherService) GetByID(id string) (models.Teacher, error) {
-	return s.repository.GetByID(id)
+func (s *TeacherService) Create(teacher models.Teacher) (uuid.UUID, error) {
+	return s.repository.Create(teacher)
 }
 
 func (s *TeacherService) GetByTelegramID(telegramID int64) (models.Teacher, error) {
 	return s.repository.GetByTelegramID(telegramID)
 }
 
-func (s *TeacherService) GetAll() ([]models.Teacher, error) {
-	return s.repository.GetAll()
+func (s *TeacherService) GetByID(id string) (models.Teacher, error) {
+	return s.repository.GetByID(id)
 }
 
-func (s *TeacherService) Create(teacher models.Teacher) (uuid.UUID, error) {
-	return s.repository.Create(teacher)
+func (s *TeacherService) GetAll() ([]models.Teacher, error) {
+	return s.repository.GetAll()
 }
 
 func (s *TeacherService) Update(teacher models.Teacher) error {

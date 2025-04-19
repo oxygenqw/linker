@@ -12,7 +12,7 @@ type Handler struct {
 	Redirect Redirect
 }
 
-func New(service *service.Service, logger *logger.Logger, bot *bot.Bot) *Handler {
+func NewHandler(service *service.Service, logger *logger.Logger, bot *bot.Bot) *Handler {
 	return &Handler{
 		Telegram: NewTelegramHandler(bot, logger),
 		Pages:    NewPagesHandler(service, logger),

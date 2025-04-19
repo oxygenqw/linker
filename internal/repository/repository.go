@@ -37,7 +37,7 @@ type User interface {
 	GetRole(telegramID int64) (string, error)
 }
 
-func New(config *config.Config, logger *logger.Logger) (*Repository, error) {
+func NewRepository(config *config.Config, logger *logger.Logger) (*Repository, error) {
 	dsn := fmt.Sprintf(
 		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		config.Database.Host,

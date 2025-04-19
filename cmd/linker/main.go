@@ -1,11 +1,7 @@
 package main
 
 import (
-	"context"
 	"net/http"
-	"os/signal"
-	"syscall"
-	"time"
 
 	"github.com/Oxygenss/linker/internal/config"
 	"github.com/Oxygenss/linker/internal/handler"
@@ -17,52 +13,40 @@ import (
 )
 
 func main() {
-	config := config.MustLoad()
-	logger := logger.GetLogger()
+	cfg := config.MustLoad()
+	log := logger.GetLogger()
 
-	bot, err := bot.New(config.Telegram.BotToken, config.Telegram.AppURL+"/bot")
+	log.Info("Initialize telegram bot...")
+	bot, err := bot.NewTelegramBot(cfg.Telegram.BotToken, cfg.Telegram.AppURL+"/bot")
 	if err != nil {
-		logger.Fatalf("error init telegram bot: %v", err)
+		log.Fatalf("Error init telegram bot: %v", err)
 	}
 
-	storage, err := repository.New(config, &logger)
+	log.Info("Initialize repository...")
+	repository, err := repository.NewRepository(cfg, &log)
 	if err != nil {
-		logger.Fatalf("error init storage: %v", err)
+		log.Fatalf("Error init storage: %v", err)
 	}
 
-	service := service.New(storage)
-	handler := handler.New(service, &logger, bot)
-	router := router.New(handler, config.Telegram.AppURL)
+	log.Info("Initialize service...")
+	service := service.NewService(repository)
 
-	serve := config.Server.Host + ":" + config.Server.Port
+	log.Info("Initialize handler...")
+	handler := handler.NewHandler(service, &log, bot)
+
+	log.Info("Initialize router...")
+	router := router.NewRouter(handler, cfg.Telegram.AppURL)
+
+	serve := cfg.Server.Host + ":" + cfg.Server.Port
 
 	srv := &http.Server{
 		Addr:    serve,
 		Handler: router.InitRoutes(),
 	}
 
-	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
-	defer cancel()
-
-	go func() {
-		logger.Info("Server start:", serve)
-		err := srv.ListenAndServe()
-		if err != nil && err != http.ErrServerClosed {
-			logger.Fatalf("listen: %s\n", err)
-		}
-	}()
-
-	<-ctx.Done()
-
-	logger.Info("Server stopping...")
-
-	ctx, cancel = context.WithTimeout(context.Background(), 3*time.Second)
-	defer cancel()
-
-	err = srv.Shutdown(ctx)
-	if err != nil {
-		logger.Fatalf("server shutdown failed: %v", err)
+	log.Info("HTTP Server starting... ", serve)
+	err = srv.ListenAndServe()
+	if err != nil && err != http.ErrServerClosed {
+		log.Fatalf("Error starting HTTP server: %s\n", err)
 	}
-
-	logger.Println("Server stopped")
 }

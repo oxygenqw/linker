@@ -12,7 +12,7 @@ type Router struct {
 	appURL  string
 }
 
-func New(handler *handler.Handler, appURL string) *Router {
+func NewRouter(handler *handler.Handler, appURL string) *Router {
 	return &Router{handler: handler, appURL: appURL}
 }
 

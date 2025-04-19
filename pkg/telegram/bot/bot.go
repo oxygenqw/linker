@@ -13,7 +13,7 @@ type Bot struct {
 // New creates a new bot instance and sets up the webhook
 // token - bot token provided by BotFather
 // webhookURL - full URL for receiving updates (e.g., "https://example.com/bot")
-func New(token string, webhookURL string) (*Bot, error) {
+func NewTelegramBot(token string, webhookURL string) (*Bot, error) {
 	bot, err := gotgbot.NewBot(token, nil)
 	if err != nil {
 		return nil, err

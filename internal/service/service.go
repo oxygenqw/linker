@@ -10,7 +10,7 @@ type Service struct {
 	User
 }
 
-func New(repository *repository.Repository) *Service {
+func NewService(repository *repository.Repository) *Service {
 	return &Service{
 		Student: NewStudentService(repository.Student),
 		Teacher: NewTeacherService(repository.Teacher),
