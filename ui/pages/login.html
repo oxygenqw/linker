@@ -4,36 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/style.css">
-    <script>
-        if (window.Telegram?.WebApp) {
-            Telegram.WebApp.setHeaderColor('#6A5ACD');
-            Telegram.WebApp.setBackgroundColor('#6A5ACD');
-            Telegram.WebApp.expand();
-        }
-    </script>
+    <link rel="stylesheet" href="/static/login.css">
+    <script src="/static/telegram.js"></script> 
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
+
     <div class="header">
         <h1>Добро пожаловать, {{ .user_name }}!</h1>
     </div>
-    <div>
+
+    <div class="form">
         <form action="/users/new/{{ .telegram_id }}" method="POST">
-            <div class="form">
+            <div class="form-item">
                 <label for="first_name">Имя</label>
                 <input type="text" id="first_name" name="first_name" required>
             </div>
-            <div class="form">
+            <div class="form-item">
                 <label for="last_name">Фамилия</label>
                 <input type="text" id="last_name" name="last_name" required>
             </div>
-            <div class="form">
+            <div class="form-item">
                 <label for="middle_name">Отчество</label>
                 <input type="text" id="middle_name" name="middle_name" required>
             </div>
-            <div class="form">
+            <div class="form-item">
                 <label for="role">Выберите роль</label>
                 <select id="role" name="role" required>
-                    <option value="" selected></option>
                     <option value="student">Студент</option>
                     <option value="teacher">Преподаватель</option>
                 </select>
@@ -41,5 +38,6 @@
             <button type="submit" class="button">Продолжить</button>
         </form>
     </div>
+    
 </body>
 </html>

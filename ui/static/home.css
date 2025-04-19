@@ -1,0 +1,84 @@
+/* Файл /static/home.css */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.main-container {
+    max-width: 500px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #2a2a2a;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Остальные стили остаются без изменений */
+.main-container h1 {
+    font-weight: 500;
+    margin: 0 0 20px 0;
+    font-size: 24px;
+    color: #fff;
+    text-align: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #1DCD9F;
+}
+
+.button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.button {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background-color: #1DCD9F;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.button:hover {
+    background-color: #17b38a;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.button:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* Адаптивность */
+@media (max-width: 600px) {
+    body {
+        padding: 15px;
+    }
+    
+    .main-container {
+        padding: 15px;
+        margin: 10px;
+    }
+    
+    .main-container h1 {
+        font-size: 20px;
+        padding-bottom: 15px;
+    }
+    
+    .button {
+        padding: 12px;
+    }
+}
