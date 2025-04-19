@@ -92,7 +92,7 @@ h1 {
     cursor: pointer;
     transition: all 0.3s ease;
     text-align: center;
-    min-width: 200px; /* Фиксированная минимальная ширина */
+    min-width: 200px;
 }
 
 .button:hover {
@@ -101,7 +101,6 @@ h1 {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Адаптивность */
 @media (max-width: 768px) {
     h1 {
         padding: 15px;

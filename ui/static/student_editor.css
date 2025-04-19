@@ -1,0 +1,116 @@
+.container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 25px;
+    background-color: #2a2a2a;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+h1 {
+    font-weight: 500;
+    font-size: 28px;
+    margin: 0 0 25px 0;
+    color: #FFF;
+    text-align: center;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #1DCD9F;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 500;
+    color: #e0e0e0;
+    margin-bottom: 8px;
+    font-size: 16px;
+}
+
+.form-group input[type="text"],
+.form-group textarea {
+    width: 100%;
+    padding: 12px 15px;
+    background-color: #333;
+    border: 1px solid #444;
+    border-radius: 6px;
+    color: #FFF;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+    font-family: "Montserrat", sans-serif;
+}
+
+.form-group textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.form-group input[type="text"]:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #1DCD9F;
+    box-shadow: 0 0 0 2px rgba(29, 205, 159, 0.2);
+}
+
+.button {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background-color: #1DCD9F;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    margin-top: 30px;
+}
+
+.button:hover {
+    background-color: #17b38a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.button:active {
+    transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+        margin: 15px;
+    }
+    
+    h1 {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 15px;
+        margin: 10px;
+    }
+    
+    h1 {
+        font-size: 22px;
+        padding-bottom: 10px;
+    }
+    
+    .form-group input[type="text"],
+    .form-group textarea {
+        padding: 10px 12px;
+        font-size: 15px;
+    }
+    
+    .button {
+        padding: 12px;
+        font-size: 15px;
+    }
+}

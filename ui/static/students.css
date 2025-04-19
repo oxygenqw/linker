@@ -2,13 +2,13 @@ h1 {
     font-weight: 500;
     font-size: 28px;
     text-align: center;
-    margin: 0 0 25px 0; /* Изменено для соответствия стилю */
-    color: #FFF; /* Белый цвет текста */
+    margin: 0 0 25px 0;
+    color: #FFF;
     padding-bottom: 15px;
-    border-bottom: 1px solid #1DCD9F; /* Мятная полоска */
-    background-color: #2a2a2a; /* Фон как в .header */
-    padding: 20px; /* Отступы как в .header */
-    margin-bottom: 20px; /* Отступ снизу */
+    border-bottom: 1px solid #1DCD9F;
+    background-color: #2a2a2a;
+    padding: 20px;
+    margin-bottom: 20px;
 }
 
 .students-list {
@@ -92,7 +92,7 @@ h1 {
     cursor: pointer;
     transition: all 0.3s ease;
     text-align: center;
-    min-width: 200px; /* Фиксированная минимальная ширина */
+    min-width: 200px;
 }
 
 .button:hover {
@@ -101,7 +101,6 @@ h1 {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Адаптивность */
 @media (max-width: 768px) {
     h1 {
         padding: 15px;
