@@ -183,7 +183,7 @@ func (h *PagesHandler) Students(w http.ResponseWriter, r *http.Request, params h
 
 	students, err := h.service.Student.GetAll()
 	if err != nil {
-		http.Error(w, "Ошибка при получении списка студентов", http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("Ошибка при получении списка студентов, %s", err), http.StatusInternalServerError)
 		return
 	}
 

@@ -3,65 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/students.css">
     <link rel="stylesheet" href="/static/style.css">
-    <title>Список студентов</title>
-    <style>
-        body {
-            background-color: #f5f5f5;
-            color: #333;
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            padding: 20px;
-        }
-        .student-card {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            background-color: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .student-card h2 {
-            margin-top: 0;
-            color: #2c3e50;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
-        }
-        .student-info {
-            margin-bottom: 10px;
-            color: #34495e;
-        }
-        .label {
-            font-weight: bold;
-            color: #2c3e50;
-        }
-        h1 {
-            color: #2c3e50;
-            margin-bottom: 20px;
-        }
-        .button {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-        .button:hover {
-            background-color: #2980b9;
-        }
-        a {
-            color: #3498db;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-        .students-list {
-            margin-bottom: 30px;
-        }
-    </style>
+    <script src="/static/telegram.js"></script> 
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
     <h1>Список студентов</h1>
@@ -88,7 +33,7 @@
         {{ end }}
     </div>
 
-    <div>
+    <div class="button-container">
         <form action="/home/{{ .id }}/{{ .role }}" method="GET">
             <button type="submit" class="button">Назад на главную</button>
         </form>
