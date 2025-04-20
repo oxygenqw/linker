@@ -205,7 +205,7 @@ func (h *PagesHandler) TeacherProfile(w http.ResponseWriter, r *http.Request, pa
 	}
 
 	data := map[string]any{
-		"student": teacher,
+		"teacher": teacher,
 		"role":    role,
 	}
 

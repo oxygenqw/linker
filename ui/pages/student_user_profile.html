@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/static/style.css">
     <script src="/static/telegram.js"></script> 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <title>Профиль студента</title>
 </head>
 <body>
     <div class="container">
@@ -29,20 +30,70 @@
         </div>
 
         <div class="profile-section">
-            <h2>Профессиональная информация</h2>
+            <h2>Образование</h2>
             <div class="profile-field">
-                <span class="field-label">GitHub:</span>
+                <span class="field-label">Университет:</span>
                 <span class="field-value">
-                    {{ if .student.GitHub }}
-                        <a href="https://github.com/{{ .student.GitHub }}" target="_blank">{{ .student.GitHub }}</a>
+                    {{ if .student.University }}
+                        {{ .student.University }}
                     {{ else }}
                         Не указан
                     {{ end }}
                 </span>
             </div>
             <div class="profile-field">
-                <span class="field-label">Место работы/учебы:</span>
-                <span class="field-value">{{ .student.Job }}</span>
+                <span class="field-label">Факультет:</span>
+                <span class="field-value">
+                    {{ if .student.Faculty }}
+                        {{ .student.Faculty }}
+                    {{ else }}
+                        Не указан
+                    {{ end }}
+                </span>
+            </div>
+            <div class="profile-field">
+                <span class="field-label">Курс/Направление:</span>
+                <span class="field-value">
+                    {{ if .student.Course }}
+                        {{ .student.Course }}
+                    {{ else }}
+                        Не указано
+                    {{ end }}
+                </span>
+            </div>
+            <div class="profile-field">
+                <span class="field-label">Уровень образования:</span>
+                <span class="field-value">
+                    {{ if .student.Education }}
+                        {{ .student.Education }}
+                    {{ else }}
+                        Не указан
+                    {{ end }}
+                </span>
+            </div>
+        </div>
+
+        <div class="profile-section">
+            <h2>Профессиональная информация</h2>
+            <div class="profile-field">
+                <span class="field-label">GitHub:</span>
+                <span class="field-value">
+                    {{ if .student.GitHub }}
+                        <a href="{{ .student.GitHub }}" target="_blank">{{ .student.GitHub }}</a>
+                    {{ else }}
+                        Не указан
+                    {{ end }}
+                </span>
+            </div>
+            <div class="profile-field">
+                <span class="field-label">Место работы:</span>
+                <span class="field-value">
+                    {{ if .student.Job }}
+                        {{ .student.Job }}
+                    {{ else }}
+                        Не указано
+                    {{ end }}
+                </span>
             </div>
         </div>
 
@@ -50,11 +101,23 @@
             <h2>Проекты и интересы</h2>
             <div class="profile-field">
                 <span class="field-label">Идея проекта:</span>
-                <p class="field-value">{{ .student.Idea }}</p>
+                <p class="field-value">
+                    {{ if .student.Idea }}
+                        {{ .student.Idea }}
+                    {{ else }}
+                        Не указана
+                    {{ end }}
+                </p>
             </div>
             <div class="profile-field">
                 <span class="field-label">О себе:</span>
-                <p class="field-value">{{ .student.About }}</p>
+                <p class="field-value">
+                    {{ if .student.About }}
+                        {{ .student.About }}
+                    {{ else }}
+                        Не указано
+                    {{ end }}
+                </p>
             </div>
         </div>
 

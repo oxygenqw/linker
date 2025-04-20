@@ -10,21 +10,21 @@
 </head>
 <body>
     <div class="container">
-        <h1>Профиль</h1>
+        <h1>Профиль преподавателя</h1>
         
         <div class="profile-section">
             <h2>Основная информация</h2>
             <div class="profile-field">
                 <span class="field-label">Имя:</span>
-                <span class="field-value">{{ .user.FirstName }}</span>
+                <span class="field-value">{{ .teacher.FirstName }}</span>
             </div>
             <div class="profile-field">
                 <span class="field-label">Фамилия:</span>
-                <span class="field-value">{{ .user.LastName }}</span>
+                <span class="field-value">{{ .teacher.LastName }}</span>
             </div>
             <div class="profile-field">
                 <span class="field-label">Отчество:</span>
-                <span class="field-value">{{ .user.MiddleName }}</span>
+                <span class="field-value">{{ .teacher.MiddleName }}</span>
             </div>
         </div>
 
@@ -32,20 +32,24 @@
             <h2>Профессиональная информация</h2>
             <div class="profile-field">
                 <span class="field-label">Ученая степень:</span>
-                <span class="field-value">{{ .user.Degree }}</span>
+                <span class="field-value">{{ .teacher.Degree }}</span>
             </div>
             <div class="profile-field">
                 <span class="field-label">Должность:</span>
-                <span class="field-value">{{ .user.Position }}</span>
+                <span class="field-value">{{ .teacher.Position }}</span>
             </div>
             <div class="profile-field">
-                <span class="field-label">Кафедра/Факультет:</span>
-                <span class="field-value">{{ .user.Department }}</span>
+                <span class="field-label">Университет:</span>
+                <span class="field-value">{{ .teacher.University }}</span>
+            </div>
+            <div class="profile-field">
+                <span class="field-label">Факультет:</span>
+                <span class="field-value">{{ .teacher.Faculty }}</span>
             </div>
             <div class="profile-field">
                 <span class="field-label">Статус:</span>
                 <span class="field-value">
-                    {{ if .user.IsFree }}Свободен для проектов{{ else }}Занят{{ end }}
+                    {{ if .teacher.IsFree }}Свободен для проектов{{ else }}Занят{{ end }}
                 </span>
             </div>
         </div>
@@ -54,11 +58,11 @@
             <h2>Проекты и интересы</h2>
             <div class="profile-field">
                 <span class="field-label">Идеи для проектов:</span>
-                <p class="field-value">{{ .user.Idea }}</p>
+                <p class="field-value">{{ .teacher.Idea }}</p>
             </div>
             <div class="profile-field">
                 <span class="field-label">О себе:</span>
-                <p class="field-value">{{ .user.About }}</p>
+                <p class="field-value">{{ .teacher.About }}</p>
             </div>
         </div>
 
@@ -66,7 +70,7 @@
             <form action="" method="GET">
                 <button type="submit" class="button">Запрос</button>
             </form>
-            <form action="/home/{{ .student.ID }}/student" method="GET">
+            <form action="/home/{{ .teacher.ID }}/{{ .role }}" method="GET">
                 <button type="submit" class="button">На главную</button>
             </form>
         </div>

@@ -29,6 +29,50 @@
         </div>
 
         <div class="profile-section">
+            <h2>Образование</h2>
+            <div class="profile-field">
+                <span class="field-label">Университет:</span>
+                <span class="field-value">
+                    {{ if .user.University }}
+                        {{ .user.University }}
+                    {{ else }}
+                        Не указан
+                    {{ end }}
+                </span>
+            </div>
+            <div class="profile-field">
+                <span class="field-label">Факультет:</span>
+                <span class="field-value">
+                    {{ if .user.Faculty }}
+                        {{ .user.Faculty }}
+                    {{ else }}
+                        Не указан
+                    {{ end }}
+                </span>
+            </div>
+            <div class="profile-field">
+                <span class="field-label">Курс/Направление:</span>
+                <span class="field-value">
+                    {{ if .user.Course }}
+                        {{ .user.Course }}
+                    {{ else }}
+                        Не указано
+                    {{ end }}
+                </span>
+            </div>
+            <div class="profile-field">
+                <span class="field-label">Уровень образования:</span>
+                <span class="field-value">
+                    {{ if .user.Education }}
+                        {{ .user.Education }}
+                    {{ else }}
+                        Не указан
+                    {{ end }}
+                </span>
+            </div>
+        </div>
+
+        <div class="profile-section">
             <h2>Профессиональная информация</h2>
             <div class="profile-field">
                 <span class="field-label">GitHub:</span>
@@ -41,8 +85,14 @@
                 </span>
             </div>
             <div class="profile-field">
-                <span class="field-label">Место работы/учебы:</span>
-                <span class="field-value">{{ .user.Job }}</span>
+                <span class="field-label">Место работы:</span>
+                <span class="field-value">
+                    {{ if .user.Job }}
+                        {{ .user.Job }}
+                    {{ else }}
+                        Не указано
+                    {{ end }}
+                </span>
             </div>
         </div>
 
@@ -50,11 +100,23 @@
             <h2>Проекты и интересы</h2>
             <div class="profile-field">
                 <span class="field-label">Идея проекта:</span>
-                <p class="field-value">{{ .user.Idea }}</p>
+                <p class="field-value">
+                    {{ if .user.Idea }}
+                        {{ .user.Idea }}
+                    {{ else }}
+                        Не указана
+                    {{ end }}
+                </p>
             </div>
             <div class="profile-field">
                 <span class="field-label">О себе:</span>
-                <p class="field-value">{{ .user.About }}</p>
+                <p class="field-value">
+                    {{ if .user.About }}
+                        {{ .user.About }}
+                    {{ else }}
+                        Не указано
+                    {{ end }}
+                </p>
             </div>
         </div>
 

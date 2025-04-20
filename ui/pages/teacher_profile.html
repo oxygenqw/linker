@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/static/style.css">
     <script src="/static/telegram.js"></script> 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <title>Профиль преподавателя</title>
 </head>
 <body>
     <div class="container">
@@ -32,15 +33,43 @@
             <h2>Профессиональная информация</h2>
             <div class="profile-field">
                 <span class="field-label">Ученая степень:</span>
-                <span class="field-value">{{ .user.Degree }}</span>
+                <span class="field-value">
+                    {{ if .user.Degree }}
+                        {{ .user.Degree }}
+                    {{ else }}
+                        Не указана
+                    {{ end }}
+                </span>
             </div>
             <div class="profile-field">
                 <span class="field-label">Должность:</span>
-                <span class="field-value">{{ .user.Position }}</span>
+                <span class="field-value">
+                    {{ if .user.Position }}
+                        {{ .user.Position }}
+                    {{ else }}
+                        Не указана
+                    {{ end }}
+                </span>
             </div>
             <div class="profile-field">
-                <span class="field-label">Кафедра/Факультет:</span>
-                <span class="field-value">{{ .user.Department }}</span>
+                <span class="field-label">Университет:</span>
+                <span class="field-value">
+                    {{ if .user.University }}
+                        {{ .user.University }}
+                    {{ else }}
+                        Не указан
+                    {{ end }}
+                </span>
+            </div>
+            <div class="profile-field">
+                <span class="field-label">Факультет/Кафедра:</span>
+                <span class="field-value">
+                    {{ if .user.Faculty }}
+                        {{ .user.Faculty }}
+                    {{ else }}
+                        Не указан
+                    {{ end }}
+                </span>
             </div>
             <div class="profile-field">
                 <span class="field-label">Статус:</span>
@@ -54,11 +83,23 @@
             <h2>Проекты и интересы</h2>
             <div class="profile-field">
                 <span class="field-label">Идеи для проектов:</span>
-                <p class="field-value">{{ .user.Idea }}</p>
+                <p class="field-value">
+                    {{ if .user.Idea }}
+                        {{ .user.Idea }}
+                    {{ else }}
+                        Нет идей для проектов
+                    {{ end }}
+                </p>
             </div>
             <div class="profile-field">
                 <span class="field-label">О себе:</span>
-                <p class="field-value">{{ .user.About }}</p>
+                <p class="field-value">
+                    {{ if .user.About }}
+                        {{ .user.About }}
+                    {{ else }}
+                        Информация отсутствует
+                    {{ end }}
+                </p>
             </div>
         </div>
 

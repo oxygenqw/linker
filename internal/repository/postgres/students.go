@@ -34,7 +34,8 @@ func (r *StudentRepository) GetByID(id string) (models.Student, error) {
 		return models.Student{}, fmt.Errorf("invalid UUID format: %w", err)
 	}
 
-	query := `SELECT id, telegram_id, first_name, middle_name, last_name, github, job, idea, about FROM students WHERE id = $1`
+	query := `SELECT id, telegram_id, first_name, middle_name, last_name, github, job, idea, about, 
+              university, faculty, course, education FROM students WHERE id = $1`
 
 	var student models.Student
 	err = r.db.QueryRow(query, id).Scan(
@@ -47,6 +48,10 @@ func (r *StudentRepository) GetByID(id string) (models.Student, error) {
 		&student.Job,
 		&student.Idea,
 		&student.About,
+		&student.University,
+		&student.Faculty,
+		&student.Course,
+		&student.Education,
 	)
 
 	switch {
@@ -66,7 +71,8 @@ func (r *StudentRepository) GetByTelegramID(telegramID int64) (models.Student, e
 		return models.Student{}, fmt.Errorf("database connection is not initialized")
 	}
 
-	query := `SELECT id, telegram_id, first_name, middle_name, last_name, github, job, idea, about FROM students WHERE telegram_id = $1`
+	query := `SELECT id, telegram_id, first_name, middle_name, last_name, github, job, idea, about,
+              university, faculty, course, education FROM students WHERE telegram_id = $1`
 
 	var student models.Student
 	err := r.db.QueryRow(query, telegramID).Scan(
@@ -79,6 +85,10 @@ func (r *StudentRepository) GetByTelegramID(telegramID int64) (models.Student, e
 		&student.Job,
 		&student.Idea,
 		&student.About,
+		&student.University,
+		&student.Faculty,
+		&student.Course,
+		&student.Education,
 	)
 
 	if err != nil {
@@ -98,7 +108,8 @@ func (r *StudentRepository) GetAll() ([]models.Student, error) {
 		return nil, fmt.Errorf("database connection is not initialized")
 	}
 
-	query := `SELECT id, telegram_id, first_name, middle_name, last_name, github, job, idea, about FROM students`
+	query := `SELECT id, telegram_id, first_name, middle_name, last_name, github, job, idea, about,
+              university, faculty, course, education FROM students`
 
 	rows, err := r.db.Query(query)
 	if err != nil {
@@ -109,7 +120,8 @@ func (r *StudentRepository) GetAll() ([]models.Student, error) {
 	var students []models.Student
 	for rows.Next() {
 		var student models.Student
-		err := rows.Scan(&student.ID,
+		err := rows.Scan(
+			&student.ID,
 			&student.TelegramID,
 			&student.FirstName,
 			&student.MiddleName,
@@ -118,6 +130,10 @@ func (r *StudentRepository) GetAll() ([]models.Student, error) {
 			&student.Job,
 			&student.Idea,
 			&student.About,
+			&student.University,
+			&student.Faculty,
+			&student.Course,
+			&student.Education,
 		)
 
 		if err != nil {
@@ -144,8 +160,10 @@ func (r *StudentRepository) Create(student models.Student) (uuid.UUID, error) {
 
 	student.ID = uuid.New()
 
-	query := `INSERT INTO students (id, telegram_id, first_name, middle_name, last_name, github, job, idea, about) 
-              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`
+	query := `INSERT INTO students 
+              (id, telegram_id, first_name, middle_name, last_name, github, job, idea, about,
+               university, faculty, course, education) 
+              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`
 	_, err := r.db.Exec(query,
 		student.ID,
 		student.TelegramID,
@@ -155,7 +173,12 @@ func (r *StudentRepository) Create(student models.Student) (uuid.UUID, error) {
 		student.GitHub,
 		student.Job,
 		student.Idea,
-		student.About)
+		student.About,
+		student.University,
+		student.Faculty,
+		student.Course,
+		student.Education,
+	)
 
 	if err != nil {
 		return uuid.Nil, fmt.Errorf("failed to insert student: %w", err)
@@ -180,8 +203,12 @@ func (r *StudentRepository) Update(student models.Student) error {
 		github = $4,
 		job = $5,
 		idea = $6,
-		about = $7
-	WHERE id = $8
+		about = $7,
+		university = $8,
+		faculty = $9,
+		course = $10,
+		education = $11
+	WHERE id = $12
 	`
 
 	result, err := r.db.Exec(query,
@@ -192,6 +219,10 @@ func (r *StudentRepository) Update(student models.Student) error {
 		student.Job,
 		student.Idea,
 		student.About,
+		student.University,
+		student.Faculty,
+		student.Course,
+		student.Education,
 		student.ID,
 	)
 

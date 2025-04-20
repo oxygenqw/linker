@@ -147,6 +147,10 @@ func (h *RedirectHandler) UpdateStudent(w http.ResponseWriter, r *http.Request, 
 		Job:        r.FormValue("job"),
 		Idea:       r.FormValue("idea"),
 		About:      r.FormValue("about"),
+		University: r.FormValue("university"),
+		Faculty:    r.FormValue("faculty"),
+		Course:     r.FormValue("course"),
+		Education:  r.FormValue("education"),
 	}
 
 	err = h.service.Student.Update(student)
@@ -163,7 +167,7 @@ func (h *RedirectHandler) UpdateTeacher(w http.ResponseWriter, r *http.Request, 
 
 	id, err := uuid.Parse(ps.ByName("id"))
 	if err != nil {
-		http.Error(w, "Invalid student ID format", http.StatusBadRequest)
+		http.Error(w, "Invalid teacher ID format", http.StatusBadRequest)
 		return
 	}
 
@@ -180,17 +184,18 @@ func (h *RedirectHandler) UpdateTeacher(w http.ResponseWriter, r *http.Request, 
 		MiddleName: r.FormValue("middle_name"),
 		Degree:     r.FormValue("degree"),
 		Position:   r.FormValue("position"),
-		Department: r.FormValue("department"),
+		University: r.FormValue("university"),
+		Faculty:    r.FormValue("faculty"),
 		Idea:       r.FormValue("idea"),
 		About:      r.FormValue("about"),
 	}
 
-	// Обрабатываем checkbox is_free
 	isFree := r.FormValue("is_free") == "on"
 	teacher.IsFree = isFree
 
 	err = h.service.Teacher.Update(teacher)
 	if err != nil {
+		h.logger.Error("Failed to update teacher", "error", err, "teacherID", id)
 		http.Error(w, "Failed to update teacher profile", http.StatusInternalServerError)
 		return
 	}

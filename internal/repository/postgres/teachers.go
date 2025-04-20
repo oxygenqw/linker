@@ -35,7 +35,7 @@ func (r *TeacherRepository) GetByID(id string) (models.Teacher, error) {
 	}
 
 	query := `SELECT id, telegram_id, first_name, middle_name, last_name, 
-                     degree, position, department, is_free, idea, about 
+                     degree, position, university, faculty, is_free, idea, about 
               FROM teachers WHERE id = $1`
 
 	var teacher models.Teacher
@@ -47,7 +47,8 @@ func (r *TeacherRepository) GetByID(id string) (models.Teacher, error) {
 		&teacher.LastName,
 		&teacher.Degree,
 		&teacher.Position,
-		&teacher.Department,
+		&teacher.University,
+		&teacher.Faculty,
 		&teacher.IsFree,
 		&teacher.Idea,
 		&teacher.About,
@@ -72,7 +73,7 @@ func (r *TeacherRepository) GetByTelegramID(telegramID int64) (models.Teacher, e
 	}
 
 	query := `SELECT id, telegram_id, first_name, middle_name, last_name,
-                     degree, position, department, is_free, idea, about
+                     degree, position, university, faculty, is_free, idea, about
               FROM teachers WHERE telegram_id = $1`
 
 	var teacher models.Teacher
@@ -84,7 +85,8 @@ func (r *TeacherRepository) GetByTelegramID(telegramID int64) (models.Teacher, e
 		&teacher.LastName,
 		&teacher.Degree,
 		&teacher.Position,
-		&teacher.Department,
+		&teacher.University,
+		&teacher.Faculty,
 		&teacher.IsFree,
 		&teacher.Idea,
 		&teacher.About,
@@ -105,7 +107,7 @@ func (r *TeacherRepository) GetAll() ([]models.Teacher, error) {
 	r.logger.Info("[TeacherRepository: GetAll]")
 
 	query := `SELECT id, telegram_id, first_name, middle_name, last_name,
-                     degree, position, department, is_free, idea, about
+                     degree, position, university, faculty, is_free, idea, about
               FROM teachers`
 
 	rows, err := r.db.Query(query)
@@ -126,7 +128,8 @@ func (r *TeacherRepository) GetAll() ([]models.Teacher, error) {
 			&teacher.LastName,
 			&teacher.Degree,
 			&teacher.Position,
-			&teacher.Department,
+			&teacher.University,
+			&teacher.Faculty,
 			&teacher.IsFree,
 			&teacher.Idea,
 			&teacher.About,
@@ -157,8 +160,8 @@ func (r *TeacherRepository) Create(teacher models.Teacher) (uuid.UUID, error) {
 
 	query := `INSERT INTO teachers 
               (id, telegram_id, first_name, middle_name, last_name, 
-               degree, position, department, is_free, idea, about) 
-              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`
+               degree, position, university, faculty, is_free, idea, about) 
+              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`
 
 	_, err := r.db.Exec(query,
 		teacher.ID,
@@ -168,7 +171,8 @@ func (r *TeacherRepository) Create(teacher models.Teacher) (uuid.UUID, error) {
 		teacher.LastName,
 		teacher.Degree,
 		teacher.Position,
-		teacher.Department,
+		teacher.University,
+		teacher.Faculty,
 		teacher.IsFree,
 		teacher.Idea,
 		teacher.About,
@@ -197,11 +201,12 @@ func (r *TeacherRepository) Update(teacher models.Teacher) error {
             last_name = $3,
             degree = $4,
             position = $5,
-            department = $6,
-            is_free = $7,
-            idea = $8,
-            about = $9
-        WHERE id = $10
+            university = $6,
+            faculty = $7,
+            is_free = $8,
+            idea = $9,
+            about = $10
+        WHERE id = $11
     `
 
 	result, err := r.db.Exec(query,
@@ -210,7 +215,8 @@ func (r *TeacherRepository) Update(teacher models.Teacher) error {
 		teacher.LastName,
 		teacher.Degree,
 		teacher.Position,
-		teacher.Department,
+		teacher.University,
+		teacher.Faculty,
 		teacher.IsFree,
 		teacher.Idea,
 		teacher.About,
