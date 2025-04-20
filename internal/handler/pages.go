@@ -22,6 +22,9 @@ type Pages interface {
 
 	EditStudentProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params)
 	EditTeacherProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params)
+
+	StudentProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params)
+	TeacherProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params)
 }
 
 type PagesHandler struct {
@@ -168,9 +171,45 @@ func (h *PagesHandler) EditTeacherProfile(w http.ResponseWriter, r *http.Request
 		"user": teacher,
 	}
 
-	fmt.Println("DATA", data)
-
 	h.renderTemplate(w, "teacher_editor.html", data)
+}
+
+func (h *PagesHandler) StudentProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	h.logger.Info("[H: StudentProfile] ", "URL: ", r.URL)
+
+	id := params.ByName("id")
+	role := params.ByName("role")
+
+	student, err := h.service.Student.GetByID(id)
+	if err != nil {
+
+	}
+
+	data := map[string]any{
+		"student": student,
+		"role":    role,
+	}
+
+	h.renderTemplate(w, "student_user_profile.html", data)
+}
+
+func (h *PagesHandler) TeacherProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	h.logger.Info("[H: TeacherProfile] ", "URL: ", r.URL)
+
+	id := params.ByName("id")
+	role := params.ByName("role")
+
+	teacher, err := h.service.Teacher.GetByID(id)
+	if err != nil {
+
+	}
+
+	data := map[string]any{
+		"student": teacher,
+		"role":    role,
+	}
+
+	h.renderTemplate(w, "teacher_user_profile.html", data)
 }
 
 // Рендерит students.html и передает туда список студентов

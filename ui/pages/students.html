@@ -19,13 +19,19 @@
             <div class="student-info">
                 <span class="label">GitHub:</span> 
                 {{ if .GitHub }}
-                    <a href="https://github.com/{{ .GitHub }}" target="_blank">{{ .GitHub }}</a>
+                    <a href="{{ .GitHub }}" target="_blank">{{ .GitHub }}</a>
                 {{ else }}
                     Не указан
                 {{ end }}<br>
                 <span class="label">Место работы:</span> {{ if .Job }}{{ .Job }}{{ else }}Не указано{{ end }}<br>
                 <span class="label">Проектная идея:</span> {{ if .Idea }}{{ .Idea }}{{ else }}Не указана{{ end }}<br>
                 <span class="label">О себе:</span> {{ if .About }}{{ .About }}{{ else }}Не указано{{ end }}
+
+                <div class="button-container">
+                    <form action="/student/profile/{{ .ID }}/{{ $.role }}" method="GET">
+                        <button type="submit" class="button">Подробнее</button>
+                    </form>
+                </div>
             </div>
         </div>
         {{ else }}

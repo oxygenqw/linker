@@ -16,57 +16,53 @@
             <h2>Основная информация</h2>
             <div class="profile-field">
                 <span class="field-label">Имя:</span>
-                <span class="field-value">{{ .user.FirstName }}</span>
+                <span class="field-value">{{ .student.FirstName }}</span>
             </div>
             <div class="profile-field">
                 <span class="field-label">Фамилия:</span>
-                <span class="field-value">{{ .user.LastName }}</span>
+                <span class="field-value">{{ .student.LastName }}</span>
             </div>
             <div class="profile-field">
                 <span class="field-label">Отчество:</span>
-                <span class="field-value">{{ .user.MiddleName }}</span>
+                <span class="field-value">{{ .student.MiddleName }}</span>
             </div>
         </div>
 
         <div class="profile-section">
             <h2>Профессиональная информация</h2>
             <div class="profile-field">
-                <span class="field-label">Ученая степень:</span>
-                <span class="field-value">{{ .user.Degree }}</span>
-            </div>
-            <div class="profile-field">
-                <span class="field-label">Должность:</span>
-                <span class="field-value">{{ .user.Position }}</span>
-            </div>
-            <div class="profile-field">
-                <span class="field-label">Кафедра/Факультет:</span>
-                <span class="field-value">{{ .user.Department }}</span>
-            </div>
-            <div class="profile-field">
-                <span class="field-label">Статус:</span>
+                <span class="field-label">GitHub:</span>
                 <span class="field-value">
-                    {{ if .user.IsFree }}Свободен для проектов{{ else }}Занят{{ end }}
+                    {{ if .student.GitHub }}
+                        <a href="https://github.com/{{ .student.GitHub }}" target="_blank">{{ .student.GitHub }}</a>
+                    {{ else }}
+                        Не указан
+                    {{ end }}
                 </span>
+            </div>
+            <div class="profile-field">
+                <span class="field-label">Место работы/учебы:</span>
+                <span class="field-value">{{ .student.Job }}</span>
             </div>
         </div>
 
         <div class="profile-section">
             <h2>Проекты и интересы</h2>
             <div class="profile-field">
-                <span class="field-label">Идеи для проектов:</span>
-                <p class="field-value">{{ .user.Idea }}</p>
+                <span class="field-label">Идея проекта:</span>
+                <p class="field-value">{{ .student.Idea }}</p>
             </div>
             <div class="profile-field">
                 <span class="field-label">О себе:</span>
-                <p class="field-value">{{ .user.About }}</p>
+                <p class="field-value">{{ .student.About }}</p>
             </div>
         </div>
 
         <div class="actions">
-            <form action="/teacher/edit/{{ .user.ID }}" method="GET">
-                <button type="submit" class="button">Редактировать профиль</button>
+            <form action="" method="GET">
+                <button type="submit" class="button">Запрос</button>
             </form>
-            <form action="/home/{{ .user.ID }}/teacher" method="GET">
+            <form action="/home/{{ .student.ID }}/student" method="GET">
                 <button type="submit" class="button">На главную</button>
             </form>
         </div>

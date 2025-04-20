@@ -15,14 +15,6 @@
         <div class="profile-section">
             <h2>Основная информация</h2>
             <div class="profile-field">
-                <span class="field-label">ID:</span>
-                <span class="field-value">{{ .user.ID }}</span>
-            </div>
-            <div class="profile-field">
-                <span class="field-label">Telegram ID:</span>
-                <span class="field-value">{{ .user.TelegramID }}</span>
-            </div>
-            <div class="profile-field">
                 <span class="field-label">Имя:</span>
                 <span class="field-value">{{ .user.FirstName }}</span>
             </div>
@@ -42,7 +34,7 @@
                 <span class="field-label">GitHub:</span>
                 <span class="field-value">
                     {{ if .user.GitHub }}
-                        <a href="https://github.com/{{ .user.GitHub }}" target="_blank">{{ .user.GitHub }}</a>
+                        <a href="{{ .user.GitHub }}" target="_blank">{{ .user.GitHub }}</a>
                     {{ else }}
                         Не указан
                     {{ end }}

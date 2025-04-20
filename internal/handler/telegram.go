@@ -69,11 +69,11 @@ func (h *TelegramHandler) CreateBotEndpointHandler(appURL string) http.HandlerFu
 
 		log.Printf("WebApp URL: %s", appURLWithParams)
 
-		message := "Welcome to the Telegram Mini App Template Bot"
+		message := "Welcome to the Linker"
 		opts := &gotgbot.SendMessageOpts{
 			ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{{
-					{Text: "Open mini app", WebApp: &gotgbot.WebAppInfo{Url: appURLWithParams}},
+					{Text: "Open Linker", WebApp: &gotgbot.WebAppInfo{Url: appURLWithParams}},
 				}, {}},
 			},
 		}

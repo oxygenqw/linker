@@ -28,7 +28,7 @@ func init() {
 			filename := path.Base(frame.File)
 			return "", fmt.Sprintf("%s:%d", filename, frame.Line) // Убрали вывод функции
 		},
-		FullTimestamp: true,
+		FullTimestamp: false,
 	}
 
 	l.SetOutput(io.MultiWriter(os.Stdout))

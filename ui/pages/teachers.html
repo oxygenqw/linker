@@ -28,6 +28,12 @@
                 {{ end }}<br>
                 <span class="label">Научные интересы:</span> {{ if .Idea }}{{ .Idea }}{{ else }}Не указаны{{ end }}<br>
                 <span class="label">Дополнительная информация:</span> {{ if .About }}{{ .About }}{{ else }}Не указана{{ end }}
+
+                <div class="button-container">
+                    <form action="/teacher/profile/{{ .ID }}/{{ $.role }}" method="GET">
+                        <button type="submit" class="button">Подробнее</button>
+                    </form>
+                </div>
             </div>
         </div>
         {{ else }}
