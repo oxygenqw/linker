@@ -1,3 +1,4 @@
+/* Общие стили для всех форм редактирования */
 .container {
     max-width: 600px;
     margin: 20px auto;
@@ -55,6 +56,7 @@ h1 {
     box-shadow: 0 0 0 2px rgba(29, 205, 159, 0.2);
 }
 
+/* Стили специфичные для преподавателя */
 .form-group input[type="checkbox"] {
     width: 18px;
     height: 18px;
@@ -69,6 +71,7 @@ h1 {
     user-select: none;
 }
 
+/* Общие стили кнопок */
 .button {
     display: block;
     width: 100%;
@@ -95,6 +98,7 @@ h1 {
     transform: translateY(0);
 }
 
+/* Адаптивные стили */
 @media (max-width: 768px) {
     .container {
         padding: 20px;
