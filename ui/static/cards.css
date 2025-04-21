@@ -11,7 +11,16 @@ h1 {
     margin-bottom: 20px;
 }
 
-.students-list {
+.card h2 {
+    font-weight: 500;
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: #FFF;
+    border-bottom: 1px solid #444;
+    padding-bottom: 10px;
+}
+
+.card-list {
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -22,7 +31,7 @@ h1 {
     margin-right: auto;
 }
 
-.student-card {
+.card {
     background-color: #2a2a2a;
     border-radius: 8px;
     padding: 20px;
@@ -30,46 +39,31 @@ h1 {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.student-card:hover {
+.card:hover {
     transform: translateY(-5px);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
-.student-card h2 {
-    font-weight: 500;
-    font-size: 20px;
-    margin-bottom: 15px;
-    color: #FFF;
-    border-bottom: 1px solid #444;
-    padding-bottom: 10px;
-}
-
-.student-info {
+.card-info {
     line-height: 1.6;
 }
 
-.label {
-    font-weight: 500;
-    color: #1DCD9F;
-    min-width: 120px;
-    display: inline-block;
-}
-
-.student-info a {
+.card-info a {
     color: #1DCD9F;
     text-decoration: none;
     transition: color 0.2s ease;
 }
 
-.student-info a:hover {
+.card-info a:hover {
     color: #17b38a;
     text-decoration: underline;
 }
 
-.button-container {
-    text-align: center;
-    margin-top: 30px;
-    padding: 0 20px;
+.label {
+    font-weight: 500;
+    color: #1DCD9F;
+    min-width: 150px;
+    display: inline-block;
 }
 
 .button-container {
@@ -89,7 +83,7 @@ h1 {
     border-radius: 6px;
     font-size: 16px;
     font-weight: 500;
-    cursor: pointer;
+    cursor: button;
     transition: all 0.3s ease;
     text-align: center;
     min-width: 200px;
@@ -101,14 +95,24 @@ h1 {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+/* Новые стили для кнопки "На главную" */
+.home-button {
+    margin-bottom: 30px; /* Отступ от нижнего края */
+    margin-top: 30px; /* Отступ от карточек */
+}
+
 @media (max-width: 768px) {
     h1 {
         padding: 15px;
         font-size: 24px;
     }
     
-    .students-list {
-        padding: 0 15px;
+    .card {
+        padding: 15px; /* Исправлено: было padding: 0 15px */
+    }
+    
+    .label {
+        min-width: 120px;
     }
 }
 
@@ -119,7 +123,7 @@ h1 {
         margin-bottom: 15px;
     }
     
-    .student-card {
+    .card {
         padding: 15px;
     }
     
@@ -128,4 +132,19 @@ h1 {
         margin-bottom: 5px;
         min-width: auto;
     }
+
+    .home-button {
+        margin-bottom: 20px;
+        margin-top: 20px;
+    }
+}
+
+.status-free {
+    color: #1DCD9F;
+    font-weight: 500;
+}
+
+.status-busy {
+    color: #e74c3c;
+    font-weight: 500;
 }

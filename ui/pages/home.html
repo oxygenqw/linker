@@ -13,6 +13,10 @@
         <h1>Главная</h1>
         
         <div class="button-group">
+            <form action="/profile/{{ .id }}/{{ .role }}" method="GET">
+                <button type="submit" class="button">Профиль</button>
+            </form>
+
             <form action="/teachers/{{ .id }}/{{ .role }}" method="GET">
                 <button type="submit" class="button">Преподаватели</button>
             </form>
@@ -20,11 +24,8 @@
             <form action="/students/{{ .id }}/{{ .role }}" method="GET">
                 <button type="submit" class="button">Студенты</button>
             </form>
-
-            <form action="/profile/{{ .id }}/{{ .role }}" method="GET">
-                <button type="submit" class="button">Профиль</button>
-            </form>
         </div>
+        
     </div>
 </body>
 </html>

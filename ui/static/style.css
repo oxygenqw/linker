@@ -14,19 +14,8 @@ body {
     font-optical-sizing: auto;
     color: #FFF;
     background-color: #222;
+    min-height: 100vh;
+    position: relative;
 }
 
-::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-    background-color: transparent;
-}
 
-::-webkit-scrollbar-thumb {
-    background-color: #1DCD9F;
-    border-radius: 3px;
-}
-
-::-webkit-scrollbar-track {
-    background-color: transparent;
-}

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/teachers.css">
+    <link rel="stylesheet" href="/static/cards.css">
     <link rel="stylesheet" href="/static/style.css">
     <script src="/static/telegram.js"></script> 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -12,12 +12,12 @@
 <body>
     <h1>Список преподавателей</h1>
 
-    <div class="teachers-list">
+    <div class="card-list">
         {{ range .teachers }}
-        <div class="teacher-card">
+        <div class="card">
             <h2>{{ .LastName }} {{ .FirstName }} {{ .MiddleName }}</h2>
             
-            <div class="teacher-info">
+            <div class="card-info">
                 <span class="label">Учёная степень:</span> {{ if .Degree }}{{ .Degree }}{{ else }}Не указана{{ end }}<br>
                 <span class="label">Должность:</span> {{ if .Position }}{{ .Position }}{{ else }}Не указана{{ end }}<br>
                 <span class="label">Университет:</span> {{ if .University }}{{ .University }}{{ else }}Не указан{{ end }}<br>
@@ -43,9 +43,9 @@
         {{ end }}
     </div>
 
-    <div class="button-container">
+    <div class="button-container home-button">
         <form action="/home/{{ .id }}/{{ .role }}" method="GET">
-            <button type="submit" class="button">Назад на главную</button>
+            <button type="submit" class="button">На главную</button>
         </form>
     </div>
 </body>
