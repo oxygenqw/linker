@@ -155,6 +155,7 @@ func (h *RedirectHandler) UpdateStudent(w http.ResponseWriter, r *http.Request, 
 
 	err = h.service.Student.Update(student)
 	if err != nil {
+		h.logger.Error("Failed to update student", "error", err, "ID: ", id)
 		http.Error(w, "Failed to update student profile", http.StatusInternalServerError)
 		return
 	}
@@ -195,7 +196,7 @@ func (h *RedirectHandler) UpdateTeacher(w http.ResponseWriter, r *http.Request, 
 
 	err = h.service.Teacher.Update(teacher)
 	if err != nil {
-		h.logger.Error("Failed to update teacher", "error", err, "teacherID", id)
+		h.logger.Error("Failed to update teacher", "error", err, "ID: ", id)
 		http.Error(w, "Failed to update teacher profile", http.StatusInternalServerError)
 		return
 	}

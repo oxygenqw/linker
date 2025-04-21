@@ -32,31 +32,39 @@ h2 {
 }
 
 .profile-field {
-    display: flex;
-    margin-bottom: 12px;
-    line-height: 1.5;
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    margin-bottom: 15px;
+    line-height: 1.6;
+    align-items: start;
+    gap: 25px;
 }
 
 .field-label {
     font-weight: 500;
     color: #e0e0e0;
-    min-width: 180px;
-    padding-right: 15px;
+    padding-right: 25px;
+    white-space: nowrap;
 }
 
 .field-value {
-    flex: 1;
     word-break: break-word;
+    display: flex;
+    align-items: center;
+    min-height: 24px;
 }
 
 .field-value p {
     margin: 0;
+    display: inline;
 }
 
 .field-value a {
     color: #1DCD9F;
     text-decoration: none;
     transition: color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
 }
 
 .field-value a:hover {
@@ -99,12 +107,16 @@ h2 {
     }
     
     .profile-field {
-        flex-direction: column;
+        grid-template-columns: 1fr;
+        gap: 5px;
     }
     
     .field-label {
-        margin-bottom: 5px;
-        min-width: auto;
+        padding-right: 0;
+    }
+    
+    .field-value {
+        min-height: auto;
     }
 }
 
@@ -116,5 +128,13 @@ h2 {
     .container {
         margin: 10px auto 20px;
         padding: 15px;
+    }
+    
+    h1 {
+        font-size: 24px;
+    }
+    
+    h2 {
+        font-size: 18px;
     }
 }
