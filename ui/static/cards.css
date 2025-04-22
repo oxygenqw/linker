@@ -45,25 +45,26 @@ h1 {
 }
 
 .card-info {
-    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
 }
 
-.card-info a {
-    color: #1DCD9F;
-    text-decoration: none;
-    transition: color 0.2s ease;
-}
-
-.card-info a:hover {
-    color: #17b38a;
-    text-decoration: underline;
+.info-row {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    align-items: start;
 }
 
 .label {
     font-weight: 500;
     color: #1DCD9F;
-    min-width: 150px;
-    display: inline-block;
+    word-break: keep-all;
+}
+
+.info-value {
+    word-break: break-word;
+    color: #FFF;
 }
 
 .button-container {
@@ -95,10 +96,9 @@ h1 {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Новые стили для кнопки "На главную" */
 .home-button {
-    margin-bottom: 30px; /* Отступ от нижнего края */
-    margin-top: 30px; /* Отступ от карточек */
+    margin-bottom: 30px;
+    margin-top: 30px;
 }
 
 @media (max-width: 768px) {
@@ -108,11 +108,11 @@ h1 {
     }
     
     .card {
-        padding: 15px; /* Исправлено: было padding: 0 15px */
+        padding: 15px;
     }
     
-    .label {
-        min-width: 120px;
+    .info-row {
+        grid-template-columns: 150px 1fr;
     }
 }
 
@@ -127,10 +127,9 @@ h1 {
         padding: 15px;
     }
     
-    .label {
-        display: block;
-        margin-bottom: 5px;
-        min-width: auto;
+    .info-row {
+        grid-template-columns: 1fr;
+        gap: 4px;
     }
 
     .home-button {
