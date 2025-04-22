@@ -31,7 +31,8 @@ h1 {
 }
 
 .form-group input[type="text"],
-.form-group textarea {
+.form-group textarea,
+.form-select {
     width: 100%;
     padding: 12px 15px;
     background-color: #333;
@@ -50,10 +51,27 @@ h1 {
 }
 
 .form-group input[type="text"]:focus,
-.form-group textarea:focus {
+.form-group textarea:focus,
+.form-select:focus {
     outline: none;
     border-color: #1DCD9F;
     box-shadow: 0 0 0 2px rgba(29, 205, 159, 0.2);
+}
+
+/* Стили для выпадающих списков */
+.form-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231DCD9F'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 16px;
+    padding-right: 40px;
+    cursor: pointer;
+}
+
+.form-select option {
+    background-color: #2a2a2a;
+    color: #FFF;
 }
 
 /* Стили специфичные для преподавателя */
@@ -122,7 +140,8 @@ h1 {
     }
     
     .form-group input[type="text"],
-    .form-group textarea {
+    .form-group textarea,
+    .form-select {
         padding: 10px 12px;
         font-size: 15px;
     }

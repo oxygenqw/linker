@@ -32,14 +32,28 @@
             
             <div class="form-group">
                 <label for="degree">Ученая степень</label>
-                <input type="text" id="degree" name="degree" 
-                       value="{{ .user.Degree }}">
+                <select id="degree" name="degree" class="form-select">
+                    <option value="">Не указано</option>
+                    <option value="Кандидат наук" {{ if eq .user.Degree "Кандидат наук" }}selected{{ end }}>Кандидат наук</option>
+                    <option value="Доктор наук" {{ if eq .user.Degree "Доктор наук" }}selected{{ end }}>Доктор наук</option>
+                    <option value="PhD" {{ if eq .user.Degree "PhD" }}selected{{ end }}>PhD</option>
+                    <option value="Доцент" {{ if eq .user.Degree "Доцент" }}selected{{ end }}>Доцент</option>
+                    <option value="Профессор" {{ if eq .user.Degree "Профессор" }}selected{{ end }}>Профессор</option>
+                    <option value="Ассистент" {{ if eq .user.Degree "Ассистент" }}selected{{ end }}>Ассистент</option>
+                </select>
             </div>
             
             <div class="form-group">
                 <label for="position">Должность</label>
-                <input type="text" id="position" name="position" 
-                       value="{{ .user.Position }}">
+                <select id="position" name="position" class="form-select">
+                    <option value="">Не указано</option>
+                    <option value="Профессор" {{ if eq .user.Position "Профессор" }}selected{{ end }}>Профессор</option>
+                    <option value="Доцент" {{ if eq .user.Position "Доцент" }}selected{{ end }}>Доцент</option>
+                    <option value="Старший преподаватель" {{ if eq .user.Position "Старший преподаватель" }}selected{{ end }}>Старший преподаватель</option>
+                    <option value="Преподаватель" {{ if eq .user.Position "Преподаватель" }}selected{{ end }}>Преподаватель</option>
+                    <option value="Ассистент" {{ if eq .user.Position "Ассистент" }}selected{{ end }}>Ассистент</option>
+                    <option value="Научный сотрудник" {{ if eq .user.Position "Научный сотрудник" }}selected{{ end }}>Научный сотрудник</option>
+                </select>
             </div>
             
             <div class="form-group">

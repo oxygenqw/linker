@@ -44,14 +44,27 @@
 
             <div class="form-group">
                 <label for="course">Курс</label>
-                <input type="text" id="course" name="course" 
-                       value="{{ .user.Course }}">
+                <select id="course" name="course" class="form-select">
+                    <option value="">Не указано</option>
+                    <option value="1 курс" {{ if eq .user.Course "1 курс" }}selected{{ end }}>1 курс</option>
+                    <option value="2 курс" {{ if eq .user.Course "2 курс" }}selected{{ end }}>2 курс</option>
+                    <option value="3 курс" {{ if eq .user.Course "3 курс" }}selected{{ end }}>3 курс</option>
+                    <option value="4 курс" {{ if eq .user.Course "4 курс" }}selected{{ end }}>4 курс</option>
+                    <option value="5 курс" {{ if eq .user.Course "5 курс" }}selected{{ end }}>5 курс</option>
+                    <option value="6 курс" {{ if eq .user.Course "6 курс" }}selected{{ end }}>6 курс</option>
+                </select>
             </div>
 
             <div class="form-group">
                 <label for="education">Уровень образования</label>
-                <input type="text" id="education" name="education" 
-                       value="{{ .user.Education }}">
+                <select id="education" name="education" class="form-select">
+                    <option value="">Не указано</option>
+                    <option value="Бакалавриат" {{ if eq .user.Education "Бакалавриат" }}selected{{ end }}>Бакалавриат</option>
+                    <option value="Специалитет" {{ if eq .user.Education "Специалитет" }}selected{{ end }}>Специалитет</option>
+                    <option value="Магистратура" {{ if eq .user.Education "Магистратура" }}selected{{ end }}>Магистратура</option>
+                    <option value="Аспирантура" {{ if eq .user.Education "Аспирантура" }}selected{{ end }}>Аспирантура</option>
+                    <option value="Докторантура" {{ if eq .user.Education "Докторантура" }}selected{{ end }}>Докторантура</option>
+                </select>
             </div>
             
             <div class="form-group">
