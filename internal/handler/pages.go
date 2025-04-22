@@ -179,14 +179,16 @@ func (h *PagesHandler) StudentProfile(w http.ResponseWriter, r *http.Request, pa
 
 	id := params.ByName("id")
 	role := params.ByName("role")
+	student_id := params.ByName("student_id")
 
-	student, err := h.service.Student.GetByID(id)
+	student, err := h.service.Student.GetByID(student_id)
 	if err != nil {
 
 	}
 
 	data := map[string]any{
 		"student": student,
+		"id":      id,
 		"role":    role,
 	}
 
@@ -198,14 +200,16 @@ func (h *PagesHandler) TeacherProfile(w http.ResponseWriter, r *http.Request, pa
 
 	id := params.ByName("id")
 	role := params.ByName("role")
+	teacher_id := params.ByName("teacher_id")
 
-	teacher, err := h.service.Teacher.GetByID(id)
+	teacher, err := h.service.Teacher.GetByID(teacher_id)
 	if err != nil {
 
 	}
 
 	data := map[string]any{
 		"teacher": teacher,
+		"id":      id,
 		"role":    role,
 	}
 

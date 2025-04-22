@@ -11,7 +11,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Профиль</h1>
+        <h1>Профиль студента</h1>
         
         <div class="profile-section">
             <h2>Основная информация</h2>
@@ -52,7 +52,7 @@
                 </span>
             </div>
             <div class="profile-field">
-                <span class="field-label">Курс/Направление:</span>
+                <span class="field-label">Курс:</span>
                 <span class="field-value">
                     {{ if .student.Course }}
                         {{ .student.Course }}
@@ -125,7 +125,7 @@
             <form action="" method="GET">
                 <button type="submit" class="button">Запрос</button>
             </form>
-            <form action="/home/{{ .student.ID }}/student" method="GET">
+            <form action="/home/{{ .id }}/{{ .role }}" method="GET">
                 <button type="submit" class="button">На главную</button>
             </form>
         </div>

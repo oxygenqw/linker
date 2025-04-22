@@ -20,12 +20,12 @@
             <div class="card-info">
                 <span class="label">Университет:</span> {{ if .University }}{{ .University }}{{ else }}Не указан{{ end }}<br>
                 <span class="label">Факультет:</span> {{ if .Faculty }}{{ .Faculty }}{{ else }}Не указан{{ end }}<br>
-                <span class="label">Курс/Направление:</span> {{ if .Course }}{{ .Course }}{{ else }}Не указано{{ end }}<br>
+                <span class="label">Курc:</span> {{ if .Course }}{{ .Course }}{{ else }}Не указано{{ end }}<br>
                 <span class="label">Уровень образования:</span> {{ if .Education }}{{ .Education }}{{ else }}Не указан{{ end }}<br>
                 
                 <span class="label">GitHub:</span> 
                 {{ if .GitHub }}
-                    <a href="https://github.com/{{ .GitHub }}" target="_blank">{{ .GitHub }}</a>
+                    <a href="{{ .GitHub }}" target="_blank">{{ .GitHub }}</a>
                 {{ else }}
                     Не указан
                 {{ end }}<br>
@@ -35,7 +35,7 @@
                 <span class="label">О себе:</span> {{ if .About }}{{ .About }}{{ else }}Не указано{{ end }}
 
                 <div class="button-container">
-                    <form action="/student/profile/{{ .ID }}/{{ $.role }}" method="GET">
+                    <form action="/student/profile/{{ $.id }}/{{ $.role }}/{{ .ID }}" method="GET">
                         <button type="submit" class="button">Подробнее</button>
                     </form>
                 </div>
