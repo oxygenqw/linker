@@ -6,7 +6,7 @@ import (
 	"github.com/google/uuid"
 )
 
-type Teacher interface {
+type TeacherService interface {
 	Create(teacher models.Teacher) (uuid.UUID, error)
 	GetByTelegramID(telegramID int64) (models.Teacher, error)
 	GetByID(id string) (models.Teacher, error)
@@ -14,32 +14,32 @@ type Teacher interface {
 	Update(teacher models.Teacher) error
 }
 
-type TeacherService struct {
-	repository repository.Teacher
+type TeacherServiceImpl struct {
+	repository repository.TeacherRepository
 }
 
-func NewTeacherService(repository repository.Teacher) *TeacherService {
-	return &TeacherService{
+func NewTeacherService(repository repository.TeacherRepository) *TeacherServiceImpl {
+	return &TeacherServiceImpl{
 		repository: repository,
 	}
 }
 
-func (s *TeacherService) Create(teacher models.Teacher) (uuid.UUID, error) {
+func (s *TeacherServiceImpl) Create(teacher models.Teacher) (uuid.UUID, error) {
 	return s.repository.Create(teacher)
 }
 
-func (s *TeacherService) GetByTelegramID(telegramID int64) (models.Teacher, error) {
+func (s *TeacherServiceImpl) GetByTelegramID(telegramID int64) (models.Teacher, error) {
 	return s.repository.GetByTelegramID(telegramID)
 }
 
-func (s *TeacherService) GetByID(id string) (models.Teacher, error) {
+func (s *TeacherServiceImpl) GetByID(id string) (models.Teacher, error) {
 	return s.repository.GetByID(id)
 }
 
-func (s *TeacherService) GetAll() ([]models.Teacher, error) {
+func (s *TeacherServiceImpl) GetAll() ([]models.Teacher, error) {
 	return s.repository.GetAll()
 }
 
-func (s *TeacherService) Update(teacher models.Teacher) error {
+func (s *TeacherServiceImpl) Update(teacher models.Teacher) error {
 	return s.repository.Update(teacher)
 }

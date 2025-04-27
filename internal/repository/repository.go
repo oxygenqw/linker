@@ -11,13 +11,13 @@ import (
 )
 
 type Repository struct {
-	logger  logger.Logger
-	Student Student
-	Teacher Teacher
-	User    User
+	logger            logger.Logger
+	StudentRepositiry StudentRepositiry
+	TeacherRepository TeacherRepository
+	UserRepository    UserRepository
 }
 
-type Student interface {
+type StudentRepositiry interface {
 	GetByTelegramID(telegramID int64) (models.Student, error)
 	GetByID(id string) (models.Student, error)
 	Create(student models.Student) (uuid.UUID, error)
@@ -25,7 +25,7 @@ type Student interface {
 	GetAll() ([]models.Student, error)
 }
 
-type Teacher interface {
+type TeacherRepository interface {
 	GetByTelegramID(telegramID int64) (models.Teacher, error)
 	GetByID(id string) (models.Teacher, error)
 	Update(teacher models.Teacher) error
@@ -33,7 +33,7 @@ type Teacher interface {
 	GetAll() ([]models.Teacher, error)
 }
 
-type User interface {
+type UserRepository interface {
 	GetRole(telegramID int64) (string, error)
 }
 
@@ -52,11 +52,11 @@ func NewRepository(config *config.Config, logger *logger.Logger) (*Repository, e
 		return nil, fmt.Errorf("failed to connect to PostgreSQL: %w", err)
 	}
 
-	repository := postgres.NewPostgresRepository(db, logger)
+	postgresRepository := postgres.NewPostgresRepository(db, logger)
 
 	return &Repository{
-		Student: repository.Student,
-		Teacher: repository.Teacher,
-		User:    repository.User,
+		StudentRepositiry: postgresRepository.StudentRepository,
+		TeacherRepository: postgresRepository.TeacherRepository,
+		UserRepository:    postgresRepository.UserRepository,
 	}, nil
 }

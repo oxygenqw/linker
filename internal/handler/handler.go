@@ -7,9 +7,9 @@ import (
 )
 
 type Handler struct {
-	Telegram Telegram
-	Pages    Pages
-	Redirect Redirect
+	Telegram TelegramHandler
+	Pages    PagesHandler
+	Redirect RedirectHadnler
 }
 
 func NewHandler(service *service.Service, logger *logger.Logger, bot *bot.Bot) *Handler {

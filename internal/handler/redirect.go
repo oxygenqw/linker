@@ -12,20 +12,20 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-type Redirect interface {
-	NewUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
+type RedirectHadnler interface {
+	CreateUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 	Input(w http.ResponseWriter, r *http.Request)
 	UpdateStudent(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 	UpdateTeacher(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 }
 
-type RedirectHandler struct {
+type RedirectHandlerImpl struct {
 	logger  *logger.Logger
 	service *service.Service
 }
 
-func NewRedirectHandler(service *service.Service, logger *logger.Logger) *RedirectHandler {
-	return &RedirectHandler{
+func NewRedirectHandler(service *service.Service, logger *logger.Logger) *RedirectHandlerImpl {
+	return &RedirectHandlerImpl{
 		logger:  logger,
 		service: service,
 	}
@@ -33,7 +33,7 @@ func NewRedirectHandler(service *service.Service, logger *logger.Logger) *Redire
 
 // ...
 // @router GET /
-func (h *RedirectHandler) Input(w http.ResponseWriter, r *http.Request) {
+func (h *RedirectHandlerImpl) Input(w http.ResponseWriter, r *http.Request) {
 	h.logger.Info("[H: Input] ", "URL: ", r.URL)
 
 	telegramIDStr := r.URL.Query().Get("telegram_id")
@@ -43,7 +43,7 @@ func (h *RedirectHandler) Input(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	role, err := h.service.User.GetRole(telegramID)
+	role, err := h.service.UserService.GetRole(telegramID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
@@ -53,7 +53,7 @@ func (h *RedirectHandler) Input(w http.ResponseWriter, r *http.Request) {
 		userName := r.URL.Query().Get("user_name")
 		http.Redirect(w, r, fmt.Sprintf("/login/%s/%s", userName, telegramIDStr), http.StatusFound)
 	case "student":
-		student, err := h.service.Student.GetByTelegramID(telegramID)
+		student, err := h.service.StudentService.GetByTelegramID(telegramID)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -61,7 +61,7 @@ func (h *RedirectHandler) Input(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, fmt.Sprintf("/home/%s/%s", student.ID, role), http.StatusFound)
 		return
 	case "teacher":
-		teacher, err := h.service.Teacher.GetByTelegramID(telegramID)
+		teacher, err := h.service.TeacherService.GetByTelegramID(telegramID)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -74,7 +74,7 @@ func (h *RedirectHandler) Input(w http.ResponseWriter, r *http.Request) {
 // После заполнения первоначальных данных парсим форму и переходим в профиль
 // @router POST /users/:telegram_id
 // TODO: Заменить на CreateUser
-func (h *RedirectHandler) NewUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (h *RedirectHandlerImpl) CreateUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	h.logger.Info("[H: NewUser] ", "URL: ", r.URL)
 
 	telegramIDStr := ps.ByName("telegram_id")
@@ -103,7 +103,7 @@ func (h *RedirectHandler) NewUser(w http.ResponseWriter, r *http.Request, ps htt
 			MiddleName: r.FormValue("middle_name"),
 		}
 
-		id, err = h.service.Student.Create(student)
+		id, err = h.service.StudentService.Create(student)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("Failed to add user: %v", err), http.StatusInternalServerError)
 		}
@@ -114,7 +114,7 @@ func (h *RedirectHandler) NewUser(w http.ResponseWriter, r *http.Request, ps htt
 			LastName:   r.FormValue("last_name"),
 			MiddleName: r.FormValue("middle_name"),
 		}
-		id, err = h.service.Teacher.Create(teacher)
+		id, err = h.service.TeacherService.Create(teacher)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("Failed to add user: %v", err), http.StatusInternalServerError)
 		}
@@ -123,7 +123,7 @@ func (h *RedirectHandler) NewUser(w http.ResponseWriter, r *http.Request, ps htt
 	http.Redirect(w, r, fmt.Sprintf("/home/%s/%s", id, role), http.StatusFound)
 }
 
-func (h *RedirectHandler) UpdateStudent(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (h *RedirectHandlerImpl) UpdateStudent(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	h.logger.Info("[H: UpdateStudent] ", "URL: ", r.URL)
 
 	id, err := uuid.Parse(ps.ByName("id"))
@@ -153,7 +153,7 @@ func (h *RedirectHandler) UpdateStudent(w http.ResponseWriter, r *http.Request, 
 		Education:  r.FormValue("education"),
 	}
 
-	err = h.service.Student.Update(student)
+	err = h.service.StudentService.Update(student)
 	if err != nil {
 		h.logger.Error("Failed to update student", "error", err, "ID: ", id)
 		http.Error(w, "Failed to update student profile", http.StatusInternalServerError)
@@ -163,7 +163,7 @@ func (h *RedirectHandler) UpdateStudent(w http.ResponseWriter, r *http.Request, 
 	http.Redirect(w, r, fmt.Sprintf("/profile/%s/%s", id, "student"), http.StatusFound)
 }
 
-func (h *RedirectHandler) UpdateTeacher(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (h *RedirectHandlerImpl) UpdateTeacher(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	h.logger.Info("[H: UpdateTeacher] ", "URL: ", r.URL)
 
 	id, err := uuid.Parse(ps.ByName("id"))
@@ -194,7 +194,7 @@ func (h *RedirectHandler) UpdateTeacher(w http.ResponseWriter, r *http.Request, 
 	isFree := r.FormValue("is_free") == "on"
 	teacher.IsFree = isFree
 
-	err = h.service.Teacher.Update(teacher)
+	err = h.service.TeacherService.Update(teacher)
 	if err != nil {
 		h.logger.Error("Failed to update teacher", "error", err, "ID: ", id)
 		http.Error(w, "Failed to update teacher profile", http.StatusInternalServerError)

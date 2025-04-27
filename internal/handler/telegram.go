@@ -13,23 +13,23 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2"
 )
 
-type Telegram interface {
+type TelegramHandler interface {
 	CreateBotEndpointHandler(appURL string) http.HandlerFunc
 }
 
-type TelegramHandler struct {
+type TelegramHandlerImpl struct {
 	logger *logger.Logger
 	bot    *bot.Bot
 }
 
-func NewTelegramHandler(bot *bot.Bot, logger *logger.Logger) *TelegramHandler {
-	return &TelegramHandler{
+func NewTelegramHandler(bot *bot.Bot, logger *logger.Logger) *TelegramHandlerImpl {
+	return &TelegramHandlerImpl{
 		logger: logger,
 		bot:    bot,
 	}
 }
 
-func (h *TelegramHandler) CreateBotEndpointHandler(appURL string) http.HandlerFunc {
+func (h *TelegramHandlerImpl) CreateBotEndpointHandler(appURL string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		//log.Println("CreateBotEndpointHandler called")
 		//log.Printf("Serving %s route", r.URL.Path)

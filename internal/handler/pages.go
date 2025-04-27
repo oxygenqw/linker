@@ -11,7 +11,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-type Pages interface {
+type PagesHandler interface {
 	Login(w http.ResponseWriter, r *http.Request, params httprouter.Params)
 	Home(w http.ResponseWriter, r *http.Request, params httprouter.Params)
 
@@ -27,13 +27,13 @@ type Pages interface {
 	TeacherProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params)
 }
 
-type PagesHandler struct {
+type PagesHandlerImpl struct {
 	logger    *logger.Logger
 	service   *service.Service
 	templates map[string]*template.Template
 }
 
-func NewPagesHandler(service *service.Service, logger *logger.Logger) *PagesHandler {
+func NewPagesHandler(service *service.Service, logger *logger.Logger) *PagesHandlerImpl {
 	files, err := filepath.Glob("./ui/pages/*.html")
 	if err != nil {
 		logger.Fatal("Failed to find template files", "error", err)
@@ -45,14 +45,14 @@ func NewPagesHandler(service *service.Service, logger *logger.Logger) *PagesHand
 		templates[name] = template.Must(template.ParseFiles(file))
 	}
 
-	return &PagesHandler{
+	return &PagesHandlerImpl{
 		logger:    logger,
 		service:   service,
 		templates: templates,
 	}
 }
 
-func (h *PagesHandler) renderTemplate(w http.ResponseWriter, tmplName string, data any) {
+func (h *PagesHandlerImpl) renderTemplate(w http.ResponseWriter, tmplName string, data any) {
 	tmpl, ok := h.templates[tmplName]
 	if !ok {
 		http.Error(w, "Template not found", http.StatusInternalServerError)
@@ -69,7 +69,7 @@ func (h *PagesHandler) renderTemplate(w http.ResponseWriter, tmplName string, da
 
 // Рендерит login.html и передает туда user_name
 // @router GET /login/:user_name/:telegram_id
-func (h *PagesHandler) Login(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+func (h *PagesHandlerImpl) Login(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	h.logger.Info("[H: Login] ", "URL: ", r.URL)
 
 	data := map[string]any{
@@ -82,7 +82,7 @@ func (h *PagesHandler) Login(w http.ResponseWriter, r *http.Request, params http
 
 // Рендерит home.html и передает туда id и role
 // @router GET /home/:id/:role
-func (h *PagesHandler) Home(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+func (h *PagesHandlerImpl) Home(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	h.logger.Info("[H: Home] ", "URL: ", r.URL)
 
 	data := map[string]any{
@@ -95,7 +95,7 @@ func (h *PagesHandler) Home(w http.ResponseWriter, r *http.Request, params httpr
 
 // Рендерит profile.html и передает туда информацию о пользователе
 // @router GET /profile/:id/:role
-func (h *PagesHandler) Profile(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+func (h *PagesHandlerImpl) Profile(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	h.logger.Info("[H: Profile]", " URL: ", r.URL)
 
 	id := params.ByName("id")
@@ -105,7 +105,7 @@ func (h *PagesHandler) Profile(w http.ResponseWriter, r *http.Request, params ht
 
 	switch role {
 	case "student":
-		student, err := h.service.Student.GetByID(id)
+		student, err := h.service.StudentService.GetByID(id)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -118,7 +118,7 @@ func (h *PagesHandler) Profile(w http.ResponseWriter, r *http.Request, params ht
 		h.renderTemplate(w, "student_profile.html", data)
 
 	case "teacher":
-		teacher, err := h.service.Teacher.GetByID(id)
+		teacher, err := h.service.TeacherService.GetByID(id)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -134,14 +134,14 @@ func (h *PagesHandler) Profile(w http.ResponseWriter, r *http.Request, params ht
 	}
 }
 
-func (h *PagesHandler) EditStudentProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+func (h *PagesHandlerImpl) EditStudentProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	h.logger.Info("[H: EditStudentProfile]", " URL: ", r.URL)
 
 	id := params.ByName("id")
 
 	var data map[string]any
 
-	student, err := h.service.Student.GetByID(id)
+	student, err := h.service.StudentService.GetByID(id)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -154,14 +154,14 @@ func (h *PagesHandler) EditStudentProfile(w http.ResponseWriter, r *http.Request
 	h.renderTemplate(w, "student_editor.html", data)
 }
 
-func (h *PagesHandler) EditTeacherProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+func (h *PagesHandlerImpl) EditTeacherProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	h.logger.Info("[H: EditTeacherProfile]", " URL: ", r.URL)
 
 	id := params.ByName("id")
 
 	var data map[string]any
 
-	teacher, err := h.service.Teacher.GetByID(id)
+	teacher, err := h.service.TeacherService.GetByID(id)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -174,14 +174,14 @@ func (h *PagesHandler) EditTeacherProfile(w http.ResponseWriter, r *http.Request
 	h.renderTemplate(w, "teacher_editor.html", data)
 }
 
-func (h *PagesHandler) StudentProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+func (h *PagesHandlerImpl) StudentProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	h.logger.Info("[H: StudentProfile] ", "URL: ", r.URL)
 
 	id := params.ByName("id")
 	role := params.ByName("role")
 	student_id := params.ByName("student_id")
 
-	student, err := h.service.Student.GetByID(student_id)
+	student, err := h.service.StudentService.GetByID(student_id)
 	if err != nil {
 
 	}
@@ -195,14 +195,14 @@ func (h *PagesHandler) StudentProfile(w http.ResponseWriter, r *http.Request, pa
 	h.renderTemplate(w, "student_user_profile.html", data)
 }
 
-func (h *PagesHandler) TeacherProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+func (h *PagesHandlerImpl) TeacherProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	h.logger.Info("[H: TeacherProfile] ", "URL: ", r.URL)
 
 	id := params.ByName("id")
 	role := params.ByName("role")
 	teacher_id := params.ByName("teacher_id")
 
-	teacher, err := h.service.Teacher.GetByID(teacher_id)
+	teacher, err := h.service.TeacherService.GetByID(teacher_id)
 	if err != nil {
 
 	}
@@ -218,13 +218,13 @@ func (h *PagesHandler) TeacherProfile(w http.ResponseWriter, r *http.Request, pa
 
 // Рендерит students.html и передает туда список студентов
 // @router GET /students/:id/:role
-func (h *PagesHandler) Students(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+func (h *PagesHandlerImpl) Students(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	h.logger.Info("[H: Students] ", "URL: ", r.URL)
 
 	id := params.ByName("id")
 	role := params.ByName("role")
 
-	students, err := h.service.Student.GetAll()
+	students, err := h.service.StudentService.GetAll()
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Ошибка при получении списка студентов, %s", err), http.StatusInternalServerError)
 		return
@@ -241,13 +241,13 @@ func (h *PagesHandler) Students(w http.ResponseWriter, r *http.Request, params h
 
 // Рендерит teachers.html и передает туда список преподавателей
 // @router GET /teachers/:id/:role
-func (h *PagesHandler) Teachers(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+func (h *PagesHandlerImpl) Teachers(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	h.logger.Info("[H: Teachers] ", "URL: ", r.URL)
 
 	id := params.ByName("id")
 	role := params.ByName("role")
 
-	teachers, err := h.service.Teacher.GetAll()
+	teachers, err := h.service.TeacherService.GetAll()
 	if err != nil {
 		http.Error(w, "Ошибка при получении списка преподавателей", http.StatusInternalServerError)
 		return

@@ -24,7 +24,7 @@ func (r *Router) InitRoutes() *httprouter.Router {
 
 	// redirects
 	router.HandlerFunc(http.MethodGet, "/", r.handler.Redirect.Input)
-	router.POST("/users/new/:telegram_id", r.handler.Redirect.NewUser)
+	router.POST("/users/new/:telegram_id", r.handler.Redirect.CreateUser)
 
 	router.POST("/student/update/:id", r.handler.Redirect.UpdateStudent)
 	router.POST("/teacher/update/:id", r.handler.Redirect.UpdateTeacher)

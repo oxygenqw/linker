@@ -5,15 +5,15 @@ import (
 )
 
 type Service struct {
-	Student
-	Teacher
-	User
+	StudentService StudentService
+	TeacherService TeacherService
+	UserService    UserService
 }
 
 func NewService(repository *repository.Repository) *Service {
 	return &Service{
-		Student: NewStudentService(repository.Student),
-		Teacher: NewTeacherService(repository.Teacher),
-		User:    NewUserService(repository.User),
+		StudentService: NewStudentService(repository.StudentRepositiry),
+		TeacherService: NewTeacherService(repository.TeacherRepository),
+		UserService:    NewUserService(repository.UserRepository),
 	}
 }
