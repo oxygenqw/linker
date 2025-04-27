@@ -7,19 +7,19 @@ import (
 	"github.com/Oxygenss/linker/pkg/logger"
 )
 
-type UserRepository struct {
+type UserRepositoryImpl struct {
 	logger *logger.Logger
 	db     *sql.DB
 }
 
-func NewUserRepository(db *sql.DB, logger *logger.Logger) *UserRepository {
-	return &UserRepository{
+func NewUserRepository(db *sql.DB, logger *logger.Logger) *UserRepositoryImpl {
+	return &UserRepositoryImpl{
 		db:     db,
 		logger: logger,
 	}
 }
 
-func (r *UserRepository) GetRole(telegramID int64) (string, error) {
+func (r *UserRepositoryImpl) GetRole(telegramID int64) (string, error) {
 	r.logger.Info("[R: GetRole]")
 	if r.db == nil {
 		return "", fmt.Errorf("database connection is not initialized")

@@ -10,19 +10,19 @@ import (
 	"github.com/google/uuid"
 )
 
-type TeacherRepository struct {
+type TeacherRepositoryImpl struct {
 	logger *logger.Logger
 	db     *sql.DB
 }
 
-func NewTeacherRepository(db *sql.DB, logger *logger.Logger) *TeacherRepository {
-	return &TeacherRepository{
+func NewTeacherRepository(db *sql.DB, logger *logger.Logger) *TeacherRepositoryImpl {
+	return &TeacherRepositoryImpl{
 		db:     db,
 		logger: logger,
 	}
 }
 
-func (r *TeacherRepository) GetByID(id string) (models.Teacher, error) {
+func (r *TeacherRepositoryImpl) GetByID(id string) (models.Teacher, error) {
 	r.logger.Info("[TeacherRepository: GetByID]", "id", id)
 
 	if r.db == nil {
@@ -65,7 +65,7 @@ func (r *TeacherRepository) GetByID(id string) (models.Teacher, error) {
 	}
 }
 
-func (r *TeacherRepository) GetByTelegramID(telegramID int64) (models.Teacher, error) {
+func (r *TeacherRepositoryImpl) GetByTelegramID(telegramID int64) (models.Teacher, error) {
 	r.logger.Info("[TeacherRepository: GetByTelegramID]", "telegramID", telegramID)
 
 	if r.db == nil {
@@ -103,7 +103,7 @@ func (r *TeacherRepository) GetByTelegramID(telegramID int64) (models.Teacher, e
 	return teacher, nil
 }
 
-func (r *TeacherRepository) GetAll() ([]models.Teacher, error) {
+func (r *TeacherRepositoryImpl) GetAll() ([]models.Teacher, error) {
 	r.logger.Info("[TeacherRepository: GetAll]")
 
 	query := `SELECT id, telegram_id, first_name, middle_name, last_name,
@@ -149,7 +149,7 @@ func (r *TeacherRepository) GetAll() ([]models.Teacher, error) {
 	return teachers, nil
 }
 
-func (r *TeacherRepository) Create(teacher models.Teacher) (uuid.UUID, error) {
+func (r *TeacherRepositoryImpl) Create(teacher models.Teacher) (uuid.UUID, error) {
 	r.logger.Info("[TeacherRepository: Create]")
 
 	if r.db == nil {
@@ -186,7 +186,7 @@ func (r *TeacherRepository) Create(teacher models.Teacher) (uuid.UUID, error) {
 	return teacher.ID, nil
 }
 
-func (r *TeacherRepository) Update(teacher models.Teacher) error {
+func (r *TeacherRepositoryImpl) Update(teacher models.Teacher) error {
 	r.logger.Info("[TeacherRepository: Update]", "teacherID", teacher.ID)
 
 	if r.db == nil {

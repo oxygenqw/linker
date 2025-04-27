@@ -7,15 +7,15 @@ import (
 )
 
 type Repository struct {
-	Student *StudentRepository
-	Teacher *TeacherRepository
-	User    *UserRepository
+	StudentRepository *StudentRepositoryImpl
+	TeacherRepository *TeacherRepositoryImpl
+	UserRepository    *UserRepositoryImpl
 }
 
 func NewPostgresRepository(db *sql.DB, logger *logger.Logger) *Repository {
 	return &Repository{
-		Student: NewStudentRepository(db, logger),
-		Teacher: NewTeacherRepository(db, logger),
-		User:    NewUserRepository(db, logger),
+		StudentRepository: NewStudentRepository(db, logger),
+		TeacherRepository: NewTeacherRepository(db, logger),
+		UserRepository:    NewUserRepository(db, logger),
 	}
 }

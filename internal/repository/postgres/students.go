@@ -10,19 +10,19 @@ import (
 	"github.com/google/uuid"
 )
 
-type StudentRepository struct {
+type StudentRepositoryImpl struct {
 	logger *logger.Logger
 	db     *sql.DB
 }
 
-func NewStudentRepository(db *sql.DB, logger *logger.Logger) *StudentRepository {
-	return &StudentRepository{
+func NewStudentRepository(db *sql.DB, logger *logger.Logger) *StudentRepositoryImpl {
+	return &StudentRepositoryImpl{
 		db:     db,
 		logger: logger,
 	}
 }
 
-func (r *StudentRepository) GetByID(id string) (models.Student, error) {
+func (r *StudentRepositoryImpl) GetByID(id string) (models.Student, error) {
 	r.logger.Info("[StudentRepository: GetByID]")
 
 	if r.db == nil {
@@ -64,7 +64,7 @@ func (r *StudentRepository) GetByID(id string) (models.Student, error) {
 	}
 }
 
-func (r *StudentRepository) GetByTelegramID(telegramID int64) (models.Student, error) {
+func (r *StudentRepositoryImpl) GetByTelegramID(telegramID int64) (models.Student, error) {
 	r.logger.Info("[StudentRepository: GetByTelegramID]")
 
 	if r.db == nil {
@@ -101,7 +101,7 @@ func (r *StudentRepository) GetByTelegramID(telegramID int64) (models.Student, e
 	return student, nil
 }
 
-func (r *StudentRepository) GetAll() ([]models.Student, error) {
+func (r *StudentRepositoryImpl) GetAll() ([]models.Student, error) {
 	r.logger.Info("[StudentRepository: GetAll]")
 
 	if r.db == nil {
@@ -151,7 +151,7 @@ func (r *StudentRepository) GetAll() ([]models.Student, error) {
 	return students, nil
 }
 
-func (r *StudentRepository) Create(student models.Student) (uuid.UUID, error) {
+func (r *StudentRepositoryImpl) Create(student models.Student) (uuid.UUID, error) {
 	r.logger.Info("[StudentRepository: Create]")
 
 	if r.db == nil {
@@ -187,7 +187,7 @@ func (r *StudentRepository) Create(student models.Student) (uuid.UUID, error) {
 	return student.ID, nil
 }
 
-func (r *StudentRepository) Update(student models.Student) error {
+func (r *StudentRepositoryImpl) Update(student models.Student) error {
 	r.logger.Info("[StudentRepository: Update]", "studentID", student.ID)
 
 	if r.db == nil {
