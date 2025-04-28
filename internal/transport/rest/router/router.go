@@ -45,7 +45,7 @@ func (r *Router) InitRoutes() *httprouter.Router {
 	router.GET("/teacher/profile/:id/:role/:teacher_id", r.handler.Pages.TeacherProfile)
 
 	// static
-	router.ServeFiles("/static/*filepath", http.Dir("./ui/static/"))
+	router.ServeFiles("/static/*filepath", http.Dir("./web/static/"))
 
 	return router
 }
