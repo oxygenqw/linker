@@ -12,7 +12,7 @@ import (
 
 type Repository struct {
 	logger            logger.Logger
-	StudentRepositiry StudentRepositiry
+	StudentRepository StudentRepositiry
 	TeacherRepository TeacherRepository
 	UserRepository    UserRepository
 }
@@ -55,7 +55,7 @@ func NewRepository(config *config.Config, logger *logger.Logger) (*Repository, e
 	postgresRepository := postgres.NewPostgresRepository(db, logger)
 
 	return &Repository{
-		StudentRepositiry: postgresRepository.StudentRepository,
+		StudentRepository: postgresRepository.StudentRepository,
 		TeacherRepository: postgresRepository.TeacherRepository,
 		UserRepository:    postgresRepository.UserRepository,
 	}, nil

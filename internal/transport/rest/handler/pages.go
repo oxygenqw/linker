@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"path/filepath"
 
-	"github.com/Oxygenss/linker/internal/service"
+	"github.com/Oxygenss/linker/internal/services"
 	"github.com/Oxygenss/linker/pkg/logger"
 	"github.com/julienschmidt/httprouter"
 )
@@ -29,11 +29,11 @@ type PagesHandler interface {
 
 type PagesHandlerImpl struct {
 	logger    *logger.Logger
-	service   *service.Service
+	service   *services.Service
 	templates map[string]*template.Template
 }
 
-func NewPagesHandler(service *service.Service, logger *logger.Logger) *PagesHandlerImpl {
+func NewPagesHandler(service *services.Service, logger *logger.Logger) *PagesHandlerImpl {
 	files, err := filepath.Glob("./ui/pages/*.html")
 	if err != nil {
 		logger.Fatal("Failed to find template files", "error", err)

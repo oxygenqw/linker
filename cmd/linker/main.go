@@ -4,17 +4,17 @@ import (
 	"net/http"
 
 	"github.com/Oxygenss/linker/internal/config"
-	"github.com/Oxygenss/linker/internal/handler"
 	"github.com/Oxygenss/linker/internal/repository"
-	"github.com/Oxygenss/linker/internal/router"
-	"github.com/Oxygenss/linker/internal/service"
+	"github.com/Oxygenss/linker/internal/services"
+	"github.com/Oxygenss/linker/internal/transport/rest/handler"
+	"github.com/Oxygenss/linker/internal/transport/rest/router"
 	"github.com/Oxygenss/linker/pkg/logger"
 	"github.com/Oxygenss/linker/pkg/telegram/bot"
 )
 
 func main() {
 	cfg := config.MustLoad()
-	log := logger.GetLogger()
+	log := logger.NewLogger()
 
 	log.Info("Initialize telegram bot...")
 	bot, err := bot.NewTelegramBot(cfg.Telegram.BotToken, cfg.Telegram.AppURL+"/bot")
@@ -29,7 +29,7 @@ func main() {
 	}
 
 	log.Info("Initialize service...")
-	service := service.NewService(repository)
+	service := services.NewService(repository)
 
 	log.Info("Initialize handler...")
 	handler := handler.NewHandler(service, &log, bot)

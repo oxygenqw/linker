@@ -6,7 +6,7 @@ import (
 	"strconv"
 
 	"github.com/Oxygenss/linker/internal/models"
-	"github.com/Oxygenss/linker/internal/service"
+	"github.com/Oxygenss/linker/internal/services"
 	"github.com/Oxygenss/linker/pkg/logger"
 	"github.com/google/uuid"
 	"github.com/julienschmidt/httprouter"
@@ -21,10 +21,10 @@ type RedirectHadnler interface {
 
 type RedirectHandlerImpl struct {
 	logger  *logger.Logger
-	service *service.Service
+	service *services.Service
 }
 
-func NewRedirectHandler(service *service.Service, logger *logger.Logger) *RedirectHandlerImpl {
+func NewRedirectHandler(service *services.Service, logger *logger.Logger) *RedirectHandlerImpl {
 	return &RedirectHandlerImpl{
 		logger:  logger,
 		service: service,

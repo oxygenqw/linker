@@ -1,5 +1,5 @@
 # 18.2Mb
-FROM golang:1.24.1 AS builder
+FROM golang:1.24.2 AS builder
 
 WORKDIR /usr/local/app
 
@@ -18,7 +18,7 @@ WORKDIR /app
 
 COPY --from=builder /usr/local/app/linker /bin/linker
 COPY --from=builder /usr/local/app/config.yaml .
-COPY --from=builder /usr/local/app/ui ./ui
+COPY --from=builder /usr/local/app/web ./web
 
 ENTRYPOINT ["/bin/linker"]
 

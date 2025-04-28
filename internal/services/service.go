@@ -1,4 +1,4 @@
-package service
+package services
 
 import (
 	"github.com/Oxygenss/linker/internal/repository"
@@ -12,7 +12,7 @@ type Service struct {
 
 func NewService(repository *repository.Repository) *Service {
 	return &Service{
-		StudentService: NewStudentService(repository.StudentRepositiry),
+		StudentService: NewStudentService(repository.StudentRepository),
 		TeacherService: NewTeacherService(repository.TeacherRepository),
 		UserService:    NewUserService(repository.UserRepository),
 	}
