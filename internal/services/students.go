@@ -15,10 +15,10 @@ type StudentService interface {
 }
 
 type StudentServiceImpl struct {
-	repository repository.StudentRepositiry
+	repository repository.StudentRepository
 }
 
-func NewStudentService(repository repository.StudentRepositiry) *StudentServiceImpl {
+func NewStudentService(repository repository.StudentRepository) StudentService {
 	return &StudentServiceImpl{
 		repository: repository,
 	}

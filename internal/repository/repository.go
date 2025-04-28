@@ -12,12 +12,12 @@ import (
 
 type Repository struct {
 	logger            logger.Logger
-	StudentRepository StudentRepositiry
+	StudentRepository StudentRepository
 	TeacherRepository TeacherRepository
 	UserRepository    UserRepository
 }
 
-type StudentRepositiry interface {
+type StudentRepository interface {
 	GetByTelegramID(telegramID int64) (models.Student, error)
 	GetByID(id string) (models.Student, error)
 	Create(student models.Student) (uuid.UUID, error)
