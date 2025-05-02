@@ -15,7 +15,8 @@
     </div>
 
     <div class="form">
-        <form action="/users/new/{{ .telegram_id }}" method="POST">
+        <form action="/users/{{ .telegram_id }}" method="POST">
+            <input type="hidden" name="user_name" value="{{ .user_name }}">
             <div class="form-item">
                 <label for="first_name">Имя</label>
                 <input type="text" id="first_name" name="first_name" required>

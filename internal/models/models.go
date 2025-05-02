@@ -5,6 +5,7 @@ import "github.com/google/uuid"
 type Student struct {
 	ID         uuid.UUID
 	TelegramID int64
+	UserName   string
 	FirstName  string
 	LastName   string
 	MiddleName string
@@ -22,6 +23,7 @@ type Student struct {
 type Teacher struct {
 	ID         uuid.UUID
 	TelegramID int64
+	UserName   string
 	FirstName  string
 	LastName   string
 	MiddleName string

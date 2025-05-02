@@ -1,30 +1,32 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/profile.css">
     <link rel="stylesheet" href="/static/style.css">
-    <script src="/static/telegram.js"></script> 
+    <script src="/static/telegram.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
+
 <body>
     <div class="container">
         <h1>Профиль</h1>
-        
+
         <div class="profile-section">
             <h2>Основная информация</h2>
             <div class="profile-field">
                 <span class="field-label">Имя:</span>
-                <span class="field-value">{{ .user.FirstName }}</span>
+                <span class="field-value">{{ .student.FirstName }}</span>
             </div>
             <div class="profile-field">
                 <span class="field-label">Фамилия:</span>
-                <span class="field-value">{{ .user.LastName }}</span>
+                <span class="field-value">{{ .student.LastName }}</span>
             </div>
             <div class="profile-field">
                 <span class="field-label">Отчество:</span>
-                <span class="field-value">{{ .user.MiddleName }}</span>
+                <span class="field-value">{{ .student.MiddleName }}</span>
             </div>
         </div>
 
@@ -33,40 +35,40 @@
             <div class="profile-field">
                 <span class="field-label">Университет:</span>
                 <span class="field-value">
-                    {{ if .user.University }}
-                        {{ .user.University }}
+                    {{ if .student.University }}
+                    {{ .student.University }}
                     {{ else }}
-                        Не указан
+                    Не указан
                     {{ end }}
                 </span>
             </div>
             <div class="profile-field">
                 <span class="field-label">Факультет:</span>
                 <span class="field-value">
-                    {{ if .user.Faculty }}
-                        {{ .user.Faculty }}
+                    {{ if .student.Faculty }}
+                    {{ .student.Faculty }}
                     {{ else }}
-                        Не указан
+                    Не указан
                     {{ end }}
                 </span>
             </div>
             <div class="profile-field">
                 <span class="field-label">Курс:</span>
                 <span class="field-value">
-                    {{ if .user.Course }}
-                        {{ .user.Course }}
+                    {{ if .student.Course }}
+                    {{ .student.Course }}
                     {{ else }}
-                        Не указано
+                    Не указано
                     {{ end }}
                 </span>
             </div>
             <div class="profile-field">
                 <span class="field-label">Уровень образования:</span>
                 <span class="field-value">
-                    {{ if .user.Education }}
-                        {{ .user.Education }}
+                    {{ if .student.Education }}
+                    {{ .student.Education }}
                     {{ else }}
-                        Не указан
+                    Не указан
                     {{ end }}
                 </span>
             </div>
@@ -77,20 +79,20 @@
             <div class="profile-field">
                 <span class="field-label">GitHub:</span>
                 <span class="field-value">
-                    {{ if .user.GitHub }}
-                        <a href="{{ .user.GitHub }}" target="_blank">{{ .user.GitHub }}</a>
+                    {{ if .student.GitHub }}
+                    <a href="{{ .student.GitHub }}" target="_blank">{{ .student.GitHub }}</a>
                     {{ else }}
-                        Не указан
+                    Не указан
                     {{ end }}
                 </span>
             </div>
             <div class="profile-field">
                 <span class="field-label">Место работы:</span>
                 <span class="field-value">
-                    {{ if .user.Job }}
-                        {{ .user.Job }}
+                    {{ if .student.Job }}
+                    {{ .student.Job }}
                     {{ else }}
-                        Не указано
+                    Не указано
                     {{ end }}
                 </span>
             </div>
@@ -101,33 +103,58 @@
             <div class="profile-field">
                 <span class="field-label">Идея проекта:</span>
                 <p class="field-value">
-                    {{ if .user.Idea }}
-                        {{ .user.Idea }}
+                    {{ if .student.Idea }}
+                    {{ .student.Idea }}
                     {{ else }}
-                        Не указана
+                    Не указана
                     {{ end }}
                 </p>
             </div>
             <div class="profile-field">
                 <span class="field-label">О себе:</span>
                 <p class="field-value">
-                    {{ if .user.About }}
-                        {{ .user.About }}
+                    {{ if .student.About }}
+                    {{ .student.About }}
                     {{ else }}
-                        Не указано
+                    Не указано
                     {{ end }}
                 </p>
             </div>
         </div>
 
         <div class="actions">
-            <form action="/student/edit/{{ .user.ID }}" method="GET">
+            <form action="/student/edit/{{ .student.ID }}" method="GET">
                 <button type="submit" class="button">Редактировать профиль</button>
             </form>
-            <form action="/home/{{ .user.ID }}/student" method="GET">
+
+            <button id="deleteProfileBtn" class="button">Удалить профиль</button>
+
+            <form action="/home/{{ .student.ID }}/student" method="GET">
                 <button type="submit" class="button">На главную</button>
             </form>
         </div>
     </div>
+    <script>
+        document.getElementById('deleteProfileBtn').addEventListener('click', function () {
+            fetch('/students/{{ .student.ID }}', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = '/login/{{ .student.UserName }}/{{ .student.TelegramID }}';
+                    } else {
+                        throw new Error(`Ошибка сервера: ${response.status}`);
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка:', error);
+                    alert('Не удалось удалить профиль: ' + error.message);
+                });
+        });
+    </script>
 </body>
+
 </html>

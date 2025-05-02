@@ -1,5 +1,5 @@
 TELEGRAM:
-  BOT_TOKEN: "435"
+  BOT_TOKEN: ""
   APP_URL: "https://linker.loca.lt"
 SERVER:
   HOST: ""

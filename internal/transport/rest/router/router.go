@@ -24,7 +24,7 @@ func (r *Router) InitRoutes() *httprouter.Router {
 
 	// redirects
 	router.HandlerFunc(http.MethodGet, "/", r.handler.Redirect.Input)
-	router.POST("/users/new/:telegram_id", r.handler.Redirect.CreateUser)
+	router.POST("/users/:telegram_id", r.handler.Redirect.Create)
 
 	router.POST("/student/update/:id", r.handler.Redirect.UpdateStudent)
 	router.POST("/teacher/update/:id", r.handler.Redirect.UpdateTeacher)
@@ -40,6 +40,9 @@ func (r *Router) InitRoutes() *httprouter.Router {
 
 	router.GET("/students/:id/:role", r.handler.Pages.Students)
 	router.GET("/teachers/:id/:role", r.handler.Pages.Teachers)
+
+	router.DELETE("/students/:id", r.handler.Redirect.DeleteStudent)
+	router.DELETE("/teachers/:id", r.handler.Redirect.DeleteTeacher)
 
 	router.GET("/student/profile/:id/:role/:student_id", r.handler.Pages.StudentProfile)
 	router.GET("/teacher/profile/:id/:role/:teacher_id", r.handler.Pages.TeacherProfile)

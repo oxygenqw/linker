@@ -1,31 +1,33 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/profile.css">
     <link rel="stylesheet" href="/static/style.css">
-    <script src="/static/telegram.js"></script> 
+    <script src="/static/telegram.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <title>Профиль преподавателя</title>
 </head>
+
 <body>
     <div class="container">
         <h1>Профиль</h1>
-        
+
         <div class="profile-section">
             <h2>Основная информация</h2>
             <div class="profile-field">
                 <span class="field-label">Имя:</span>
-                <span class="field-value">{{ .user.FirstName }}</span>
+                <span class="field-value">{{ .teacher.FirstName }}</span>
             </div>
             <div class="profile-field">
                 <span class="field-label">Фамилия:</span>
-                <span class="field-value">{{ .user.LastName }}</span>
+                <span class="field-value">{{ .teacher.LastName }}</span>
             </div>
             <div class="profile-field">
                 <span class="field-label">Отчество:</span>
-                <span class="field-value">{{ .user.MiddleName }}</span>
+                <span class="field-value">{{ .teacher.MiddleName }}</span>
             </div>
         </div>
 
@@ -34,47 +36,47 @@
             <div class="profile-field">
                 <span class="field-label">Ученая степень:</span>
                 <span class="field-value">
-                    {{ if .user.Degree }}
-                        {{ .user.Degree }}
+                    {{ if .teacher.Degree }}
+                    {{ .teacher.Degree }}
                     {{ else }}
-                        Не указана
+                    Не указана
                     {{ end }}
                 </span>
             </div>
             <div class="profile-field">
                 <span class="field-label">Должность:</span>
                 <span class="field-value">
-                    {{ if .user.Position }}
-                        {{ .user.Position }}
+                    {{ if .teacher.Position }}
+                    {{ .teacher.Position }}
                     {{ else }}
-                        Не указана
+                    Не указана
                     {{ end }}
                 </span>
             </div>
             <div class="profile-field">
                 <span class="field-label">Университет:</span>
                 <span class="field-value">
-                    {{ if .user.University }}
-                        {{ .user.University }}
+                    {{ if .teacher.University }}
+                    {{ .teacher.University }}
                     {{ else }}
-                        Не указан
+                    Не указан
                     {{ end }}
                 </span>
             </div>
             <div class="profile-field">
                 <span class="field-label">Факультет/Кафедра:</span>
                 <span class="field-value">
-                    {{ if .user.Faculty }}
-                        {{ .user.Faculty }}
+                    {{ if .teacher.Faculty }}
+                    {{ .teacher.Faculty }}
                     {{ else }}
-                        Не указан
+                    Не указан
                     {{ end }}
                 </span>
             </div>
             <div class="profile-field">
                 <span class="field-label">Статус:</span>
                 <span class="field-value">
-                    {{ if .user.IsFree }}Свободен для проектов{{ else }}Занят{{ end }}
+                    {{ if .teacher.IsFree }}Свободен для проектов{{ else }}Занят{{ end }}
                 </span>
             </div>
         </div>
@@ -84,33 +86,59 @@
             <div class="profile-field">
                 <span class="field-label">Идеи для проектов:</span>
                 <p class="field-value">
-                    {{ if .user.Idea }}
-                        {{ .user.Idea }}
+                    {{ if .teacher.Idea }}
+                    {{ .teacher.Idea }}
                     {{ else }}
-                        Нет идей для проектов
+                    Нет идей для проектов
                     {{ end }}
                 </p>
             </div>
             <div class="profile-field">
                 <span class="field-label">О себе:</span>
                 <p class="field-value">
-                    {{ if .user.About }}
-                        {{ .user.About }}
+                    {{ if .teacher.About }}
+                    {{ .teacher.About }}
                     {{ else }}
-                        Информация отсутствует
+                    Информация отсутствует
                     {{ end }}
                 </p>
             </div>
         </div>
 
         <div class="actions">
-            <form action="/teacher/edit/{{ .user.ID }}" method="GET">
+            <form action="/teacher/edit/{{ .teacher.ID }}" method="GET">
                 <button type="submit" class="button">Редактировать профиль</button>
             </form>
-            <form action="/home/{{ .user.ID }}/teacher" method="GET">
+
+            <button id="deleteProfileBtn" class="button">Удалить профиль</button>
+
+            <form action="/home/{{ .teacher.ID }}/teacher" method="GET">
                 <button type="submit" class="button">На главную</button>
             </form>
         </div>
     </div>
+
+    <script>
+        document.getElementById('deleteProfileBtn').addEventListener('click', function () {
+            fetch('/teachers/{{ .teacher.ID }}', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = '/login/{{ .teacher.UserName }}/{{ .teacher.TelegramID }}';
+                    } else {
+                        throw new Error(`Ошибка сервера: ${response.status}`);
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка:', error);
+                    alert('Не удалось удалить профиль: ' + error.message);
+                });
+        });
+    </script>
 </body>
+
 </html>

@@ -12,6 +12,7 @@ type StudentService interface {
 	GetByID(id string) (models.Student, error)
 	GetAll() ([]models.Student, error)
 	Update(student models.Student) error
+	Delete(id string) error
 }
 
 type StudentServiceImpl struct {
@@ -43,3 +44,8 @@ func (s *StudentServiceImpl) GetAll() ([]models.Student, error) {
 func (s *StudentServiceImpl) Update(student models.Student) error {
 	return s.repository.Update(student)
 }
+
+func (s *StudentServiceImpl) Delete(id string) error {
+	return s.repository.Delete(id)
+}
+

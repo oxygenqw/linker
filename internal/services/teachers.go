@@ -12,6 +12,7 @@ type TeacherService interface {
 	GetByID(id string) (models.Teacher, error)
 	GetAll() ([]models.Teacher, error)
 	Update(teacher models.Teacher) error
+	Delete(id string) error
 }
 
 type TeacherServiceImpl struct {
@@ -42,4 +43,8 @@ func (s *TeacherServiceImpl) GetAll() ([]models.Teacher, error) {
 
 func (s *TeacherServiceImpl) Update(teacher models.Teacher) error {
 	return s.repository.Update(teacher)
+}
+
+func (s *TeacherServiceImpl) Delete(id string) error {
+	return s.repository.Delete(id)
 }

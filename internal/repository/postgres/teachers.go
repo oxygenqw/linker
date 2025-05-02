@@ -34,7 +34,7 @@ func (r *TeacherRepositoryImpl) GetByID(id string) (models.Teacher, error) {
 		return models.Teacher{}, fmt.Errorf("invalid UUID format: %w", err)
 	}
 
-	query := `SELECT id, telegram_id, first_name, middle_name, last_name, 
+	query := `SELECT id, telegram_id, user_name, first_name, middle_name, last_name, 
                      degree, position, university, faculty, is_free, idea, about 
               FROM teachers WHERE id = $1`
 
@@ -42,6 +42,7 @@ func (r *TeacherRepositoryImpl) GetByID(id string) (models.Teacher, error) {
 	err = r.db.QueryRow(query, id).Scan(
 		&teacher.ID,
 		&teacher.TelegramID,
+		&teacher.UserName,
 		&teacher.FirstName,
 		&teacher.MiddleName,
 		&teacher.LastName,
@@ -72,7 +73,7 @@ func (r *TeacherRepositoryImpl) GetByTelegramID(telegramID int64) (models.Teache
 		return models.Teacher{}, fmt.Errorf("database connection is not initialized")
 	}
 
-	query := `SELECT id, telegram_id, first_name, middle_name, last_name,
+	query := `SELECT id, telegram_id, user_name, first_name, middle_name, last_name,
                      degree, position, university, faculty, is_free, idea, about
               FROM teachers WHERE telegram_id = $1`
 
@@ -80,6 +81,7 @@ func (r *TeacherRepositoryImpl) GetByTelegramID(telegramID int64) (models.Teache
 	err := r.db.QueryRow(query, telegramID).Scan(
 		&teacher.ID,
 		&teacher.TelegramID,
+		&teacher.UserName,
 		&teacher.FirstName,
 		&teacher.MiddleName,
 		&teacher.LastName,
@@ -106,7 +108,7 @@ func (r *TeacherRepositoryImpl) GetByTelegramID(telegramID int64) (models.Teache
 func (r *TeacherRepositoryImpl) GetAll() ([]models.Teacher, error) {
 	r.logger.Info("[TeacherRepository: GetAll]")
 
-	query := `SELECT id, telegram_id, first_name, middle_name, last_name,
+	query := `SELECT id, telegram_id, user_name, first_name, middle_name, last_name,
                      degree, position, university, faculty, is_free, idea, about
               FROM teachers`
 
@@ -123,6 +125,7 @@ func (r *TeacherRepositoryImpl) GetAll() ([]models.Teacher, error) {
 		err := rows.Scan(
 			&teacher.ID,
 			&teacher.TelegramID,
+			&teacher.UserName,
 			&teacher.FirstName,
 			&teacher.MiddleName,
 			&teacher.LastName,
@@ -159,13 +162,14 @@ func (r *TeacherRepositoryImpl) Create(teacher models.Teacher) (uuid.UUID, error
 	teacher.ID = uuid.New()
 
 	query := `INSERT INTO teachers 
-              (id, telegram_id, first_name, middle_name, last_name, 
+              (id, telegram_id, user_name, first_name, middle_name, last_name, 
                degree, position, university, faculty, is_free, idea, about) 
-              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`
+              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`
 
 	_, err := r.db.Exec(query,
 		teacher.ID,
 		teacher.TelegramID,
+		teacher.UserName,
 		teacher.FirstName,
 		teacher.MiddleName,
 		teacher.LastName,
@@ -237,6 +241,23 @@ func (r *TeacherRepositoryImpl) Update(teacher models.Teacher) error {
 	if rowsAffected == 0 {
 		r.logger.Warn("Teacher not found for update", "teacherID", teacher.ID)
 		return fmt.Errorf("teacher with ID %s not found", teacher.ID)
+	}
+
+	return nil
+}
+
+func (r *TeacherRepositoryImpl) Delete(id string) error {
+	r.logger.Info("[TeacherRepository: Delete]", id)
+
+	if r.db == nil {
+		return fmt.Errorf("database connection is not initialized")
+	}
+
+	query := `DELETE FROM teachers WHERE id = $1`
+
+	_, err := r.db.Exec(query, id)
+	if err != nil {
+		return fmt.Errorf("failed to delete teacher with id %s: %w", id, err)
 	}
 
 	return nil

@@ -13,10 +13,12 @@ import (
 )
 
 type RedirectHadnler interface {
-	CreateUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
+	Create(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 	Input(w http.ResponseWriter, r *http.Request)
 	UpdateStudent(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 	UpdateTeacher(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
+	DeleteStudent(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
+	DeleteTeacher(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 }
 
 type RedirectHandlerImpl struct {
@@ -74,7 +76,7 @@ func (h *RedirectHandlerImpl) Input(w http.ResponseWriter, r *http.Request) {
 // После заполнения первоначальных данных парсим форму и переходим в профиль
 // @router POST /users/:telegram_id
 // TODO: Заменить на CreateUser
-func (h *RedirectHandlerImpl) CreateUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (h *RedirectHandlerImpl) Create(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	h.logger.Info("[H: NewUser] ", "URL: ", r.URL)
 
 	telegramIDStr := ps.ByName("telegram_id")
@@ -98,6 +100,7 @@ func (h *RedirectHandlerImpl) CreateUser(w http.ResponseWriter, r *http.Request,
 	case "student":
 		student := models.Student{
 			TelegramID: telegramID,
+			UserName:   r.FormValue("user_name"),
 			FirstName:  r.FormValue("first_name"),
 			LastName:   r.FormValue("last_name"),
 			MiddleName: r.FormValue("middle_name"),
@@ -110,6 +113,7 @@ func (h *RedirectHandlerImpl) CreateUser(w http.ResponseWriter, r *http.Request,
 	case "teacher":
 		teacher := models.Teacher{
 			TelegramID: telegramID,
+			UserName:   r.FormValue("user_name"),
 			FirstName:  r.FormValue("first_name"),
 			LastName:   r.FormValue("last_name"),
 			MiddleName: r.FormValue("middle_name"),
@@ -202,4 +206,30 @@ func (h *RedirectHandlerImpl) UpdateTeacher(w http.ResponseWriter, r *http.Reque
 	}
 
 	http.Redirect(w, r, fmt.Sprintf("/profile/%s/%s", id, "teacher"), http.StatusFound)
+}
+
+func (h *RedirectHandlerImpl) DeleteStudent(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	h.logger.Info("[H: DeleteStudent] ", "URL: ", r.URL)
+
+	id := ps.ByName("id")
+
+	err := h.service.StudentService.Delete(id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
+func (h *RedirectHandlerImpl) DeleteTeacher(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	h.logger.Info("[H: DeleteTeacher] ", "URL: ", r.URL)
+
+	id := ps.ByName("id")
+
+	err := h.service.TeacherService.Delete(id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+
+	w.WriteHeader(http.StatusOK)
 }

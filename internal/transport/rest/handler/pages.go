@@ -34,7 +34,7 @@ type PagesHandlerImpl struct {
 }
 
 func NewPagesHandler(service *services.Service, logger *logger.Logger) *PagesHandlerImpl {
-	files, err := filepath.Glob("./ui/pages/*.html")
+	files, err := filepath.Glob("./web/pages/*.html")
 	if err != nil {
 		logger.Fatal("Failed to find template files", "error", err)
 	}
@@ -112,7 +112,7 @@ func (h *PagesHandlerImpl) Profile(w http.ResponseWriter, r *http.Request, param
 		}
 
 		data = map[string]any{
-			"user": student,
+			"student": student,
 		}
 
 		h.renderTemplate(w, "student_profile.html", data)
@@ -124,7 +124,7 @@ func (h *PagesHandlerImpl) Profile(w http.ResponseWriter, r *http.Request, param
 			return
 		}
 		data = map[string]any{
-			"user": teacher,
+			"teacher": teacher,
 		}
 
 		h.renderTemplate(w, "teacher_profile.html", data)

@@ -34,13 +34,14 @@ func (r *StudentRepositoryImpl) GetByID(id string) (models.Student, error) {
 		return models.Student{}, fmt.Errorf("invalid UUID format: %w", err)
 	}
 
-	query := `SELECT id, telegram_id, first_name, middle_name, last_name, github, job, idea, about, 
+	query := `SELECT id, telegram_id, user_name, first_name, middle_name, last_name, github, job, idea, about, 
               university, faculty, course, education FROM students WHERE id = $1`
 
 	var student models.Student
 	err = r.db.QueryRow(query, id).Scan(
 		&student.ID,
 		&student.TelegramID,
+		&student.UserName,
 		&student.FirstName,
 		&student.MiddleName,
 		&student.LastName,
@@ -71,13 +72,14 @@ func (r *StudentRepositoryImpl) GetByTelegramID(telegramID int64) (models.Studen
 		return models.Student{}, fmt.Errorf("database connection is not initialized")
 	}
 
-	query := `SELECT id, telegram_id, first_name, middle_name, last_name, github, job, idea, about,
+	query := `SELECT id, telegram_id, user_name, first_name, middle_name, last_name, github, job, idea, about,
               university, faculty, course, education FROM students WHERE telegram_id = $1`
 
 	var student models.Student
 	err := r.db.QueryRow(query, telegramID).Scan(
 		&student.ID,
 		&student.TelegramID,
+		&student.UserName,
 		&student.FirstName,
 		&student.MiddleName,
 		&student.LastName,
@@ -108,7 +110,7 @@ func (r *StudentRepositoryImpl) GetAll() ([]models.Student, error) {
 		return nil, fmt.Errorf("database connection is not initialized")
 	}
 
-	query := `SELECT id, telegram_id, first_name, middle_name, last_name, github, job, idea, about,
+	query := `SELECT id, telegram_id, user_name, first_name, middle_name, last_name, github, job, idea, about,
               university, faculty, course, education FROM students`
 
 	rows, err := r.db.Query(query)
@@ -123,6 +125,7 @@ func (r *StudentRepositoryImpl) GetAll() ([]models.Student, error) {
 		err := rows.Scan(
 			&student.ID,
 			&student.TelegramID,
+			&student.UserName,
 			&student.FirstName,
 			&student.MiddleName,
 			&student.LastName,
@@ -161,12 +164,13 @@ func (r *StudentRepositoryImpl) Create(student models.Student) (uuid.UUID, error
 	student.ID = uuid.New()
 
 	query := `INSERT INTO students 
-              (id, telegram_id, first_name, middle_name, last_name, github, job, idea, about,
+              (id, telegram_id, user_name, first_name, middle_name, last_name, github, job, idea, about,
                university, faculty, course, education) 
-              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`
+              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`
 	_, err := r.db.Exec(query,
 		student.ID,
 		student.TelegramID,
+		student.UserName,
 		student.FirstName,
 		student.MiddleName,
 		student.LastName,
@@ -237,6 +241,23 @@ func (r *StudentRepositoryImpl) Update(student models.Student) error {
 
 	if rowsAffected == 0 {
 		return fmt.Errorf("student with ID %s not found", student.ID)
+	}
+
+	return nil
+}
+
+func (r *StudentRepositoryImpl) Delete(id string) error {
+	r.logger.Info("[StudentRepository: Delete]", id)
+
+	if r.db == nil {
+		return fmt.Errorf("database connection is not initialized")
+	}
+
+	query := `DELETE FROM students WHERE id = $1`
+
+	_, err := r.db.Exec(query, id)
+	if err != nil {
+		return fmt.Errorf("failed to delete student with id %s: %w", id, err)
 	}
 
 	return nil
