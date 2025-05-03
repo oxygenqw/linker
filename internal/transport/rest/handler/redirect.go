@@ -14,7 +14,8 @@ import (
 )
 
 type RedirectHadnler interface {
-	Create(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
+	CreateStudent(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
+	CreateTeacher(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 	Input(w http.ResponseWriter, r *http.Request)
 	UserStudentUpdate(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 	UserTeacherUpdate(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
@@ -34,8 +35,6 @@ func NewRedirectHandler(service *services.Service, logger *logger.Logger) *Redir
 	}
 }
 
-// ...
-// @router GET /
 func (h *RedirectHandlerImpl) Input(w http.ResponseWriter, r *http.Request) {
 	h.logger.Info("[H: Input] ", "URL: ", r.URL)
 
@@ -74,58 +73,53 @@ func (h *RedirectHandlerImpl) Input(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// После заполнения первоначальных данных парсим форму и переходим в профиль
-// @router POST /users/:telegram_id
-// TODO: Заменить на CreateUser
-func (h *RedirectHandlerImpl) Create(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	h.logger.Info("[H: NewUser] ", "URL: ", r.URL)
+func (h *RedirectHandlerImpl) CreateStudent(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	h.logger.Info("[H: CreateStudent] ", "URL: ", r.URL)
 
-	telegramIDStr := ps.ByName("telegram_id")
-	telegramID, err := strconv.ParseInt(telegramIDStr, 10, 64)
-	if err != nil {
-		http.Error(w, "Invalid Telegram ID", http.StatusBadRequest)
+	var student models.Student
+	decoder := json.NewDecoder(r.Body)
+	if err := decoder.Decode(&student); err != nil {
+		http.Error(w, fmt.Sprintf("Invalid JSON: %v", err), http.StatusBadRequest)
 		return
 	}
 
-	err = r.ParseForm()
-	if err != nil {
-		http.Error(w, "Failed to parse form", http.StatusBadRequest)
+	// Проверяем telegram_id
+	if student.TelegramID == 0 {
+		http.Error(w, "Missing telegram_id", http.StatusBadRequest)
 		return
 	}
 
-	role := r.FormValue("role")
-
-	var id uuid.UUID
-
-	switch role {
-	case "student":
-		student := models.Student{
-			TelegramID: telegramID,
-			UserName:   r.FormValue("user_name"),
-			FirstName:  r.FormValue("first_name"),
-			LastName:   r.FormValue("last_name"),
-			MiddleName: r.FormValue("middle_name"),
-		}
-
-		id, err = h.service.StudentService.Create(student)
-		if err != nil {
-			http.Error(w, fmt.Sprintf("Failed to add user: %v", err), http.StatusInternalServerError)
-		}
-	case "teacher":
-		teacher := models.Teacher{
-			TelegramID: telegramID,
-			UserName:   r.FormValue("user_name"),
-			FirstName:  r.FormValue("first_name"),
-			LastName:   r.FormValue("last_name"),
-			MiddleName: r.FormValue("middle_name"),
-		}
-		id, err = h.service.TeacherService.Create(teacher)
-		if err != nil {
-			http.Error(w, fmt.Sprintf("Failed to add user: %v", err), http.StatusInternalServerError)
-		}
+	id, err := h.service.StudentService.Create(student)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Failed to add student: %v", err), http.StatusInternalServerError)
+		return
 	}
 
-	http.Redirect(w, r, fmt.Sprintf("/home/%s/%s", id, role), http.StatusFound)
+	http.Redirect(w, r, fmt.Sprintf("/home/%s/student", id), http.StatusFound)
+}
+
+func (h *RedirectHandlerImpl) CreateTeacher(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	h.logger.Info("[H: CreateTeacher] ", "URL: ", r.URL)
+
+	var teacher models.Teacher
+	decoder := json.NewDecoder(r.Body)
+	if err := decoder.Decode(&teacher); err != nil {
+		http.Error(w, "Invalid JSON", http.StatusBadRequest)
+		return
+	}
+
+	if teacher.TelegramID == 0 {
+		http.Error(w, "Missing telegram_id", http.StatusBadRequest)
+		return
+	}
+
+	id, err := h.service.TeacherService.Create(teacher)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Failed to add teacher: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	http.Redirect(w, r, fmt.Sprintf("/home/%s/teacher", id), http.StatusFound)
 }
 
 func (h *RedirectHandlerImpl) UserStudentUpdate(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {

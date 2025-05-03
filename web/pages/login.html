@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/style.css">
     <link rel="stylesheet" href="/static/login.css">
-    <script src="/static/telegram.js"></script> 
+    <script src="/static/telegram.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
+
 <body>
 
     <div class="header">
@@ -15,7 +17,7 @@
     </div>
 
     <div class="form">
-        <form action="/users/{{ .telegram_id }}" method="POST">
+        <form id="registerForm">
             <input type="hidden" name="user_name" value="{{ .user_name }}">
             <div class="form-item">
                 <label for="first_name">Имя</label>
@@ -39,6 +41,56 @@
             <button type="submit" class="button">Продолжить</button>
         </form>
     </div>
-    
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const form = e.target;
+            const role = form.role.value;
+            const telegramId = Number('{{ .telegram_id }}');
+
+            // Формируем endpoint
+            let endpoint = '';
+            if (role === 'student') {
+                endpoint = `/users/student`;
+            } else if (role === 'teacher') {
+                endpoint = `/users/teacher`;
+            } else {
+                alert('Неизвестная роль!');
+                return;
+            }
+
+            const data = {
+                telegram_id: telegramId,
+                user_name: form.user_name.value,
+                first_name: form.first_name.value,
+                last_name: form.last_name.value,
+                middle_name: form.middle_name.value
+            };
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.redirected) {
+                    window.location.href = response.url;
+                } else if (response.ok) {
+                    alert('Регистрация прошла успешно!');
+                } else {
+                    const error = await response.text();
+                    throw new Error(error || 'Ошибка сервера');
+                }
+            } catch (error) {
+                alert('Ошибка: ' + error.message);
+            }
+        });
+    </script>
 </body>
+
 </html>

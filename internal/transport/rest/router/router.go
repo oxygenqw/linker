@@ -23,12 +23,15 @@ func (r *Router) InitRoutes() *httprouter.Router {
 	router.HandlerFunc(http.MethodPost, "/bot", r.handler.Telegram.CreateBotEndpointHandler(r.appURL))
 
 	// users
+	router.POST("/users/student", r.handler.Redirect.CreateStudent)
+	router.POST("/users/teacher", r.handler.Redirect.CreateTeacher)
+
 	router.GET("/users/student/:id", r.handler.Pages.UserStudentProfile)
 	router.GET("/users/teacher/:id", r.handler.Pages.UserTeacherProfile)
 
 	router.GET("/student/edit/:id", r.handler.Pages.EditStudentProfile)
 	router.GET("/teacher/edit/:id", r.handler.Pages.EditTeacherProfile)
-	
+
 	router.PATCH("/users/student", r.handler.Redirect.UserStudentUpdate)
 	router.PATCH("/users/teacher", r.handler.Redirect.UserTeacherUpdate)
 
@@ -37,7 +40,6 @@ func (r *Router) InitRoutes() *httprouter.Router {
 
 	// redirects
 	router.HandlerFunc(http.MethodGet, "/", r.handler.Redirect.Input)
-	router.POST("/users/:telegram_id", r.handler.Redirect.Create)
 
 	// html pages
 	router.GET("/login/:user_name/:telegram_id", r.handler.Pages.Login)
