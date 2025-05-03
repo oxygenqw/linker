@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -127,85 +128,54 @@ func (h *RedirectHandlerImpl) Create(w http.ResponseWriter, r *http.Request, ps 
 	http.Redirect(w, r, fmt.Sprintf("/home/%s/%s", id, role), http.StatusFound)
 }
 
-func (h *RedirectHandlerImpl) UpdateStudent(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (h *RedirectHandlerImpl) UpdateStudent(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	h.logger.Info("[H: UpdateStudent] ", "URL: ", r.URL)
 
-	id, err := uuid.Parse(ps.ByName("id"))
-	if err != nil {
-		http.Error(w, "Invalid student ID format", http.StatusBadRequest)
+	var student models.Student
+	if err := json.NewDecoder(r.Body).Decode(&student); err != nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
 
-	err = r.ParseForm()
-	if err != nil {
-		http.Error(w, "Failed to parse form", http.StatusBadRequest)
+	if student.ID == uuid.Nil {
+		http.Error(w, "Missing student ID", http.StatusBadRequest)
 		return
 	}
 
-	student := models.Student{
-		ID:         id,
-		FirstName:  r.FormValue("first_name"),
-		LastName:   r.FormValue("last_name"),
-		MiddleName: r.FormValue("middle_name"),
-		GitHub:     r.FormValue("github"),
-		Job:        r.FormValue("job"),
-		Idea:       r.FormValue("idea"),
-		About:      r.FormValue("about"),
-		University: r.FormValue("university"),
-		Faculty:    r.FormValue("faculty"),
-		Course:     r.FormValue("course"),
-		Education:  r.FormValue("education"),
-	}
-
-	err = h.service.StudentService.Update(student)
+	err := h.service.StudentService.Update(student)
 	if err != nil {
-		h.logger.Error("Failed to update student", "error", err, "ID: ", id)
+		h.logger.Error("Failed to update student", "error", err, "ID: ", student.ID)
 		http.Error(w, "Failed to update student profile", http.StatusInternalServerError)
 		return
 	}
 
-	http.Redirect(w, r, fmt.Sprintf("/profile/%s/%s", id, "student"), http.StatusFound)
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(map[string]string{"status": "success"})
 }
 
-func (h *RedirectHandlerImpl) UpdateTeacher(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (h *RedirectHandlerImpl) UpdateTeacher(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	h.logger.Info("[H: UpdateTeacher] ", "URL: ", r.URL)
 
-	id, err := uuid.Parse(ps.ByName("id"))
-	if err != nil {
-		http.Error(w, "Invalid teacher ID format", http.StatusBadRequest)
+	var teacher models.Teacher
+	if err := json.NewDecoder(r.Body).Decode(&teacher); err != nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
 
-	err = r.ParseForm()
-	if err != nil {
-		http.Error(w, "Failed to parse form", http.StatusBadRequest)
+	if teacher.ID == uuid.Nil {
+		http.Error(w, "Missing student ID", http.StatusBadRequest)
 		return
 	}
 
-	teacher := models.Teacher{
-		ID:         id,
-		FirstName:  r.FormValue("first_name"),
-		LastName:   r.FormValue("last_name"),
-		MiddleName: r.FormValue("middle_name"),
-		Degree:     r.FormValue("degree"),
-		Position:   r.FormValue("position"),
-		University: r.FormValue("university"),
-		Faculty:    r.FormValue("faculty"),
-		Idea:       r.FormValue("idea"),
-		About:      r.FormValue("about"),
-	}
-
-	isFree := r.FormValue("is_free") == "on"
-	teacher.IsFree = isFree
-
-	err = h.service.TeacherService.Update(teacher)
+	err := h.service.TeacherService.Update(teacher)
 	if err != nil {
-		h.logger.Error("Failed to update teacher", "error", err, "ID: ", id)
-		http.Error(w, "Failed to update teacher profile", http.StatusInternalServerError)
+		h.logger.Error("Failed to update student", "error", err, "ID: ", teacher.ID)
+		http.Error(w, "Failed to update student profile", http.StatusInternalServerError)
 		return
 	}
 
-	http.Redirect(w, r, fmt.Sprintf("/profile/%s/%s", id, "teacher"), http.StatusFound)
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(map[string]string{"status": "success"})
 }
 
 func (h *RedirectHandlerImpl) DeleteStudent(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -216,6 +186,7 @@ func (h *RedirectHandlerImpl) DeleteStudent(w http.ResponseWriter, r *http.Reque
 	err := h.service.StudentService.Delete(id)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -229,6 +200,7 @@ func (h *RedirectHandlerImpl) DeleteTeacher(w http.ResponseWriter, r *http.Reque
 	err := h.service.TeacherService.Delete(id)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
 	w.WriteHeader(http.StatusOK)

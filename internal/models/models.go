@@ -3,36 +3,34 @@ package models
 import "github.com/google/uuid"
 
 type Student struct {
-	ID         uuid.UUID
-	TelegramID int64
-	UserName   string
-	FirstName  string
-	LastName   string
-	MiddleName string
-	University string
-	Faculty    string
-	Idea       string
-	About      string
-
-	GitHub    string
-	Job       string
-	Course    string
-	Education string
+	ID         uuid.UUID `json:"id"`
+	TelegramID int64     `json:"telegram_id"`
+	UserName   string    `json:"user_name"`
+	FirstName  string    `json:"first_name"`
+	LastName   string    `json:"last_name"`
+	MiddleName string    `json:"middle_name"`
+	University string    `json:"university"`
+	Faculty    string    `json:"faculty"`
+	Idea       string    `json:"idea"`
+	About      string    `json:"about"`
+	GitHub     string    `json:"github"`
+	Job        string    `json:"job"`
+	Course     string    `json:"course"`
+	Education  string    `json:"education"`
 }
 
 type Teacher struct {
-	ID         uuid.UUID
-	TelegramID int64
-	UserName   string
-	FirstName  string
-	LastName   string
-	MiddleName string
-	University string
-	Faculty    string
-	Idea       string
-	About      string
-
-	Degree   string
-	Position string
-	IsFree   bool
+	ID         uuid.UUID `json:"id"`
+	TelegramID int64     `json:"telegram_id"`
+	UserName   string    `json:"user_name"`
+	FirstName  string    `json:"first_name"`
+	LastName   string    `json:"last_name"`
+	MiddleName string    `json:"middle_name"`
+	University string    `json:"university"`
+	Faculty    string    `json:"faculty"`
+	Idea       string    `json:"idea"`
+	About      string    `json:"about"`
+	Degree     string    `json:"degree"`
+	Position   string    `json:"position"`
+	IsFree     bool      `json:"is_free"`
 }

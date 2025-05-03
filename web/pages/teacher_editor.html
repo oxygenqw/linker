@@ -11,23 +11,20 @@
 <body>
     <div class="container">
         <h1>Редактирование профиля</h1>
-        <form action="/teacher/update/{{ .user.ID }}" method="POST">
+        <form id="profileForm">
             <div class="form-group">
                 <label for="first_name">Имя</label>
-                <input type="text" id="first_name" name="first_name" 
-                       value="{{ .user.FirstName }}" required>
+                <input type="text" id="first_name" name="first_name" value="{{ .user.FirstName }}" required>
             </div>
             
             <div class="form-group">
                 <label for="last_name">Фамилия</label>
-                <input type="text" id="last_name" name="last_name" 
-                       value="{{ .user.LastName }}" required>
+                <input type="text" id="last_name" name="last_name" value="{{ .user.LastName }}" required>
             </div>
             
             <div class="form-group">
                 <label for="middle_name">Отчество</label>
-                <input type="text" id="middle_name" name="middle_name" 
-                       value="{{ .user.MiddleName }}">
+                <input type="text" id="middle_name" name="middle_name" value="{{ .user.MiddleName }}">
             </div>
             
             <div class="form-group">
@@ -58,20 +55,17 @@
             
             <div class="form-group">
                 <label for="university">Университет</label>
-                <input type="text" id="university" name="university"
-                       value="{{ .user.University }}">
+                <input type="text" id="university" name="university" value="{{ .user.University }}">
             </div>
             
             <div class="form-group">
                 <label for="faculty">Факультет/Кафедра</label>
-                <input type="text" id="faculty" name="faculty"
-                       value="{{ .user.Faculty }}">
+                <input type="text" id="faculty" name="faculty" value="{{ .user.Faculty }}">
             </div>
             
             <div class="form-group">
                 <label for="is_free">
-                    <input type="checkbox" id="is_free" name="is_free" 
-                           {{ if .user.IsFree }}checked{{ end }}>
+                    <input type="checkbox" id="is_free" name="is_free" {{ if .user.IsFree }}checked{{ end }}>
                     Свободен для проектов
                 </label>
             </div>
@@ -89,5 +83,45 @@
             <button type="submit" class="button">Сохранить изменения</button>
         </form>
     </div>
+    <script>
+        document.getElementById('profileForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const form = e.target;
+            const teacherId = '{{ .user.ID }}';
+
+            try {
+                const response = await fetch(`/teachers`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        id: teacherId,
+                        first_name: form.first_name.value,
+                        last_name: form.last_name.value,
+                        middle_name: form.middle_name.value,
+                        degree: form.degree.value,
+                        position: form.position.value,
+                        university: form.university.value,
+                        faculty: form.faculty.value,
+                        is_free: form.is_free.checked,
+                        idea: form.idea.value,
+                        about: form.about.value
+                    })
+                });
+
+                if (response.ok) {
+                    window.location.href = `/profile/${teacherId}/teacher`;
+                } else {
+                    const error = await response.text();
+                    throw new Error(error || 'Ошибка сервера');
+                }
+            } catch (error) {
+                console.error('Ошибка:', error);
+                alert(`Ошибка при сохранении: ${error.message}`);
+            }
+        });
+    </script>
 </body>
 </html>

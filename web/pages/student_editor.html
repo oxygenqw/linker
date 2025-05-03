@@ -1,45 +1,42 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/editor.css">
     <link rel="stylesheet" href="/static/style.css">
-    <script src="/static/telegram.js"></script> 
+    <script src="/static/telegram.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
+
 <body>
     <div class="container">
         <h1>Редактирование профиля</h1>
-        <form action="/student/update/{{ .user.ID }}" method="POST">
+        <form id="profileForm">
             <div class="form-group">
                 <label for="first_name">Имя</label>
-                <input type="text" id="first_name" name="first_name" 
-                       value="{{ .user.FirstName }}" required>
+                <input type="text" id="first_name" name="first_name" value="{{ .user.FirstName }}" required>
             </div>
-            
+
             <div class="form-group">
                 <label for="last_name">Фамилия</label>
-                <input type="text" id="last_name" name="last_name" 
-                       value="{{ .user.LastName }}" required>
+                <input type="text" id="last_name" name="last_name" value="{{ .user.LastName }}" required>
             </div>
-            
+
             <div class="form-group">
                 <label for="middle_name">Отчество</label>
-                <input type="text" id="middle_name" name="middle_name" 
-                       value="{{ .user.MiddleName }}">
+                <input type="text" id="middle_name" name="middle_name" value="{{ .user.MiddleName }}">
             </div>
 
             <div class="form-group">
                 <label for="university">Университет</label>
-                <input type="text" id="university" name="university" 
-                       value="{{ .user.University }}">
+                <input type="text" id="university" name="university" value="{{ .user.University }}">
             </div>
 
             <div class="form-group">
                 <label for="faculty">Факультет</label>
-                <input type="text" id="faculty" name="faculty" 
-                       value="{{ .user.Faculty }}">
+                <input type="text" id="faculty" name="faculty" value="{{ .user.Faculty }}">
             </div>
 
             <div class="form-group">
@@ -59,38 +56,84 @@
                 <label for="education">Уровень образования</label>
                 <select id="education" name="education" class="form-select">
                     <option value="">Не указано</option>
-                    <option value="Бакалавриат" {{ if eq .user.Education "Бакалавриат" }}selected{{ end }}>Бакалавриат</option>
-                    <option value="Специалитет" {{ if eq .user.Education "Специалитет" }}selected{{ end }}>Специалитет</option>
-                    <option value="Магистратура" {{ if eq .user.Education "Магистратура" }}selected{{ end }}>Магистратура</option>
-                    <option value="Аспирантура" {{ if eq .user.Education "Аспирантура" }}selected{{ end }}>Аспирантура</option>
-                    <option value="Докторантура" {{ if eq .user.Education "Докторантура" }}selected{{ end }}>Докторантура</option>
+                    <option value="Бакалавриат" {{ if eq .user.Education "Бакалавриат" }}selected{{ end }}>Бакалавриат
+                    </option>
+                    <option value="Специалитет" {{ if eq .user.Education "Специалитет" }}selected{{ end }}>Специалитет
+                    </option>
+                    <option value="Магистратура" {{ if eq .user.Education "Магистратура" }}selected{{ end }}>
+                        Магистратура</option>
+                    <option value="Аспирантура" {{ if eq .user.Education "Аспирантура" }}selected{{ end }}>Аспирантура
+                    </option>
+                    <option value="Докторантура" {{ if eq .user.Education "Докторантура" }}selected{{ end }}>
+                        Докторантура</option>
                 </select>
             </div>
-            
+
             <div class="form-group">
                 <label for="github">GitHub</label>
-                <input type="text" id="github" name="github" 
-                       value="{{ .user.GitHub }}">
+                <input type="text" id="github" name="github" value="{{ .user.GitHub }}">
             </div>
-            
+
             <div class="form-group">
                 <label for="job">Место работы</label>
-                <input type="text" id="job" name="job" 
-                       value="{{ .user.Job }}">
+                <input type="text" id="job" name="job" value="{{ .user.Job }}">
             </div>
-            
+
             <div class="form-group">
                 <label for="idea">Идея проекта</label>
                 <textarea id="idea" name="idea">{{ .user.Idea }}</textarea>
             </div>
-            
+
             <div class="form-group">
                 <label for="about">О себе</label>
                 <textarea id="about" name="about">{{ .user.About }}</textarea>
             </div>
-            
+
             <button type="submit" class="button">Сохранить изменения</button>
         </form>
     </div>
+
+    <script>
+        document.getElementById('profileForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const form = e.target;
+            const studentId = '{{ .user.ID }}';
+
+            try {
+                const response = await fetch(`/students`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        id: studentId,
+                        first_name: form.first_name.value,
+                        last_name: form.last_name.value,
+                        middle_name: form.middle_name.value,
+                        university: form.university.value,
+                        faculty: form.faculty.value,
+                        course: form.course.value,
+                        education: form.education.value,
+                        github: form.github.value,
+                        job: form.job.value,
+                        idea: form.idea.value,
+                        about: form.about.value
+                    })
+                });
+
+                if (response.ok) {
+                    window.location.href = `/profile/${studentId}/student`;
+                } else {
+                    const error = await response.text();
+                    throw new Error(error || 'Ошибка сервера');
+                }
+            } catch (error) {
+                console.error('Ошибка:', error);
+                alert(`Ошибка при сохранении: ${error.message}`);
+            }
+        });
+    </script>
 </body>
+
 </html>

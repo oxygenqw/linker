@@ -123,36 +123,38 @@
         </div>
 
         <div class="actions">
-            <form action="/student/edit/{{ .student.ID }}" method="GET">
-                <button type="submit" class="button">Редактировать профиль</button>
-            </form>
-
-            <button id="deleteProfileBtn" class="button">Удалить профиль</button>
-
-            <form action="/home/{{ .student.ID }}/student" method="GET">
-                <button type="submit" class="button">На главную</button>
-            </form>
+            <button class="button" id="editProfile">Редактировать профиль</button>
+            <button class="button" id="deleteProfile">Удалить профиль</button>
+            <button class="button" id="homeButton">На главную</button>
         </div>
     </div>
     <script>
-        document.getElementById('deleteProfileBtn').addEventListener('click', function () {
-            fetch('/students/{{ .student.ID }}', {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            })
-                .then(response => {
-                    if (response.ok) {
-                        window.location.href = '/login/{{ .student.UserName }}/{{ .student.TelegramID }}';
-                    } else {
-                        throw new Error(`Ошибка сервера: ${response.status}`);
-                    }
+        document.getElementById('editProfile').addEventListener('click', function () {
+            window.location.href = '/student/edit/{{ .student.ID }}';
+        });
+
+        document.getElementById('deleteProfile').addEventListener('click', function () {
+            {
+                fetch('/students/{{ .student.ID }}', {
+                    method: 'DELETE',
                 })
-                .catch(error => {
-                    console.error('Ошибка:', error);
-                    alert('Не удалось удалить профиль: ' + error.message);
-                });
+                    .then(response => {
+                        if (response.ok) {
+                            window.location.href = '/login/{{ .student.UserName }}/{{ .student.TelegramID }}';
+                        } else {
+                            return response.text().then(text => {
+                                throw new Error(text || `Server error: ${response.status}`);
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        alert('Failed to delete profile: ' + error.message);
+                    });
+            }
+        });
+
+        document.getElementById('homeButton').addEventListener('click', function () {
+            window.location.href = '/home/{{ .student.ID }}/student';
         });
     </script>
 </body>

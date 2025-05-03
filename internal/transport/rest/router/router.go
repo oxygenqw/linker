@@ -22,27 +22,28 @@ func (r *Router) InitRoutes() *httprouter.Router {
 	// telegram api
 	router.HandlerFunc(http.MethodPost, "/bot", r.handler.Telegram.CreateBotEndpointHandler(r.appURL))
 
+	// me
+	router.PATCH("/students", r.handler.Redirect.UpdateStudent)
+	router.PATCH("/teachers", r.handler.Redirect.UpdateTeacher)
+
+	router.DELETE("/students/:id", r.handler.Redirect.DeleteStudent)
+	router.DELETE("/teachers/:id", r.handler.Redirect.DeleteTeacher)
+
+	router.GET("/profile/:id/:role", r.handler.Pages.Profile)
+
 	// redirects
 	router.HandlerFunc(http.MethodGet, "/", r.handler.Redirect.Input)
 	router.POST("/users/:telegram_id", r.handler.Redirect.Create)
 
-	router.POST("/student/update/:id", r.handler.Redirect.UpdateStudent)
-	router.POST("/teacher/update/:id", r.handler.Redirect.UpdateTeacher)
-
 	// html pages
 	router.GET("/login/:user_name/:telegram_id", r.handler.Pages.Login)
 	router.GET("/home/:id/:role", r.handler.Pages.Home)
-
-	router.GET("/profile/:id/:role", r.handler.Pages.Profile)
 
 	router.GET("/student/edit/:id", r.handler.Pages.EditStudentProfile)
 	router.GET("/teacher/edit/:id", r.handler.Pages.EditTeacherProfile)
 
 	router.GET("/students/:id/:role", r.handler.Pages.Students)
 	router.GET("/teachers/:id/:role", r.handler.Pages.Teachers)
-
-	router.DELETE("/students/:id", r.handler.Redirect.DeleteStudent)
-	router.DELETE("/teachers/:id", r.handler.Redirect.DeleteTeacher)
 
 	router.GET("/student/profile/:id/:role/:student_id", r.handler.Pages.StudentProfile)
 	router.GET("/teacher/profile/:id/:role/:teacher_id", r.handler.Pages.TeacherProfile)
