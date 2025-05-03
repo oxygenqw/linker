@@ -107,8 +107,8 @@
 
         <div class="actions">
             <div class="actions">
-                <button class="button" id="editProfile">Редактировать профиль</button>
-                <button class="button" id="deleteProfile">Удалить профиль</button>
+                <button class="button" id="editProfileButton">Редактировать профиль</button>
+                <button class="button" id="deleteProfileButton">Удалить профиль</button>
                 <button class="button" id="homeButton">На главную</button>
             </div>
         </div>
@@ -117,11 +117,11 @@
     <script>
         const teacherId = '{{ .teacher.ID }}';
 
-        document.getElementById('editProfile').addEventListener('click', function () {
+        document.getElementById('editProfileButton').addEventListener('click', function () {
             window.location.href = `/teacher/edit/${teacherId}`;
         });
 
-        document.getElementById('deleteProfile').addEventListener('click', function () {
+        document.getElementById('deleteProfileButton').addEventListener('click', function () {
             fetch(`/users/teacher/${teacherId}`, {
                 method: 'DELETE',
             })

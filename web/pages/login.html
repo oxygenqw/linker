@@ -50,15 +50,11 @@
             const role = form.role.value;
             const telegramId = Number('{{ .telegram_id }}');
 
-            // Формируем endpoint
             let endpoint = '';
             if (role === 'student') {
                 endpoint = `/users/student`;
             } else if (role === 'teacher') {
                 endpoint = `/users/teacher`;
-            } else {
-                alert('Неизвестная роль!');
-                return;
             }
 
             const data = {
@@ -78,18 +74,22 @@
                     body: JSON.stringify(data)
                 });
 
-                if (response.redirected) {
-                    window.location.href = response.url;
-                } else if (response.ok) {
-                    alert('Регистрация прошла успешно!');
-                } else {
+                if (!response.ok) {
                     const error = await response.text();
                     throw new Error(error || 'Ошибка сервера');
+                }
+
+                const result = await response.json();
+                if (role === 'student') {
+                    window.location.href = `/home/${result.id}/student`;
+                } else if (role === 'teacher') {
+                    window.location.href = `/home/${result.id}/teacher`;
                 }
             } catch (error) {
                 alert('Ошибка: ' + error.message);
             }
         });
+
     </script>
 </body>
 

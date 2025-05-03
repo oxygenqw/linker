@@ -15,14 +15,8 @@ type PagesHandler interface {
 	Login(w http.ResponseWriter, r *http.Request, params httprouter.Params)
 	Home(w http.ResponseWriter, r *http.Request, params httprouter.Params)
 
-	UserStudentProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params)
-	UserTeacherProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params)
-
 	Students(w http.ResponseWriter, r *http.Request, params httprouter.Params)
 	Teachers(w http.ResponseWriter, r *http.Request, params httprouter.Params)
-
-	EditStudentProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params)
-	EditTeacherProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params)
 
 	StudentProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params)
 	TeacherProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params)
@@ -92,85 +86,6 @@ func (h *PagesHandlerImpl) Home(w http.ResponseWriter, r *http.Request, params h
 	}
 
 	h.renderTemplate(w, "home.html", data)
-}
-
-// Рендерит profile.html и передает туда информацию о пользователе
-// @router GET /profile/:id/:role
-
-func (h *PagesHandlerImpl) UserStudentProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	h.logger.Info("[H: MeStudentProfile]", " URL: ", r.URL)
-
-	id := params.ByName("id")
-
-	student, err := h.service.StudentService.GetByID(id)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	data := map[string]any{
-		"student": student,
-	}
-
-	h.renderTemplate(w, "student_profile.html", data)
-}
-
-func (h *PagesHandlerImpl) UserTeacherProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	h.logger.Info("[H: MeTeacherProfile]", " URL: ", r.URL)
-
-	id := params.ByName("id")
-
-	teacher, err := h.service.TeacherService.GetByID(id)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	data := map[string]any{
-		"teacher": teacher,
-	}
-
-	h.renderTemplate(w, "teacher_profile.html", data)
-}
-
-func (h *PagesHandlerImpl) EditStudentProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	h.logger.Info("[H: EditStudentProfile]", " URL: ", r.URL)
-
-	id := params.ByName("id")
-
-	var data map[string]any
-
-	student, err := h.service.StudentService.GetByID(id)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	data = map[string]any{
-		"student": student,
-	}
-
-	h.renderTemplate(w, "student_editor.html", data)
-}
-
-func (h *PagesHandlerImpl) EditTeacherProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	h.logger.Info("[H: EditTeacherProfile]", " URL: ", r.URL)
-
-	id := params.ByName("id")
-
-	var data map[string]any
-
-	teacher, err := h.service.TeacherService.GetByID(id)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	data = map[string]any{
-		"teacher": teacher,
-	}
-
-	h.renderTemplate(w, "teacher_editor.html", data)
 }
 
 func (h *PagesHandlerImpl) StudentProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
