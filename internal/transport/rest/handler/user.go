@@ -15,20 +15,6 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-type UserHandler interface {
-	TelegramAuth(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
-	CreateStudent(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
-	CreateTeacher(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
-	StudentProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params)
-	TeacherProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params)
-	EditStudentProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params)
-	EditTeacherProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params)
-	StudentUpdate(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
-	TeacherUpdate(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
-	StudentDelete(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
-	TeacherDelete(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
-}
-
 type UserHandlerImpl struct {
 	logger    *logger.Logger
 	service   *services.Service
@@ -144,10 +130,10 @@ func (h *UserHandlerImpl) CreateTeacher(w http.ResponseWriter, r *http.Request, 
 	fmt.Fprintf(w, `{"id":"%s"}`, id)
 }
 
-func (h *UserHandlerImpl) StudentProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+func (h *UserHandlerImpl) StudentProfile(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	h.logger.Info("[H: StudentProfile]", " URL: ", r.URL)
 
-	id := params.ByName("id")
+	id := ps.ByName("id")
 
 	student, err := h.service.StudentService.GetByID(id)
 	if err != nil {
@@ -162,10 +148,10 @@ func (h *UserHandlerImpl) StudentProfile(w http.ResponseWriter, r *http.Request,
 	h.renderTemplate(w, "student_profile.html", data)
 }
 
-func (h *UserHandlerImpl) TeacherProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+func (h *UserHandlerImpl) TeacherProfile(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	h.logger.Info("[H: TeacherProfile]", " URL: ", r.URL)
 
-	id := params.ByName("id")
+	id := ps.ByName("id")
 
 	teacher, err := h.service.TeacherService.GetByID(id)
 	if err != nil {
@@ -180,10 +166,10 @@ func (h *UserHandlerImpl) TeacherProfile(w http.ResponseWriter, r *http.Request,
 	h.renderTemplate(w, "teacher_profile.html", data)
 }
 
-func (h *UserHandlerImpl) EditStudentProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+func (h *UserHandlerImpl) EditStudentProfile(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	h.logger.Info("[H: EditStudentProfile]", " URL: ", r.URL)
 
-	id := params.ByName("id")
+	id := ps.ByName("id")
 
 	var data map[string]any
 
@@ -200,10 +186,10 @@ func (h *UserHandlerImpl) EditStudentProfile(w http.ResponseWriter, r *http.Requ
 	h.renderTemplate(w, "student_editor.html", data)
 }
 
-func (h *UserHandlerImpl) EditTeacherProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+func (h *UserHandlerImpl) EditTeacherProfile(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	h.logger.Info("[H: EditTeacherProfile]", " URL: ", r.URL)
 
-	id := params.ByName("id")
+	id := ps.ByName("id")
 
 	var data map[string]any
 

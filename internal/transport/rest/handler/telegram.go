@@ -13,10 +13,6 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2"
 )
 
-type TelegramHandler interface {
-	CreateBotEndpointHandler(appURL string) http.HandlerFunc
-}
-
 type TelegramHandlerImpl struct {
 	logger *logger.Logger
 	bot    *bot.Bot

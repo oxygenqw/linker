@@ -11,17 +11,6 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-type PagesHandler interface {
-	Login(w http.ResponseWriter, r *http.Request, params httprouter.Params)
-	Home(w http.ResponseWriter, r *http.Request, params httprouter.Params)
-
-	Students(w http.ResponseWriter, r *http.Request, params httprouter.Params)
-	Teachers(w http.ResponseWriter, r *http.Request, params httprouter.Params)
-
-	StudentProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params)
-	TeacherProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params)
-}
-
 type PagesHandlerImpl struct {
 	logger    *logger.Logger
 	service   *services.Service
