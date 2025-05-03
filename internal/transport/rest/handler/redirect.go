@@ -16,10 +16,10 @@ import (
 type RedirectHadnler interface {
 	Create(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 	Input(w http.ResponseWriter, r *http.Request)
-	UpdateStudent(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
-	UpdateTeacher(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
-	DeleteStudent(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
-	DeleteTeacher(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
+	UserStudentUpdate(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
+	UserTeacherUpdate(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
+	UserStudentDelete(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
+	UserTeacherDelete(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 }
 
 type RedirectHandlerImpl struct {
@@ -128,7 +128,7 @@ func (h *RedirectHandlerImpl) Create(w http.ResponseWriter, r *http.Request, ps 
 	http.Redirect(w, r, fmt.Sprintf("/home/%s/%s", id, role), http.StatusFound)
 }
 
-func (h *RedirectHandlerImpl) UpdateStudent(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func (h *RedirectHandlerImpl) UserStudentUpdate(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	h.logger.Info("[H: UpdateStudent] ", "URL: ", r.URL)
 
 	var student models.Student
@@ -153,7 +153,7 @@ func (h *RedirectHandlerImpl) UpdateStudent(w http.ResponseWriter, r *http.Reque
 	json.NewEncoder(w).Encode(map[string]string{"status": "success"})
 }
 
-func (h *RedirectHandlerImpl) UpdateTeacher(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func (h *RedirectHandlerImpl) UserTeacherUpdate(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	h.logger.Info("[H: UpdateTeacher] ", "URL: ", r.URL)
 
 	var teacher models.Teacher
@@ -178,7 +178,7 @@ func (h *RedirectHandlerImpl) UpdateTeacher(w http.ResponseWriter, r *http.Reque
 	json.NewEncoder(w).Encode(map[string]string{"status": "success"})
 }
 
-func (h *RedirectHandlerImpl) DeleteStudent(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (h *RedirectHandlerImpl) UserStudentDelete(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	h.logger.Info("[H: DeleteStudent] ", "URL: ", r.URL)
 
 	id := ps.ByName("id")
@@ -192,7 +192,7 @@ func (h *RedirectHandlerImpl) DeleteStudent(w http.ResponseWriter, r *http.Reque
 	w.WriteHeader(http.StatusOK)
 }
 
-func (h *RedirectHandlerImpl) DeleteTeacher(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (h *RedirectHandlerImpl) UserTeacherDelete(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	h.logger.Info("[H: DeleteTeacher] ", "URL: ", r.URL)
 
 	id := ps.ByName("id")

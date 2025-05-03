@@ -129,32 +129,32 @@
         </div>
     </div>
     <script>
+        const studentId = '{{ .student.ID }}';
+
         document.getElementById('editProfile').addEventListener('click', function () {
-            window.location.href = '/student/edit/{{ .student.ID }}';
+            window.location.href = `/student/edit/${studentId}`;
         });
 
         document.getElementById('deleteProfile').addEventListener('click', function () {
-            {
-                fetch('/students/{{ .student.ID }}', {
-                    method: 'DELETE',
+            fetch(`/users/student/${studentId}`, {
+                method: 'DELETE',
+            })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = `/login/{{ .student.UserName }}/{{ .student.TelegramID }}`;
+                    } else {
+                        return response.text().then(text => {
+                            throw new Error(text || `Server error: ${response.status}`);
+                        });
+                    }
                 })
-                    .then(response => {
-                        if (response.ok) {
-                            window.location.href = '/login/{{ .student.UserName }}/{{ .student.TelegramID }}';
-                        } else {
-                            return response.text().then(text => {
-                                throw new Error(text || `Server error: ${response.status}`);
-                            });
-                        }
-                    })
-                    .catch(error => {
-                        alert('Failed to delete profile: ' + error.message);
-                    });
-            }
+                .catch(error => {
+                    alert('Failed to delete profile: ' + error.message);
+                });
         });
 
         document.getElementById('homeButton').addEventListener('click', function () {
-            window.location.href = '/home/{{ .student.ID }}/student';
+            window.location.href = `/home/${studentId}/student`;
         });
     </script>
 </body>

@@ -22,14 +22,18 @@ func (r *Router) InitRoutes() *httprouter.Router {
 	// telegram api
 	router.HandlerFunc(http.MethodPost, "/bot", r.handler.Telegram.CreateBotEndpointHandler(r.appURL))
 
-	// me
-	router.PATCH("/students", r.handler.Redirect.UpdateStudent)
-	router.PATCH("/teachers", r.handler.Redirect.UpdateTeacher)
+	// users
+	router.GET("/users/student/:id", r.handler.Pages.UserStudentProfile)
+	router.GET("/users/teacher/:id", r.handler.Pages.UserTeacherProfile)
 
-	router.DELETE("/students/:id", r.handler.Redirect.DeleteStudent)
-	router.DELETE("/teachers/:id", r.handler.Redirect.DeleteTeacher)
+	router.GET("/student/edit/:id", r.handler.Pages.EditStudentProfile)
+	router.GET("/teacher/edit/:id", r.handler.Pages.EditTeacherProfile)
+	
+	router.PATCH("/users/student", r.handler.Redirect.UserStudentUpdate)
+	router.PATCH("/users/teacher", r.handler.Redirect.UserTeacherUpdate)
 
-	router.GET("/profile/:id/:role", r.handler.Pages.Profile)
+	router.DELETE("/users/student/:id", r.handler.Redirect.UserStudentDelete)
+	router.DELETE("/users/teacher/:id", r.handler.Redirect.UserTeacherDelete)
 
 	// redirects
 	router.HandlerFunc(http.MethodGet, "/", r.handler.Redirect.Input)
@@ -38,9 +42,6 @@ func (r *Router) InitRoutes() *httprouter.Router {
 	// html pages
 	router.GET("/login/:user_name/:telegram_id", r.handler.Pages.Login)
 	router.GET("/home/:id/:role", r.handler.Pages.Home)
-
-	router.GET("/student/edit/:id", r.handler.Pages.EditStudentProfile)
-	router.GET("/teacher/edit/:id", r.handler.Pages.EditTeacherProfile)
 
 	router.GET("/students/:id/:role", r.handler.Pages.Students)
 	router.GET("/teachers/:id/:role", r.handler.Pages.Teachers)

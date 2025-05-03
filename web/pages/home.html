@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="/static/telegram.js"></script> 
+    <script src="/static/telegram.js"></script>
     <link rel="stylesheet" href="/static/style.css">
     <link rel="stylesheet" href="/static/home.css">
     <title>Главная</title>
 </head>
+
 <body>
     <div class="main-container">
         <h1>Главная</h1>
-        
+
         <div class="button-group">
-            <form action="/profile/{{ .id }}/{{ .role }}" method="GET">
-                <button type="submit" class="button">Профиль</button>
-            </form>
+            <button class="button" id="profile">Профиль</button>
+
+
 
             <form action="/teachers/{{ .id }}/{{ .role }}" method="GET">
                 <button type="submit" class="button">Преподаватели</button>
@@ -27,5 +29,22 @@
             </form>
         </div>
     </div>
+
+    <script>
+        const userRole = "{{ .role }}";
+        const userId = "{{ .id }}";
+
+        document.getElementById('profile').addEventListener('click', function () {
+            if (userRole === 'student') {
+                window.location.href = `/users/student/${userId}`;
+            } else if (userRole === 'teacher') {
+                window.location.href = `/users/teacher/${userId}`;
+            } else {
+                alert('Неизвестная роль пользователя');
+            }
+        });
+    </script>
+
 </body>
+
 </html>
