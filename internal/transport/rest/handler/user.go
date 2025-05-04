@@ -22,9 +22,11 @@ type UserHandlerImpl struct {
 }
 
 func NewUserHandler(service *services.Service, logger *logger.Logger) *UserHandlerImpl {
-	files, err := filepath.Glob("./web/pages/*.html")
-	if err != nil {
-		logger.Fatal("Failed to find template files", "error", err)
+	files := []string{
+		"./web/pages/student_profile.html",
+		"./web/pages/teacher_profile.html",
+		"./web/pages/student_editor.html",
+		"./web/pages/teacher_editor.html",
 	}
 
 	templates := make(map[string]*template.Template)

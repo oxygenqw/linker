@@ -40,15 +40,16 @@ func (r *Router) InitRoutes() *httprouter.Router {
 	router.DELETE("/users/student/:id", r.handler.Users.StudentDelete)
 	router.DELETE("/users/teacher/:id", r.handler.Users.TeacherDelete)
 
+	// cards
+	router.GET("/students/:id/:role", r.handler.Cards.Students)
+	router.GET("/teachers/:id/:role", r.handler.Cards.Teachers)
+
+	router.GET("/student/profile/:id/:role/:student_id", r.handler.Cards.StudentProfile)
+	router.GET("/teacher/profile/:id/:role/:teacher_id", r.handler.Cards.TeacherProfile)
+
 	// html pages
 	router.GET("/login/:user_name/:telegram_id", r.handler.Pages.Login)
 	router.GET("/home/:id/:role", r.handler.Pages.Home)
-
-	router.GET("/students/:id/:role", r.handler.Pages.Students)
-	router.GET("/teachers/:id/:role", r.handler.Pages.Teachers)
-
-	router.GET("/student/profile/:id/:role/:student_id", r.handler.Pages.StudentProfile)
-	router.GET("/teacher/profile/:id/:role/:teacher_id", r.handler.Pages.TeacherProfile)
 
 	// static
 	router.ServeFiles("/static/*filepath", http.Dir("./web/static/"))
