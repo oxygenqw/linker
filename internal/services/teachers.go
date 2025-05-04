@@ -6,15 +6,6 @@ import (
 	"github.com/google/uuid"
 )
 
-type TeacherService interface {
-	Create(teacher models.Teacher) (uuid.UUID, error)
-	GetByTelegramID(telegramID int64) (models.Teacher, error)
-	GetByID(id string) (models.Teacher, error)
-	GetAll() ([]models.Teacher, error)
-	Update(teacher models.Teacher) error
-	Delete(id string) error
-}
-
 type TeacherServiceImpl struct {
 	repository repository.TeacherRepository
 }
@@ -39,6 +30,10 @@ func (s *TeacherServiceImpl) GetByID(id string) (models.Teacher, error) {
 
 func (s *TeacherServiceImpl) GetAll() ([]models.Teacher, error) {
 	return s.repository.GetAll()
+}
+
+func (s *TeacherServiceImpl) Search(search string) ([]models.Teacher, error) {
+	return s.repository.Search(search)
 }
 
 func (s *TeacherServiceImpl) Update(teacher models.Teacher) error {

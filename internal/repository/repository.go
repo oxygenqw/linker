@@ -23,6 +23,7 @@ type StudentRepository interface {
 	Create(student models.Student) (uuid.UUID, error)
 	Update(student models.Student) error
 	GetAll() ([]models.Student, error)
+	Search(search string) ([]models.Student, error)
 	Delete(id string) error
 }
 
@@ -32,6 +33,7 @@ type TeacherRepository interface {
 	Update(teacher models.Teacher) error
 	Create(teacher models.Teacher) (uuid.UUID, error)
 	GetAll() ([]models.Teacher, error)
+	Search(search string) ([]models.Teacher, error)
 	Delete(id string) error
 }
 

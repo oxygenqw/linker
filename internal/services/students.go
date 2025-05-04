@@ -6,15 +6,6 @@ import (
 	"github.com/google/uuid"
 )
 
-type StudentService interface {
-	Create(student models.Student) (uuid.UUID, error)
-	GetByTelegramID(telegramID int64) (models.Student, error)
-	GetByID(id string) (models.Student, error)
-	GetAll() ([]models.Student, error)
-	Update(student models.Student) error
-	Delete(id string) error
-}
-
 type StudentServiceImpl struct {
 	repository repository.StudentRepository
 }
@@ -41,6 +32,10 @@ func (s *StudentServiceImpl) GetAll() ([]models.Student, error) {
 	return s.repository.GetAll()
 }
 
+func (s *StudentServiceImpl) Search(search string) ([]models.Student, error) {
+	return s.repository.Search(search)
+}
+
 func (s *StudentServiceImpl) Update(student models.Student) error {
 	return s.repository.Update(student)
 }
@@ -48,4 +43,3 @@ func (s *StudentServiceImpl) Update(student models.Student) error {
 func (s *StudentServiceImpl) Delete(id string) error {
 	return s.repository.Delete(id)
 }
-

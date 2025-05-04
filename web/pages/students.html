@@ -14,6 +14,11 @@
 <body>
     <h1>Список студентов</h1>
 
+    <div class="search-container" style="margin-bottom:20px; text-align:center;">
+        <input type="text" id="studentSearch" placeholder="Поиск по студентам..." class="search-input"
+            style="padding:10px; width:60%; border-radius:6px; border:1px solid #444; background:#222; color:#fff;">
+        <button type="button" id="searchBtn" class="button" style="margin-left:10px;">Найти</button>
+    </div>
     <div class="card-list">
         {{ range .students }}
         <div class="card">
@@ -75,6 +80,14 @@
             window.location.href = `/student/profile/${id}/${role}/${studentId}`;
         });
     });
+
+    document.getElementById('searchBtn').addEventListener('click', function () {
+        const query = document.getElementById('studentSearch').value.trim();
+        const id = '{{ $.id }}';
+        const role = '{{ $.role }}';
+        window.location.href = `/students/${id}/${role}?search=${encodeURIComponent(query)}`;
+    });
+
 </script>
 
 </html>

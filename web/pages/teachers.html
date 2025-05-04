@@ -1,22 +1,29 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/cards.css">
     <link rel="stylesheet" href="/static/style.css">
-    <script src="/static/telegram.js"></script> 
+    <script src="/static/telegram.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <title>Список преподавателей</title>
 </head>
+
 <body>
     <h1>Список преподавателей</h1>
 
+    <div class="search-container" style="margin-bottom:20px; text-align:center;">
+        <input type="text" id="teacherSearch" placeholder="Поиск по преподавателям..." class="search-input"
+            style="padding:10px; width:60%; border-radius:6px; border:1px solid #444; background:#222; color:#fff;">
+        <button type="button" id="searchBtn" class="button" style="margin-left:10px;">Найти</button>
+    </div>
     <div class="card-list">
         {{ range .teachers }}
         <div class="card">
             <h2>{{ .LastName }} {{ .FirstName }} {{ .MiddleName }}</h2>
-            
+
             <div class="card-info">
                 <div class="info-row">
                     <span class="label">Учёная степень:</span>
@@ -46,9 +53,10 @@
                 </div>
 
                 <div class="button-container">
-                    <form action="/teacher/profile/{{ $.id }}/{{ $.role }}/{{ .ID }}" method="GET">
-                        <button type="submit" class="button">Подробнее</button>
-                    </form>
+                    <button type="button" class="button details-btn" data-id="{{ $.id }}" data-role="{{ $.role }}"
+                        data-teacher-id="{{ .ID }}">
+                        Подробнее
+                    </button>
                 </div>
             </div>
         </div>
@@ -58,9 +66,33 @@
     </div>
 
     <div class="button-container home-button">
-        <form action="/home/{{ .id }}/{{ .role }}" method="GET">
-            <button type="submit" class="button">На главную</button>
-        </form>
+        <button class="button" id="homeButton" data-id="{{ .id }}" data-role="{{ .role }}">
+            На главную
+        </button>
     </div>
 </body>
+<script>
+    document.getElementById('homeButton').addEventListener('click', function () {
+        const id = this.getAttribute('data-id');
+        const role = this.getAttribute('data-role');
+        window.location.href = `/home/${id}/${role}`;
+    });
+
+    document.querySelectorAll('.details-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            const id = btn.getAttribute('data-id');
+            const role = btn.getAttribute('data-role');
+            const teacherId = btn.getAttribute('data-teacher-id');
+            window.location.href = `/teacher/profile/${id}/${role}/${teacherId}`;
+        });
+    });
+
+    document.getElementById('searchBtn').addEventListener('click', function () {
+        const query = document.getElementById('teacherSearch').value.trim();
+        const id = '{{ $.id }}';
+        const role = '{{ $.role }}';
+        window.location.href = `/teachers/${id}/${role}?search=${encodeURIComponent(query)}`;
+    });
+</script>
+
 </html>

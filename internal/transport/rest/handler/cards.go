@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"path/filepath"
 
+	"github.com/Oxygenss/linker/internal/models"
 	"github.com/Oxygenss/linker/internal/services"
 	"github.com/Oxygenss/linker/pkg/logger"
 	"github.com/julienschmidt/httprouter"
@@ -87,8 +88,16 @@ func (h *CardsHandlerImpl) Students(w http.ResponseWriter, r *http.Request, para
 
 	id := params.ByName("id")
 	role := params.ByName("role")
+	search := r.URL.Query().Get("search")
 
-	students, err := h.service.StudentService.GetAll()
+	var students []models.Student
+	var err error
+
+	if search != "" {
+		students, err = h.service.StudentService.Search(search)
+	} else {
+		students, err = h.service.StudentService.GetAll()
+	}
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Ошибка при получении списка студентов, %s", err), http.StatusInternalServerError)
 		return
@@ -103,17 +112,23 @@ func (h *CardsHandlerImpl) Students(w http.ResponseWriter, r *http.Request, para
 	h.renderTemplate(w, "students.html", data)
 }
 
-// Рендерит teachers.html и передает туда список преподавателей
-// @router GET /teachers/:id/:role
 func (h *CardsHandlerImpl) Teachers(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	h.logger.Info("[H: Teachers] ", "URL: ", r.URL)
 
 	id := params.ByName("id")
 	role := params.ByName("role")
+	search := r.URL.Query().Get("search")
 
-	teachers, err := h.service.TeacherService.GetAll()
+	var teachers []models.Teacher
+	var err error
+
+	if search != "" {
+		teachers, err = h.service.TeacherService.Search(search)
+	} else {
+		teachers, err = h.service.TeacherService.GetAll()
+	}
 	if err != nil {
-		http.Error(w, "Ошибка при получении списка преподавателей", http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("Ошибка при получении списка преподавателей, %s", err), http.StatusInternalServerError)
 		return
 	}
 

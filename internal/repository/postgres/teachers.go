@@ -152,6 +152,59 @@ func (r *TeacherRepositoryImpl) GetAll() ([]models.Teacher, error) {
 	return teachers, nil
 }
 
+func (r *TeacherRepositoryImpl) Search(query string) ([]models.Teacher, error) {
+	r.logger.Info("[R: TeacherRepository: Search]")
+
+	if r.db == nil {
+		return nil, fmt.Errorf("database connection is not initialized")
+	}
+
+	sqlQuery := `
+		SELECT id, first_name, middle_name, last_name, degree, university, faculty, is_free, idea
+		FROM teachers
+		WHERE
+			last_name ILIKE '%' || $1 || '%' OR
+			first_name ILIKE '%' || $1 || '%' OR
+			middle_name ILIKE '%' || $1 || '%' OR
+			degree ILIKE '%' || $1 || '%' OR
+			university ILIKE '%' || $1 || '%' OR
+			faculty ILIKE '%' || $1 || '%' OR
+			idea ILIKE '%' || $1 || '%'
+	`
+
+	rows, err := r.db.Query(sqlQuery, query)
+	if err != nil {
+		return nil, fmt.Errorf("failed to retrieve teachers: %w", err)
+	}
+	defer rows.Close()
+
+	var teachers []models.Teacher
+	for rows.Next() {
+		var teacher models.Teacher
+		err := rows.Scan(
+			&teacher.ID,
+			&teacher.FirstName,
+			&teacher.MiddleName,
+			&teacher.LastName,
+			&teacher.Degree,
+			&teacher.University,
+			&teacher.Faculty,
+			&teacher.IsFree,
+			&teacher.Idea,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan teacher: %w", err)
+		}
+		teachers = append(teachers, teacher)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, fmt.Errorf("error after scanning rows: %w", err)
+	}
+
+	return teachers, nil
+}
+
 func (r *TeacherRepositoryImpl) Create(teacher models.Teacher) (uuid.UUID, error) {
 	r.logger.Info("[TeacherRepository: Create]")
 

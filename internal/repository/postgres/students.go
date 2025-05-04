@@ -154,6 +154,60 @@ func (r *StudentRepositoryImpl) GetAll() ([]models.Student, error) {
 	return students, nil
 }
 
+func (r *StudentRepositoryImpl) Search(query string) ([]models.Student, error) {
+	r.logger.Info("[R: StudentRepository: Search]")
+
+	if r.db == nil {
+		return nil, fmt.Errorf("database connection is not initialized")
+	}
+
+	sqlQuery := `
+		SELECT id, first_name, middle_name, last_name, university, faculty, course, education, idea
+		FROM students
+		WHERE
+			last_name ILIKE '%' || $1 || '%' OR
+			first_name ILIKE '%' || $1 || '%' OR
+			middle_name ILIKE '%' || $1 || '%' OR
+			university ILIKE '%' || $1 || '%' OR
+			faculty ILIKE '%' || $1 || '%' OR
+			course ILIKE '%' || $1 || '%' OR
+			education ILIKE '%' || $1 || '%' OR
+			idea ILIKE '%' || $1 || '%'
+	`
+
+	rows, err := r.db.Query(sqlQuery, query)
+	if err != nil {
+		return nil, fmt.Errorf("failed to retrieve students: %w", err)
+	}
+	defer rows.Close()
+
+	var students []models.Student
+	for rows.Next() {
+		var student models.Student
+		err := rows.Scan(
+			&student.ID,
+			&student.FirstName,
+			&student.MiddleName,
+			&student.LastName,
+			&student.University,
+			&student.Faculty,
+			&student.Course,
+			&student.Education,
+			&student.Idea,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan student: %w", err)
+		}
+		students = append(students, student)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, fmt.Errorf("error after scanning rows: %w", err)
+	}
+
+	return students, nil
+}
+
 func (r *StudentRepositoryImpl) Create(student models.Student) (uuid.UUID, error) {
 	r.logger.Info("[StudentRepository: Create]")
 

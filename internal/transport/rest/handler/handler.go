@@ -35,7 +35,6 @@ type PagesHandler interface {
 type CardsHandler interface {
 	Students(w http.ResponseWriter, r *http.Request, params httprouter.Params)
 	Teachers(w http.ResponseWriter, r *http.Request, params httprouter.Params)
-
 	StudentProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params)
 	TeacherProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params)
 }
