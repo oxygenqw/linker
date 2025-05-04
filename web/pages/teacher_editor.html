@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/editor.css">
     <link rel="stylesheet" href="/static/style.css">
-    <script src="/static/telegram.js"></script> 
+    <script src="/static/telegram.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
+
 <body>
     <div class="container">
         <h1>Редактирование профиля</h1>
@@ -16,80 +18,91 @@
                 <label for="first_name">Имя</label>
                 <input type="text" id="first_name" name="first_name" value="{{ .teacher.FirstName }}" required>
             </div>
-            
+
             <div class="form-group">
                 <label for="last_name">Фамилия</label>
                 <input type="text" id="last_name" name="last_name" value="{{ .teacher.LastName }}" required>
             </div>
-            
+
             <div class="form-group">
                 <label for="middle_name">Отчество</label>
                 <input type="text" id="middle_name" name="middle_name" value="{{ .teacher.MiddleName }}">
             </div>
-            
+
             <div class="form-group">
                 <label for="degree">Ученая степень</label>
                 <select id="degree" name="degree" class="form-select">
                     <option value="">Не указано</option>
-                    <option value="Кандидат наук" {{ if eq .teacher.Degree "Кандидат наук" }}selected{{ end }}>Кандидат наук</option>
-                    <option value="Доктор наук" {{ if eq .teacher.Degree "Доктор наук" }}selected{{ end }}>Доктор наук</option>
+                    <option value="Кандидат наук" {{ if eq .teacher.Degree "Кандидат наук" }}selected{{ end }}>Кандидат
+                        наук</option>
+                    <option value="Доктор наук" {{ if eq .teacher.Degree "Доктор наук" }}selected{{ end }}>Доктор наук
+                    </option>
                     <option value="PhD" {{ if eq .teacher.Degree "PhD" }}selected{{ end }}>PhD</option>
                     <option value="Доцент" {{ if eq .teacher.Degree "Доцент" }}selected{{ end }}>Доцент</option>
-                    <option value="Профессор" {{ if eq .teacher.Degree "Профессор" }}selected{{ end }}>Профессор</option>
-                    <option value="Ассистент" {{ if eq .teacher.Degree "Ассистент" }}selected{{ end }}>Ассистент</option>
+                    <option value="Профессор" {{ if eq .teacher.Degree "Профессор" }}selected{{ end }}>Профессор
+                    </option>
+                    <option value="Ассистент" {{ if eq .teacher.Degree "Ассистент" }}selected{{ end }}>Ассистент
+                    </option>
                 </select>
             </div>
-            
+
             <div class="form-group">
                 <label for="position">Должность</label>
                 <select id="position" name="position" class="form-select">
                     <option value="">Не указано</option>
-                    <option value="Профессор" {{ if eq .teacher.Position "Профессор" }}selected{{ end }}>Профессор</option>
+                    <option value="Профессор" {{ if eq .teacher.Position "Профессор" }}selected{{ end }}>Профессор
+                    </option>
                     <option value="Доцент" {{ if eq .teacher.Position "Доцент" }}selected{{ end }}>Доцент</option>
-                    <option value="Старший преподаватель" {{ if eq .teacher.Position "Старший преподаватель" }}selected{{ end }}>Старший преподаватель</option>
-                    <option value="Преподаватель" {{ if eq .teacher.Position "Преподаватель" }}selected{{ end }}>Преподаватель</option>
-                    <option value="Ассистент" {{ if eq .teacher.Position "Ассистент" }}selected{{ end }}>Ассистент</option>
-                    <option value="Научный сотрудник" {{ if eq .teacher.Position "Научный сотрудник" }}selected{{ end }}>Научный сотрудник</option>
+                    <option value="Старший преподаватель" {{ if eq .teacher.Position "Старший преподаватель"
+                        }}selected{{ end }}>Старший преподаватель</option>
+                    <option value="Преподаватель" {{ if eq .teacher.Position "Преподаватель" }}selected{{ end }}>
+                        Преподаватель</option>
+                    <option value="Ассистент" {{ if eq .teacher.Position "Ассистент" }}selected{{ end }}>Ассистент
+                    </option>
+                    <option value="Научный сотрудник" {{ if eq .teacher.Position "Научный сотрудник" }}selected{{ end
+                        }}>Научный сотрудник</option>
                 </select>
             </div>
-            
+
             <div class="form-group">
                 <label for="university">Университет</label>
                 <input type="text" id="university" name="university" value="{{ .teacher.University }}">
             </div>
-            
+
             <div class="form-group">
                 <label for="faculty">Факультет/Кафедра</label>
                 <input type="text" id="faculty" name="faculty" value="{{ .teacher.Faculty }}">
             </div>
-            
+
             <div class="form-group">
                 <label for="is_free">
                     <input type="checkbox" id="is_free" name="is_free" {{ if .teacher.IsFree }}checked{{ end }}>
                     Свободен для проектов
                 </label>
             </div>
-            
+
             <div class="form-group">
                 <label for="idea">Идеи для проектов</label>
                 <textarea id="idea" name="idea">{{ .teacher.Idea }}</textarea>
             </div>
-            
+
             <div class="form-group">
                 <label for="about">О себе</label>
                 <textarea id="about" name="about">{{ .teacher.About }}</textarea>
             </div>
-            
-            <button type="submit" class="button">Сохранить изменения</button>
         </form>
     </div>
+
+    <div class="actions">
+        <button class="button" id="saveButton">Сохранить</button>
+        <button class="button" id="profileButton">Назад</button>
+    </div>
+
     <script>
-        document.getElementById('profileForm').addEventListener('submit', async function (e) {
-            e.preventDefault();
+        const teacherId = '{{ .teacher.ID }}';
+        const form = document.getElementById('profileForm');
 
-            const form = e.target;
-            const teacherId = '{{ .teacher.ID }}';
-
+        document.getElementById('saveButton').addEventListener('click', async function () {
             try {
                 const response = await fetch(`/users/teacher`, {
                     method: 'PATCH',
@@ -122,6 +135,11 @@
                 alert(`Ошибка при сохранении: ${error.message}`);
             }
         });
+
+        document.getElementById('profileButton').addEventListener('click', function () {
+            window.location.href = `/users/teacher/${teacherId}`;
+        });
     </script>
 </body>
+
 </html>

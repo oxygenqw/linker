@@ -27,6 +27,50 @@ h2 {
     border-bottom: 1px solid #444;
 }
 
+.actions {
+    position: fixed;
+    left: 50%;
+    bottom: 0;
+    width: 100%;
+    max-width: 800px;
+    transform: translateX(-50%);
+    background: #2a2a2a;
+    padding: 12px 25px;
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    justify-content: space-between;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    z-index: 1000;
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.15);
+}
+
+.button {
+    flex: 1;
+    min-width: 120px;
+    padding: 12px;
+    margin: 0;
+    white-space: nowrap;
+    background: none;
+    color: #1DCD9F;
+    border: 1px solid #1DCD9F;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.button:hover {
+    background: rgba(29, 205, 159, 0.1);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+
 .profile-section {
     margin-bottom: 30px;
 }
@@ -72,34 +116,6 @@ h2 {
     text-decoration: underline;
 }
 
-.actions {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-top: 30px;
-}
-
-.button {
-    width: 100%;
-    padding: 14px;
-    background-color: #1DCD9F;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-align: center;
-}
-
-.button:hover {
-    background-color: #17b38a;
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
 @media (max-width: 768px) {
     .container {
         padding: 15px;
@@ -136,5 +152,17 @@ h2 {
     
     h2 {
         font-size: 18px;
+    }
+}
+
+@media (max-width: 480px) {
+    .actions {
+        gap: 6px;
+        padding: 8px 10px;
+    }
+    .button {
+        min-width: 100px;
+        padding: 10px 6px;
+        font-size: 14px;
     }
 }

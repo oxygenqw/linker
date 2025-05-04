@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/profile.css">
     <link rel="stylesheet" href="/static/style.css">
-    <script src="/static/telegram.js"></script> 
+    <script src="/static/telegram.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <title>Профиль студента</title>
 </head>
+
 <body>
     <div class="container">
         <h1>Профиль студента</h1>
-        
+
         <div class="profile-section">
             <h2>Основная информация</h2>
             <div class="profile-field">
@@ -35,9 +37,9 @@
                 <span class="field-label">Университет:</span>
                 <span class="field-value">
                     {{ if .student.University }}
-                        {{ .student.University }}
+                    {{ .student.University }}
                     {{ else }}
-                        Не указан
+                    Не указан
                     {{ end }}
                 </span>
             </div>
@@ -45,9 +47,9 @@
                 <span class="field-label">Факультет:</span>
                 <span class="field-value">
                     {{ if .student.Faculty }}
-                        {{ .student.Faculty }}
+                    {{ .student.Faculty }}
                     {{ else }}
-                        Не указан
+                    Не указан
                     {{ end }}
                 </span>
             </div>
@@ -55,9 +57,9 @@
                 <span class="field-label">Курс:</span>
                 <span class="field-value">
                     {{ if .student.Course }}
-                        {{ .student.Course }}
+                    {{ .student.Course }}
                     {{ else }}
-                        Не указано
+                    Не указано
                     {{ end }}
                 </span>
             </div>
@@ -65,9 +67,9 @@
                 <span class="field-label">Уровень образования:</span>
                 <span class="field-value">
                     {{ if .student.Education }}
-                        {{ .student.Education }}
+                    {{ .student.Education }}
                     {{ else }}
-                        Не указан
+                    Не указан
                     {{ end }}
                 </span>
             </div>
@@ -79,9 +81,9 @@
                 <span class="field-label">GitHub:</span>
                 <span class="field-value">
                     {{ if .student.GitHub }}
-                        <a href="{{ .student.GitHub }}" target="_blank">{{ .student.GitHub }}</a>
+                    <a href="{{ .student.GitHub }}" target="_blank">{{ .student.GitHub }}</a>
                     {{ else }}
-                        Не указан
+                    Не указан
                     {{ end }}
                 </span>
             </div>
@@ -89,9 +91,9 @@
                 <span class="field-label">Место работы:</span>
                 <span class="field-value">
                     {{ if .student.Job }}
-                        {{ .student.Job }}
+                    {{ .student.Job }}
                     {{ else }}
-                        Не указано
+                    Не указано
                     {{ end }}
                 </span>
             </div>
@@ -103,9 +105,9 @@
                 <span class="field-label">Идея проекта:</span>
                 <p class="field-value">
                     {{ if .student.Idea }}
-                        {{ .student.Idea }}
+                    {{ .student.Idea }}
                     {{ else }}
-                        Не указана
+                    Не указана
                     {{ end }}
                 </p>
             </div>
@@ -113,22 +115,33 @@
                 <span class="field-label">О себе:</span>
                 <p class="field-value">
                     {{ if .student.About }}
-                        {{ .student.About }}
+                    {{ .student.About }}
                     {{ else }}
-                        Не указано
+                    Не указано
                     {{ end }}
                 </p>
             </div>
         </div>
 
         <div class="actions">
-            <form action="" method="GET">
-                <button type="submit" class="button">Запрос</button>
-            </form>
-            <form action="/home/{{ .id }}/{{ .role }}" method="GET">
-                <button type="submit" class="button">На главную</button>
-            </form>
+            <button class="button" id="">Запрос</button>
+            <button class="button" id="homeButton">На главную</button>
+            <button class="button" id="backButton">Назад</button>
         </div>
     </div>
+
+    <script>
+        const userId = '{{ .id }}';
+        const userRole = '{{ .role }}';
+
+        document.getElementById('homeButton').addEventListener('click', function () {
+            window.location.href = `/home/${userId}/student`;
+        });
+
+        document.getElementById('backButton').addEventListener('click', function () {
+            window.location.href = `/students/${userId}/${userRole}`;
+        });
+    </script>
 </body>
+
 </html>

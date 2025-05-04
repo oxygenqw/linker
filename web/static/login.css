@@ -1,41 +1,54 @@
-.header {
+body {
+    background-color: #222;
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
     padding: 20px;
-    margin-bottom: 20px;
-    text-align: center;
+    min-height: 100vh;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-container {
+    max-width: 500px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 25px;
     background-color: #2a2a2a;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.main-container h1 {
+    font-weight: 500;
+    margin: 0 0 25px 0;
+    font-size: 24px;
+    color: #fff;
+    text-align: center;
+    padding-bottom: 15px;
     border-bottom: 1px solid #1DCD9F;
 }
 
-h1 {
-    font-weight: 500;
-    margin: 0;
-    font-size: 24px;
-    color: #fff;
-}
-
-.form {
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #2a2a2a;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+.form-content {
+    width: 100%;
 }
 
 .form-item {
     margin-bottom: 20px;
 }
 
-.form label {
+.form-content label {
     display: block;
     margin-bottom: 8px;
-    font-weight: 400;
+    font-weight: 500;
     color: #e0e0e0;
-    font-size: 14px;
+    font-size: 16px;
 }
 
-.form input,
-.form select {
+.form-content input,
+.form-content select {
     width: 100%;
     padding: 12px 15px;
     background-color: #333;
@@ -45,45 +58,47 @@ h1 {
     font-size: 16px;
     transition: all 0.3s ease;
     box-sizing: border-box;
+    font-family: inherit;
 }
 
-.form input:focus,
-.form select:focus {
+.form-content input:focus,
+.form-content select:focus {
     outline: none;
     border-color: #1DCD9F;
     box-shadow: 0 0 0 2px rgba(29, 205, 159, 0.2);
 }
 
-.form select {
-    background-color: #333;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%231DCD9F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+.form-content select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231DCD9F'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
     background-repeat: no-repeat;
     background-position: right 15px center;
-    background-size: 12px;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
+    background-size: 16px;
+    padding-right: 40px;
+    cursor: pointer;
 }
 
 .button {
     display: block;
     width: 100%;
     padding: 14px;
-    background-color: #1DCD9F;
-    color: white;
-    border: none;
+    background: none;
+    color: #1DCD9F;
+    border: 1px solid #1DCD9F;
     border-radius: 6px;
     font-size: 16px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
-    margin-top: 10px;
+    margin-top: 30px;
     text-align: center;
 }
 
 .button:hover {
-    background-color: #17b38a;
-    transform: translateY(-1px);
+    background: rgba(29, 205, 159, 0.1);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .button:active {
@@ -91,12 +106,16 @@ h1 {
 }
 
 @media (max-width: 600px) {
-    .form {
+    body {
         padding: 15px;
-        margin: 10px;
     }
-    
-    .header {
-        padding: 15px;
+
+    .main-container {
+        padding: 20px;
+    }
+
+    .button {
+        padding: 12px;
+        margin-top: 25px;
     }
 }

@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/profile.css">
     <link rel="stylesheet" href="/static/style.css">
-    <script src="/static/telegram.js"></script> 
+    <script src="/static/telegram.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
+
 <body>
     <div class="container">
         <h1>Профиль преподавателя</h1>
-        
+
         <div class="profile-section">
             <h2>Основная информация</h2>
             <div class="profile-field">
@@ -67,13 +69,24 @@
         </div>
 
         <div class="actions">
-            <form action="" method="GET">
-                <button type="submit" class="button">Запрос</button>
-            </form>
-            <form action="/home/{{ .id }}/{{ .role }}" method="GET">
-                <button type="submit" class="button">На главную</button>
-            </form>
+            <button class="button" id="">Запрос</button>
+            <button class="button" id="homeButton">На главную</button>
+            <button class="button" id="backButton">Назад</button>
         </div>
     </div>
+
+    <script>
+        const userId = '{{ .id }}';
+        const userRole = '{{ .role }}';
+
+        document.getElementById('homeButton').addEventListener('click', function () {
+            window.location.href = `/home/${userId}/student`;
+        });
+
+        document.getElementById('backButton').addEventListener('click', function () {
+            window.location.href = `/teachers/${userId}/${userRole}`;
+        });
+    </script>
 </body>
+
 </html>

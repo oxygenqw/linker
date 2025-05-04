@@ -14,11 +14,11 @@
 <body>
     <h1>Список студентов</h1>
 
-    <div class="search-container" style="margin-bottom:20px; text-align:center;">
-        <input type="text" id="studentSearch" placeholder="Поиск по студентам..." class="search-input"
-            style="padding:10px; width:60%; border-radius:6px; border:1px solid #444; background:#222; color:#fff;">
-        <button type="button" id="searchBtn" class="button" style="margin-left:10px;">Найти</button>
+    <div class="search-container">
+        <input type="text" id="studentSearch" placeholder="Поиск по студентам..." class="search-input">
+        <button type="button" id="searchBtn" class="button">Найти</button>
     </div>
+
     <div class="card-list">
         {{ range .students }}
         <div class="card">
@@ -60,12 +60,24 @@
     </div>
 
     <div class="button-container home-button">
+        <button class="button" id="profile">В профиль</button>
         <button class="button" id="homeButton" data-id="{{ .id }}" data-role="{{ .role }}">
-            На главную
+            Назад
         </button>
     </div>
 </body>
 <script>
+    const userId = '{{ .id }}';
+    const userRole = '{{ .role }}';
+
+    document.getElementById('profile').addEventListener('click', function () {
+        if (userRole === 'student') {
+            window.location.href = `/users/student/${userId}`;
+        } else if (userRole === 'teacher') {
+            window.location.href = `/users/teacher/${userId}`;
+        } userRole
+    });
+
     document.getElementById('homeButton').addEventListener('click', function () {
         const id = this.getAttribute('data-id');
         const role = this.getAttribute('data-role');
@@ -87,7 +99,6 @@
         const role = '{{ $.role }}';
         window.location.href = `/students/${id}/${role}?search=${encodeURIComponent(query)}`;
     });
-
 </script>
 
 </html>

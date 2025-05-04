@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,15 +8,11 @@
     <script src="/static/telegram.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
-
 <body>
-
-    <div class="header">
+    <div class="main-container">
         <h1>Добро пожаловать, {{ .user_name }}!</h1>
-    </div>
 
-    <div class="form">
-        <form id="registerForm">
+        <form id="registerForm" class="form-content">
             <input type="hidden" name="user_name" value="{{ .user_name }}">
             <div class="form-item">
                 <label for="first_name">Имя</label>
@@ -89,8 +84,6 @@
                 alert('Ошибка: ' + error.message);
             }
         });
-
     </script>
 </body>
-
 </html>
