@@ -80,7 +80,7 @@
         const userRole = '{{ .role }}';
 
         document.getElementById('homeButton').addEventListener('click', function () {
-            window.location.href = `/home/${userId}/student`;
+            window.location.href = `/home/${userId}/${userRole}`;
         });
 
         document.getElementById('backButton').addEventListener('click', function () {
