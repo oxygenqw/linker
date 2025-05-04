@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/cards.css">
     <link rel="stylesheet" href="/static/style.css">
-    <script src="/static/telegram.js"></script> 
+    <script src="/static/telegram.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <title>Список студентов</title>
 </head>
+
 <body>
     <h1>Список студентов</h1>
 
@@ -16,7 +18,7 @@
         {{ range .students }}
         <div class="card">
             <h2>{{ .LastName }} {{ .FirstName }} {{ .MiddleName }}</h2>
-            
+
             <div class="card-info">
                 <div class="info-row">
                     <span class="label">Университет:</span>
@@ -40,9 +42,10 @@
                 </div>
 
                 <div class="button-container">
-                    <form action="/student/profile/{{ $.id }}/{{ $.role }}/{{ .ID }}" method="GET">
-                        <button type="submit" class="button">Подробнее</button>
-                    </form>
+                    <button type="button" class="button details-btn" data-id="{{ $.id }}" data-role="{{ $.role }}"
+                        data-student-id="{{ .ID }}">
+                        Подробнее
+                    </button>
                 </div>
             </div>
         </div>
@@ -52,9 +55,26 @@
     </div>
 
     <div class="button-container home-button">
-        <form action="/home/{{ .id }}/{{ .role }}" method="GET">
-            <button type="submit" class="button">На главную</button>
-        </form>
+        <button class="button" id="homeButton" data-id="{{ .id }}" data-role="{{ .role }}">
+            На главную
+        </button>
     </div>
 </body>
+<script>
+    document.getElementById('homeButton').addEventListener('click', function () {
+        const id = this.getAttribute('data-id');
+        const role = this.getAttribute('data-role');
+        window.location.href = `/home/${id}/${role}`;
+    });
+
+    document.querySelectorAll('.details-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            const id = btn.getAttribute('data-id');
+            const role = btn.getAttribute('data-role');
+            const studentId = btn.getAttribute('data-student-id');
+            window.location.href = `/student/profile/${id}/${role}/${studentId}`;
+        });
+    });
+</script>
+
 </html>
