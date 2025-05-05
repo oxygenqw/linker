@@ -14,29 +14,33 @@
     <div class="container">
         <h1>Редактирование профиля</h1>
         <form id="profileForm">
+            <div id="form-error" class="form-error" style="display:none"></div>
+
             <div class="form-group">
                 <label for="first_name">Имя</label>
-                <input type="text" id="first_name" name="first_name" value="{{ .student.FirstName }}" required>
+                <input type="text" id="first_name" name="first_name" value="{{ .student.FirstName }}" maxlength="50"
+                    required>
             </div>
 
             <div class="form-group">
                 <label for="last_name">Фамилия</label>
-                <input type="text" id="last_name" name="last_name" value="{{ .student.LastName }}" required>
+                <input type="text" id="last_name" name="last_name" value="{{ .student.LastName }}" maxlength="50"
+                    required>
             </div>
 
             <div class="form-group">
                 <label for="middle_name">Отчество</label>
-                <input type="text" id="middle_name" name="middle_name" value="{{ .student.MiddleName }}">
+                <input type="text" id="middle_name" name="middle_name" value="{{ .student.MiddleName }}" maxlength="50">
             </div>
 
             <div class="form-group">
                 <label for="university">Университет</label>
-                <input type="text" id="university" name="university" value="{{ .student.University }}">
+                <input type="text" id="university" name="university" value="{{ .student.University }}" maxlength="100">
             </div>
 
             <div class="form-group">
                 <label for="faculty">Факультет</label>
-                <input type="text" id="faculty" name="faculty" value="{{ .student.Faculty }}">
+                <input type="text" id="faculty" name="faculty" value="{{ .student.Faculty }}" maxlength="100">
             </div>
 
             <div class="form-group">
@@ -71,22 +75,22 @@
 
             <div class="form-group">
                 <label for="github">GitHub</label>
-                <input type="text" id="github" name="github" value="{{ .student.GitHub }}">
+                <input type="text" id="github" name="github" value="{{ .student.GitHub }}" maxlength="100">
             </div>
 
             <div class="form-group">
                 <label for="job">Место работы</label>
-                <input type="text" id="job" name="job" value="{{ .student.Job }}">
+                <input type="text" id="job" name="job" value="{{ .student.Job }}" maxlength="100">
             </div>
 
             <div class="form-group">
                 <label for="idea">Идея проекта</label>
-                <textarea id="idea" name="idea">{{ .student.Idea }}</textarea>
+                <textarea id="idea" name="idea" maxlength="1000">{{ .student.Idea }}</textarea>
             </div>
 
             <div class="form-group">
                 <label for="about">О себе</label>
-                <textarea id="about" name="about">{{ .student.About }}</textarea>
+                <textarea id="about" name="about" maxlength="1000">{{ .student.About }}</textarea>
             </div>
         </form>
     </div>
@@ -101,6 +105,72 @@
         const form = document.getElementById('profileForm');
 
         document.getElementById('saveButton').addEventListener('click', async function () {
+            // Очистка ошибок
+            document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+            const errorBlock = document.getElementById('form-error');
+            errorBlock.style.display = 'none';
+            errorBlock.textContent = '';
+
+            // Получаем значения
+            const firstName = form.first_name.value.trim();
+            const lastName = form.last_name.value.trim();
+            const middleName = form.middle_name.value.trim();
+            const university = form.university.value.trim();
+            const faculty = form.faculty.value.trim();
+            const github = form.github.value.trim();
+            const job = form.job.value.trim();
+
+            // Проверки
+            const nameRegex = /^[a-zA-Zа-яА-ЯёЁ\- ]+$/;
+            let errorMsg = '';
+            let errorField = null;
+
+            if (!firstName) {
+                errorMsg = 'Пожалуйста, введите имя';
+                errorField = form.first_name;
+            } else if (firstName.length > 50) {
+                errorMsg = 'Имя не должно превышать 50 символов';
+                errorField = form.first_name;
+            } else if (!nameRegex.test(firstName)) {
+                errorMsg = 'Имя может содержать только буквы';
+                errorField = form.first_name;
+            } else if (!lastName) {
+                errorMsg = 'Пожалуйста, введите фамилию';
+                errorField = form.last_name;
+            } else if (lastName.length > 50) {
+                errorMsg = 'Фамилия не должна превышать 50 символов';
+                errorField = form.last_name;
+            } else if (!nameRegex.test(lastName)) {
+                errorMsg = 'Фамилия может содержать только буквы';
+                errorField = form.last_name;
+            } else if (middleName && (middleName.length > 50 || !nameRegex.test(middleName))) {
+                errorMsg = middleName.length > 50
+                    ? 'Отчество не должно превышать 50 символов'
+                    : 'Отчество может содержать только буквы';
+                errorField = form.middle_name;
+            } else if (university.length > 100) {
+                errorMsg = 'Название университета не должно превышать 100 символов';
+                errorField = form.university;
+            } else if (faculty.length > 100) {
+                errorMsg = 'Название факультета не должно превышать 100 символов';
+                errorField = form.faculty;
+            } else if (github.length > 100) {
+                errorMsg = 'GitHub не должен превышать 100 символов';
+                errorField = form.github;
+            } else if (job.length > 100) {
+                errorMsg = 'Место работы не должно превышать 100 символов';
+                errorField = form.job;
+            }
+
+            if (errorMsg) {
+                if (errorField) errorField.classList.add('input-error');
+                errorBlock.textContent = errorMsg;
+                errorBlock.style.display = 'block';
+                if (errorField) errorField.focus();
+                return;
+            }
+
+            // Отправка формы
             try {
                 const response = await fetch(`/users/student`, {
                     method: 'PATCH',
@@ -109,15 +179,15 @@
                     },
                     body: JSON.stringify({
                         id: studentId,
-                        first_name: form.first_name.value,
-                        last_name: form.last_name.value,
-                        middle_name: form.middle_name.value,
-                        university: form.university.value,
-                        faculty: form.faculty.value,
+                        first_name: firstName,
+                        last_name: lastName,
+                        middle_name: middleName,
+                        university: university,
+                        faculty: faculty,
                         course: form.course.value,
                         education: form.education.value,
-                        github: form.github.value,
-                        job: form.job.value,
+                        github: github,
+                        job: job,
                         idea: form.idea.value,
                         about: form.about.value
                     })
@@ -130,8 +200,8 @@
                     throw new Error(error || 'Ошибка сервера');
                 }
             } catch (error) {
-                console.error('Ошибка:', error);
-                alert(`Ошибка при сохранении: ${error.message}`);
+                errorBlock.textContent = 'Ошибка: ' + error.message;
+                errorBlock.style.display = 'block';
             }
         });
 

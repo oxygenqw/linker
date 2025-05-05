@@ -123,6 +123,19 @@ h1 {
     text-align: center;
 }
 
+.form-error {
+    color: #e74c3c !important;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 0 2px 8px 2px !important;
+    margin-bottom: 0 !important;
+    font-size: 15px !important;
+    font-weight: 500 !important;
+    text-align: left !important;
+    min-height: 18px;
+}
+
 .button:hover {
     background: rgba(29, 205, 159, 0.1);
     color: #fff;
