@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,101 +9,99 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <title>Список преподавателей</title>
 </head>
-
 <body>
-    <h1>Список преподавателей</h1>
-
-    <div class="search-container">
-        <input type="text" id="studentSearch" placeholder="Поиск по преподавателям..." class="search-input">
-        <button type="button" id="searchBtn" class="button">Найти</button>
-    </div>
-
-    <div class="card-list">
-        {{ range .teachers }}
-        <div class="card">
-            <h2>{{ .LastName }} {{ .FirstName }} {{ .MiddleName }}</h2>
-
-            <div class="card-info">
-                <div class="info-row">
-                    <span class="label">Учёная степень:</span>
-                    <span class="info-value">{{ if .Degree }}{{ .Degree }}{{ else }}Не указана{{ end }}</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">Университет:</span>
-                    <span class="info-value">{{ if .University }}{{ .University }}{{ else }}Не указан{{ end }}</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">Факультет/Кафедра:</span>
-                    <span class="info-value">{{ if .Faculty }}{{ .Faculty }}{{ else }}Не указан{{ end }}</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">Статус:</span>
-                    <span class="info-value">
-                        {{ if .IsFree }}
-                        <span class="status-free">Свободен для сотрудничества</span>
-                        {{ else }}
-                        <span class="status-busy">Занят</span>
-                        {{ end }}
-                    </span>
-                </div>
-                <div class="info-row">
-                    <span class="label">Научные интересы:</span>
-                    <span class="info-value">{{ if .Idea }}{{ .Idea }}{{ else }}Не указаны{{ end }}</span>
-                </div>
-
-                <div class="button-container">
-                    <button type="button" class="button details-btn" data-id="{{ $.id }}" data-role="{{ $.role }}"
-                        data-teacher-id="{{ .ID }}">
-                        Подробнее
-                    </button>
-                </div>
+    <div class="container">
+        <div class="header-search-card">
+            <h1>Список преподавателей</h1>
+            <div class="search-container">
+                <input type="text" id="teacherSearch" placeholder="Поиск по преподавателям..." class="search-input">
+                <button type="button" id="searchBtn" class="button">Найти</button>
             </div>
         </div>
-        {{ else }}
-        <p>Нет данных о преподавателях</p>
-        {{ end }}
+
+        <div class="card-list">
+            {{ range .teachers }}
+            <div class="card">
+                <h2>{{ .LastName }} {{ .FirstName }} {{ .MiddleName }}</h2>
+                <div class="card-info">
+                    <div class="info-row">
+                        <span class="label">Учёная степень:</span>
+                        <span class="info-value">{{ if .Degree }}{{ .Degree }}{{ else }}Не указана{{ end }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Университет:</span>
+                        <span class="info-value">{{ if .University }}{{ .University }}{{ else }}Не указан{{ end }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Факультет/Кафедра:</span>
+                        <span class="info-value">{{ if .Faculty }}{{ .Faculty }}{{ else }}Не указан{{ end }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Статус:</span>
+                        <span class="info-value">
+                            {{ if .IsFree }}
+                            <span class="status-free">Свободен для сотрудничества</span>
+                            {{ else }}
+                            <span class="status-busy">Занят</span>
+                            {{ end }}
+                        </span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Научные интересы:</span>
+                        <span class="info-value">{{ if .Idea }}{{ .Idea }}{{ else }}Не указаны{{ end }}</span>
+                    </div>
+                    <div class="button-container">
+                        <button type="button" class="button details-btn" data-id="{{ $.id }}" data-role="{{ $.role }}"
+                            data-teacher-id="{{ .ID }}">
+                            Подробнее
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {{ else }}
+            <p>Нет данных о преподавателях</p>
+            {{ end }}
+        </div>
     </div>
 
-    <div class="button-container home-button">
+    <div class="actions">
         <button class="button" id="profile">В профиль</button>
-        <button class="button" id="homeButton" data-id="{{ .id }}" data-role="{{ .role }}">
-            Назад
-        </button>
+        <button class="button" id="homeButton" data-id="{{ .id }}" data-role="{{ .role }}">Назад</button>
     </div>
-</body>
-<script>
-    const userId = '{{ .id }}';
-    const userRole = '{{ .role }}';
 
-    document.getElementById('profile').addEventListener('click', function () {
-        if (userRole === 'student') {
-            window.location.href = `/users/student/${userId}`;
-        } else if (userRole === 'teacher') {
-            window.location.href = `/users/teacher/${userId}`;
-        } userRole
-    });
+    <script>
+        const userId = '{{ .id }}';
+        const userRole = '{{ .role }}';
 
-    document.getElementById('homeButton').addEventListener('click', function () {
-        const id = this.getAttribute('data-id');
-        const role = this.getAttribute('data-role');
-        window.location.href = `/home/${id}/${role}`;
-    });
-
-    document.querySelectorAll('.details-btn').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            const id = btn.getAttribute('data-id');
-            const role = btn.getAttribute('data-role');
-            const teacherId = btn.getAttribute('data-teacher-id');
-            window.location.href = `/teacher/profile/${id}/${role}/${teacherId}`;
+        document.getElementById('profile').addEventListener('click', function () {
+            if (userRole === 'student') {
+                window.location.href = `/users/student/${userId}`;
+            } else if (userRole === 'teacher') {
+                window.location.href = `/users/teacher/${userId}`;
+            }
         });
-    });
 
-    document.getElementById('searchBtn').addEventListener('click', function () {
-        const query = document.getElementById('teacherSearch').value.trim();
-        const id = '{{ $.id }}';
-        const role = '{{ $.role }}';
-        window.location.href = `/teachers/${id}/${role}?search=${encodeURIComponent(query)}`;
-    });
-</script>
+        document.getElementById('homeButton').addEventListener('click', function () {
+            const id = this.getAttribute('data-id');
+            const role = this.getAttribute('data-role');
+            window.location.href = `/home/${id}/${role}`;
+        });
 
+        document.querySelectorAll('.details-btn').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                const id = btn.getAttribute('data-id');
+                const role = btn.getAttribute('data-role');
+                const teacherId = btn.getAttribute('data-teacher-id');
+                window.location.href = `/teacher/profile/${id}/${role}/${teacherId}`;
+            });
+        });
+
+        document.getElementById('searchBtn').addEventListener('click', function () {
+            const query = document.getElementById('teacherSearch').value.trim();
+            const id = '{{ $.id }}';
+            const role = '{{ $.role }}';
+            window.location.href = `/teachers/${id}/${role}?search=${encodeURIComponent(query)}`;
+        });
+    </script>
+</body>
 </html>
