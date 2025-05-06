@@ -3,12 +3,11 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
-	"html/template"
 	"net/http"
-	"path/filepath"
 	"strconv"
 
 	"github.com/Oxygenss/linker/internal/models"
+	"github.com/Oxygenss/linker/internal/renderer"
 	"github.com/Oxygenss/linker/internal/services"
 	"github.com/Oxygenss/linker/pkg/logger"
 	"github.com/google/uuid"
@@ -16,29 +15,16 @@ import (
 )
 
 type UserHandlerImpl struct {
-	logger    *logger.Logger
-	service   *services.Service
-	templates map[string]*template.Template
+	logger   *logger.Logger
+	service  *services.Service
+	renderer *renderer.TemplateRenderer
 }
 
-func NewUserHandler(service *services.Service, logger *logger.Logger) *UserHandlerImpl {
-	files := []string{
-		"./web/pages/student_profile.html",
-		"./web/pages/teacher_profile.html",
-		"./web/pages/student_editor.html",
-		"./web/pages/teacher_editor.html",
-	}
-
-	templates := make(map[string]*template.Template)
-	for _, file := range files {
-		name := filepath.Base(file)
-		templates[name] = template.Must(template.ParseFiles(file))
-	}
-
+func NewUserHandler(service *services.Service, renderer *renderer.TemplateRenderer, logger *logger.Logger) *UserHandlerImpl {
 	return &UserHandlerImpl{
-		logger:    logger,
-		service:   service,
-		templates: templates,
+		logger:   logger,
+		service:  service,
+		renderer: renderer,
 	}
 }
 
@@ -147,7 +133,7 @@ func (h *UserHandlerImpl) StudentProfile(w http.ResponseWriter, r *http.Request,
 		"student": student,
 	}
 
-	h.renderTemplate(w, "student_profile.html", data)
+	h.renderer.RenderTemplate(w, "student_profile.html", data)
 }
 
 func (h *UserHandlerImpl) TeacherProfile(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -165,7 +151,7 @@ func (h *UserHandlerImpl) TeacherProfile(w http.ResponseWriter, r *http.Request,
 		"teacher": teacher,
 	}
 
-	h.renderTemplate(w, "teacher_profile.html", data)
+	h.renderer.RenderTemplate(w, "teacher_profile.html", data)
 }
 
 func (h *UserHandlerImpl) EditStudentProfile(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -185,7 +171,7 @@ func (h *UserHandlerImpl) EditStudentProfile(w http.ResponseWriter, r *http.Requ
 		"student": student,
 	}
 
-	h.renderTemplate(w, "student_editor.html", data)
+	h.renderer.RenderTemplate(w, "student_editor.html", data)
 }
 
 func (h *UserHandlerImpl) EditTeacherProfile(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -205,7 +191,7 @@ func (h *UserHandlerImpl) EditTeacherProfile(w http.ResponseWriter, r *http.Requ
 		"teacher": teacher,
 	}
 
-	h.renderTemplate(w, "teacher_editor.html", data)
+	h.renderer.RenderTemplate(w, "teacher_editor.html", data)
 }
 
 func (h *UserHandlerImpl) StudentUpdate(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
@@ -282,19 +268,4 @@ func (h *UserHandlerImpl) TeacherDelete(w http.ResponseWriter, r *http.Request, 
 	}
 
 	w.WriteHeader(http.StatusOK)
-}
-
-func (h *UserHandlerImpl) renderTemplate(w http.ResponseWriter, tmplName string, data any) {
-	tmpl, ok := h.templates[tmplName]
-	if !ok {
-		http.Error(w, "Template not found", http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	if err := tmpl.Execute(w, data); err != nil {
-		h.logger.Error("Failed to render template", "error", err)
-		http.Error(w, "Error executing template", http.StatusInternalServerError)
-		return
-	}
 }

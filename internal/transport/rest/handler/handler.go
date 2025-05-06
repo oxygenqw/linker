@@ -3,6 +3,7 @@ package handler
 import (
 	"net/http"
 
+	"github.com/Oxygenss/linker/internal/renderer"
 	"github.com/Oxygenss/linker/internal/services"
 	"github.com/Oxygenss/linker/pkg/logger"
 	"github.com/Oxygenss/linker/pkg/telegram/bot"
@@ -52,12 +53,12 @@ type Handler struct {
 	Requests RequestsHandler
 }
 
-func NewHandler(service *services.Service, logger *logger.Logger, bot *bot.Bot) *Handler {
+func NewHandler(service *services.Service, renderer *renderer.TemplateRenderer, logger *logger.Logger, bot *bot.Bot) *Handler {
 	return &Handler{
 		Telegram: NewTelegramHandler(bot, logger),
-		Pages:    NewPagesHandler(service, logger),
-		Users:    NewUserHandler(service, logger),
-		Cards:    NewCardsHandler(service, logger),
-		Requests: NewRequestsHandler(service, logger),
+		Pages:    NewPagesHandler(service, renderer, logger),
+		Users:    NewUserHandler(service, renderer, logger),
+		Cards:    NewCardsHandler(service, renderer, logger),
+		Requests: NewRequestsHandler(service, renderer, logger),
 	}
 }

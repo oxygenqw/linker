@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/Oxygenss/linker/internal/config"
+	"github.com/Oxygenss/linker/internal/renderer"
 	"github.com/Oxygenss/linker/internal/repository"
 	"github.com/Oxygenss/linker/internal/services"
 	"github.com/Oxygenss/linker/internal/transport/rest/handler"
@@ -31,8 +32,14 @@ func main() {
 	log.Info("Initialize service...")
 	service := services.NewService(repository, &log, bot)
 
+	log.Info("Initialize renderer...")
+	renderer, err := renderer.NewTemplateRenderer()
+	if err != nil {
+		log.Fatalf("Error init renderer: %v", err)
+	}
+
 	log.Info("Initialize handler...")
-	handler := handler.NewHandler(service, &log, bot)
+	handler := handler.NewHandler(service, renderer, &log, bot)
 
 	log.Info("Initialize router...")
 	router := router.NewRouter(handler, cfg.Telegram.AppURL)
