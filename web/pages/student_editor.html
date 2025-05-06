@@ -97,7 +97,7 @@
 
     <div class="actions">
         <button class="button" id="saveButton">Сохранить</button>
-        <button class="button" id="profileButton">Назад</button>
+        <button class="button" id="backButton">Назад</button>
     </div>
 
     <script>
@@ -105,13 +105,13 @@
         const form = document.getElementById('profileForm');
 
         document.getElementById('saveButton').addEventListener('click', async function () {
-            // Очистка ошибок
+
             document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
             const errorBlock = document.getElementById('form-error');
             errorBlock.style.display = 'none';
             errorBlock.textContent = '';
 
-            // Получаем значения
+
             const firstName = form.first_name.value.trim();
             const lastName = form.last_name.value.trim();
             const middleName = form.middle_name.value.trim();
@@ -120,7 +120,7 @@
             const github = form.github.value.trim();
             const job = form.job.value.trim();
 
-            // Проверки
+
             const nameRegex = /^[a-zA-Zа-яА-ЯёЁ\- ]+$/;
             let errorMsg = '';
             let errorField = null;
@@ -170,7 +170,6 @@
                 return;
             }
 
-            // Отправка формы
             try {
                 const response = await fetch(`/users/student`, {
                     method: 'PATCH',
@@ -205,8 +204,12 @@
             }
         });
 
-        document.getElementById('profileButton').addEventListener('click', function () {
-            window.location.href = `/users/student/${studentId}`;
+        document.getElementById('backButton').addEventListener('click', function () {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = `/users/student/${studentId}`;
+            }
         });
     </script>
 

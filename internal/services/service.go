@@ -3,6 +3,8 @@ package services
 import (
 	"github.com/Oxygenss/linker/internal/models"
 	"github.com/Oxygenss/linker/internal/repository"
+	"github.com/Oxygenss/linker/pkg/logger"
+	"github.com/Oxygenss/linker/pkg/telegram/bot"
 	"github.com/google/uuid"
 )
 
@@ -26,16 +28,22 @@ type TeacherService interface {
 	Delete(id string) error
 }
 
+type RequestService interface {
+	CreateRequest(senderID string, recipientID string, message models.Request) error
+}
+
 type Service struct {
 	StudentService StudentService
 	TeacherService TeacherService
 	UserService    UserService
+	RequestService RequestService
 }
 
-func NewService(repository *repository.Repository) *Service {
+func NewService(repository *repository.Repository, logger *logger.Logger, bot *bot.Bot) *Service {
 	return &Service{
 		StudentService: NewStudentService(repository.StudentRepository),
 		TeacherService: NewTeacherService(repository.TeacherRepository),
 		UserService:    NewUserService(repository.UserRepository),
+		RequestService: NewRequestService(repository.StudentRepository, bot, *logger),
 	}
 }

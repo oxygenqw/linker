@@ -47,6 +47,11 @@ func (r *Router) InitRoutes() *httprouter.Router {
 	router.GET("/student/profile/:id/:role/:student_id", r.handler.Cards.StudentProfile)
 	router.GET("/teacher/profile/:id/:role/:teacher_id", r.handler.Cards.TeacherProfile)
 
+	// requests
+	router.GET("/requests/:id/:role/:recipient_id", r.handler.Requests.ToRequestForm)
+
+	router.POST("/requests/:id/:recipient_id", r.handler.Requests.RequestToStudent)
+
 	// html pages
 	router.GET("/login/:user_name/:telegram_id", r.handler.Pages.Login)
 	router.GET("/home/:id/:role", r.handler.Pages.Home)

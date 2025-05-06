@@ -15,7 +15,6 @@
         <h1>Добро пожаловать, {{ .user_name }}!</h1>
 
         <form id="registerForm" class="form-content" autocomplete="off">
-            <input type="hidden" name="user_name" value="{{ .user_name }}">
             <div class="form-item">
                 <label for="first_name">Имя</label>
                 <input type="text" id="first_name" name="first_name" maxlength="50">
@@ -44,7 +43,6 @@
         document.getElementById('registerForm').addEventListener('submit', async function (e) {
             e.preventDefault();
 
-            // Очистка ошибок
             document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
             const errorBlock = document.getElementById('form-error');
             errorBlock.style.display = 'none';
@@ -56,7 +54,6 @@
             const middleName = form.middle_name.value.trim();
             const role = form.role.value;
 
-            // Проверки
             let errorMsg = '';
             let errorField = null;
             const nameRegex = /^[a-zA-Zа-яА-ЯёЁ\- ]+$/;
@@ -111,7 +108,7 @@
 
             const data = {
                 telegram_id: telegramId,
-                user_name: form.user_name.value,
+                user_name: '{{ .user_name }}',
                 first_name: firstName,
                 last_name: lastName,
                 middle_name: middleName

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <title>Список преподавателей</title>
 </head>
+
 <body>
     <div class="container">
         <div class="header-search-card">
@@ -30,7 +32,8 @@
                     </div>
                     <div class="info-row">
                         <span class="label">Университет:</span>
-                        <span class="info-value">{{ if .University }}{{ .University }}{{ else }}Не указан{{ end }}</span>
+                        <span class="info-value">{{ if .University }}{{ .University }}{{ else }}Не указан{{ end
+                            }}</span>
                     </div>
                     <div class="info-row">
                         <span class="label">Факультет/Кафедра:</span>
@@ -66,7 +69,7 @@
 
     <div class="actions">
         <button class="button" id="profile">В профиль</button>
-        <button class="button" id="homeButton" data-id="{{ .id }}" data-role="{{ .role }}">Назад</button>
+        <button class="button" id="backButton">Назад</button>
     </div>
 
     <script>
@@ -79,12 +82,6 @@
             } else if (userRole === 'teacher') {
                 window.location.href = `/users/teacher/${userId}`;
             }
-        });
-
-        document.getElementById('homeButton').addEventListener('click', function () {
-            const id = this.getAttribute('data-id');
-            const role = this.getAttribute('data-role');
-            window.location.href = `/home/${id}/${role}`;
         });
 
         document.querySelectorAll('.details-btn').forEach(function (btn) {
@@ -102,6 +99,15 @@
             const role = '{{ $.role }}';
             window.location.href = `/teachers/${id}/${role}?search=${encodeURIComponent(query)}`;
         });
+
+        document.getElementById('backButton').addEventListener('click', function () {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = `/home/${userId}/${userRole}`;
+            }
+        });
     </script>
 </body>
+
 </html>

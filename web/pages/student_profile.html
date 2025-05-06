@@ -125,7 +125,7 @@
         <div class="actions">
             <button class="button" id="editProfileButton">Редактировать профиль</button>
             <button class="button" id="deleteProfileButton">Удалить профиль</button>
-            <button class="button" id="homeButton">Назад</button>
+            <button class="button" id="backButton">Назад</button>
         </div>
     </div>
     <script>
@@ -153,8 +153,12 @@
                 });
         });
 
-        document.getElementById('homeButton').addEventListener('click', function () {
-            window.location.href = `/home/${studentId}/student`;
+        document.getElementById('backButton').addEventListener('click', function () {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = `/home/${studentId}/student`;
+            }
         });
     </script>
 </body>

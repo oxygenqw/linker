@@ -69,7 +69,7 @@
         </div>
 
         <div class="actions">
-            <button class="button" id="">Запрос</button>
+            <button class="button" id="requestButton">Запрос</button>
             <button class="button" id="homeButton">На главную</button>
             <button class="button" id="backButton">Назад</button>
         </div>
@@ -84,7 +84,11 @@
         });
 
         document.getElementById('backButton').addEventListener('click', function () {
-            window.location.href = `/teachers/${userId}/${userRole}`;
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = `/teachers/${userId}/${userRole}`;
+            }
         });
     </script>
 </body>

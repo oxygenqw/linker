@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/request_form.css">
+    <script src="/static/telegram.js"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <title>Отправить запрос</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Отправить запрос студенту</h1>
+        <form id="requestForm">
+            <div class="profile-section">
+                <h2>Сообщение</h2>
+                <div class="profile-field">
+                    <label for="message" class="field-label">Текст сообщения:</label>
+                    <div class="field-value">
+                        <textarea id="message" name="message" required
+                            placeholder="Введите ваше сообщение..."></textarea>
+                    </div>
+                </div>
+            </div>
+            <div id="form-error" class="form-error" style="display: none;"></div>
+            <div class="actions">
+                <button type="submit" class="button">Отправить</button>
+                <button type="button" class="button" id="backButton">Назад</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('requestForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+            const errorBlock = document.getElementById('form-error');
+            errorBlock.style.display = 'none';
+            errorBlock.textContent = '';
+
+            const message = document.getElementById('message').value.trim();
+
+            if (!message) {
+                errorBlock.textContent = 'Пожалуйста, введите сообщение';
+                errorBlock.style.display = 'block';
+                document.getElementById('message').focus();
+                return;
+            }
+
+            try {
+                const response = await fetch(`/requests/{{ .id }}/{{ .recipient_id }}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: message
+                    })
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.message || 'Ошибка сервера');
+                }
+
+                const result = await response.json();
+
+                if (window.Telegram && window.Telegram.WebApp) {
+                    window.Telegram.WebApp.showAlert(result.message || 'Запрос отправлен');
+                } else {
+                    alert(result.message || 'Запрос отправлен');
+                }
+
+                if (window.Telegram && window.Telegram.WebApp) {
+                    window.Telegram.WebApp.close();
+                } else {
+                    window.history.back();
+                }
+
+            } catch (error) {
+                errorBlock.textContent = 'Ошибка: ' + error.message;
+                errorBlock.style.display = 'block';
+                console.error('Ошибка отправки запроса:', error);
+            }
+        });
+
+        // TODO: Save back button
+        document.getElementById('backButton').addEventListener('click', function () {
+            window.history.back();
+        });
+    </script>
+</body>
+
+</html>

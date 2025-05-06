@@ -29,7 +29,7 @@ func main() {
 	}
 
 	log.Info("Initialize service...")
-	service := services.NewService(repository)
+	service := services.NewService(repository, &log, bot)
 
 	log.Info("Initialize handler...")
 	handler := handler.NewHandler(service, &log, bot)

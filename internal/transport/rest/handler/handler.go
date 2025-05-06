@@ -39,11 +39,17 @@ type CardsHandler interface {
 	TeacherProfile(w http.ResponseWriter, r *http.Request, params httprouter.Params)
 }
 
+type RequestsHandler interface {
+	ToRequestForm(w http.ResponseWriter, r *http.Request, params httprouter.Params)
+	RequestToStudent(w http.ResponseWriter, r *http.Request, params httprouter.Params)
+}
+
 type Handler struct {
 	Telegram TelegramHandler
 	Pages    PagesHandler
 	Users    UserHandler
 	Cards    CardsHandler
+	Requests RequestsHandler
 }
 
 func NewHandler(service *services.Service, logger *logger.Logger, bot *bot.Bot) *Handler {
@@ -52,5 +58,6 @@ func NewHandler(service *services.Service, logger *logger.Logger, bot *bot.Bot) 
 		Pages:    NewPagesHandler(service, logger),
 		Users:    NewUserHandler(service, logger),
 		Cards:    NewCardsHandler(service, logger),
+		Requests: NewRequestsHandler(service, logger),
 	}
 }

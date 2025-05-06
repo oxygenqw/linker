@@ -97,7 +97,7 @@
 
     <div class="actions">
         <button class="button" id="saveButton">Сохранить</button>
-        <button class="button" id="profileButton">Назад</button>
+        <button class="button" id="backButton">Назад</button>
     </div>
 
     <script>
@@ -200,8 +200,12 @@
             }
         });
 
-        document.getElementById('profileButton').addEventListener('click', function () {
-            window.location.href = `/users/teacher/${teacherId}`;
+        document.getElementById('backButton').addEventListener('click', function () {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = `/users/teacher/${teacherId}`;
+            }
         });
     </script>
 </body>

@@ -124,7 +124,7 @@
         </div>
 
         <div class="actions">
-            <button class="button" id="">Запрос</button>
+            <button class="button" id="toRequestFormButton">Запрос</button>
             <button class="button" id="homeButton">На главную</button>
             <button class="button" id="backButton">Назад</button>
         </div>
@@ -133,14 +133,25 @@
     <script>
         const userId = '{{ .id }}';
         const userRole = '{{ .role }}';
+        const recipientID = '{{ .student.ID }}'
 
         document.getElementById('homeButton').addEventListener('click', function () {
             window.location.href = `/home/${userId}/${userRole}`;
         });
 
-        document.getElementById('backButton').addEventListener('click', function () {
-            window.location.href = `/students/${userId}/${userRole}`;
+        document.getElementById('toRequestFormButton').addEventListener('click', function () {
+            window.location.href = `/requests/${userId}/${userRole}/${recipientID}`;
         });
+
+        document.getElementById('backButton').addEventListener('click', function () {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = `/students/${userId}/${userRole}`;
+            }
+        });
+
+
     </script>
 </body>
 

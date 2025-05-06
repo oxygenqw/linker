@@ -34,3 +34,7 @@ type Teacher struct {
 	Position   string    `json:"position"`
 	IsFree     bool      `json:"is_free"`
 }
+
+type Request struct {
+	Message string `json:"message"`
+}
