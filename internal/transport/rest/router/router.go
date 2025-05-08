@@ -52,6 +52,12 @@ func (r *Router) InitRoutes() *httprouter.Router {
 
 	router.POST("/requests/:sender_id/:recipient_id", r.handler.Requests.RequestToUser)
 
+	// works
+	router.GET("/works/:user_id", r.handler.Works.ToForm)
+
+	router.POST("/works/:user_id", r.handler.Works.Create)
+	router.DELETE("/works/:id", r.handler.Works.Delete)
+
 	// html pages
 	router.GET("/login/:user_name/:telegram_id", r.handler.Pages.Login)
 	router.GET("/home/:id/:role", r.handler.Pages.Home)

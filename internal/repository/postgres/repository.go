@@ -11,6 +11,7 @@ type Repository struct {
 	TeacherRepository *TeacherRepositoryImpl
 	UserRepository    *UserRepositoryImpl
 	RequestRepository *RequestRepositoryImpl
+	WorksRepository   *WorksRepositoryImpl
 }
 
 func NewPostgresRepository(db *sql.DB, logger *logger.Logger) *Repository {
@@ -19,5 +20,6 @@ func NewPostgresRepository(db *sql.DB, logger *logger.Logger) *Repository {
 		TeacherRepository: NewTeacherRepository(db, logger),
 		UserRepository:    NewUserRepository(db, logger),
 		RequestRepository: NewRequestRepository(db, logger),
+		WorksRepository:   NewWorksRepository(db, logger),
 	}
 }

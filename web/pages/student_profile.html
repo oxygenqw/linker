@@ -122,9 +122,34 @@
             </div>
         </div>
 
+        <div class="profile-section">
+            <h2>Дипломные работы</h2>
+            {{ if .works }}
+            <div class="works-grid">
+                {{ range .works }}
+                <div class="work-card">
+                    <div class="work-card-header">
+                        <a href="{{ .Link }}" target="_blank" class="work-card-title">{{ .Link }}</a>
+                    </div>
+                    <div class="work-card-body">
+                        <p class="work-card-description">{{ .Description }}</p>
+                    </div>
+                    <div class="work-card-actions">
+                        <button class="button work-edit-button" data-work-id="{{ .ID }}">Редактировать</button>
+                        <button class="button work-delete-button" data-work-id="{{ .ID }}">Удалить</button>
+                    </div>
+                </div>
+                {{ end }}
+            </div>
+            {{ else }}
+            <div class="field-value">Нет добавленных работ</div>
+            {{ end }}
+        </div>
+
         <div class="actions">
             <button class="button" id="editProfileButton">Редактировать профиль</button>
             <button class="button" id="deleteProfileButton">Удалить профиль</button>
+            <button class="button" id="addWorkButton">Добавить научную работу</button>
             <button class="button" id="backButton">Назад</button>
         </div>
     </div>
@@ -151,6 +176,32 @@
                 .catch(error => {
                     alert('Failed to delete profile: ' + error.message);
                 });
+        });
+
+        document.addEventListener('click', async function (e) {
+
+            if (e.target.classList.contains('work-delete-button')) {
+                const workId = e.target.dataset.workId;
+                try {
+                    const response = await fetch(`/works/${workId}`, { method: 'DELETE' });
+                    if (response.ok) {
+                        window.location.reload();
+                    } else {
+                        const error = await response.text();
+                        alert('Ошибка удаления: ' + (error || 'Ошибка сервера'));
+                    }
+                } catch (error) {
+                    alert('Ошибка удаления: ' + error.message);
+                }
+            }
+            // Заглушка для редактирования
+            else if (e.target.classList.contains('work-edit-button')) {
+                alert('Редактирование пока недоступно');
+            }
+        });
+
+        document.getElementById('addWorkButton').addEventListener('click', function () {
+            window.location.href = `/works/${studentId}`;
         });
 
         document.getElementById('backButton').addEventListener('click', function () {

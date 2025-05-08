@@ -39,3 +39,10 @@ CREATE TABLE requests (
     status VARCHAR(20),
     created_at TIMESTAMP
 );
+
+CREATE TABLE works (
+    id uuid PRIMARY KEY,
+    user_id uuid,
+    link TEXT,
+    description TEXT
+);

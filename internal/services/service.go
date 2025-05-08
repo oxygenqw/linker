@@ -37,11 +37,18 @@ type RequestService interface {
 	SendRequest(senderID string, recipientID string, message models.Message) error
 }
 
+type WorkService interface {
+	Create(models.Work) error
+	GetAll(userID uuid.UUID) ([]models.Work, error)
+	Delete(id uuid.UUID) error
+}
+
 type Service struct {
 	StudentService StudentService
 	TeacherService TeacherService
 	UserService    UserService
 	RequestService RequestService
+	WorkService    WorkService
 }
 
 func NewService(repository *repository.Repository, logger *logger.Logger, bot *bot.Bot) *Service {
@@ -56,5 +63,6 @@ func NewService(repository *repository.Repository, logger *logger.Logger, bot *b
 			repository.RequestRepository,
 			bot,
 			*logger),
+		WorkService: NewWorkService(repository.WorkRepository),
 	}
 }

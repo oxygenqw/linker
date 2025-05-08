@@ -16,6 +16,7 @@ type Repository struct {
 	TeacherRepository TeacherRepository
 	UserRepository    UserRepository
 	RequestRepository RequestRepository
+	WorkRepository    WorkRepository
 }
 
 type StudentRepository interface {
@@ -47,6 +48,12 @@ type RequestRepository interface {
 	Create(models.Request) error
 }
 
+type WorkRepository interface {
+	Create(models.Work) error
+	GetAll(userID uuid.UUID) ([]models.Work, error)
+	Delete(id uuid.UUID) error
+}
+
 func NewRepository(config *config.Config, logger *logger.Logger) (*Repository, error) {
 	dsn := fmt.Sprintf(
 		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
@@ -69,5 +76,6 @@ func NewRepository(config *config.Config, logger *logger.Logger) (*Repository, e
 		TeacherRepository: postgresRepository.TeacherRepository,
 		UserRepository:    postgresRepository.UserRepository,
 		RequestRepository: postgresRepository.RequestRepository,
+		WorkRepository:    postgresRepository.WorksRepository,
 	}, nil
 }

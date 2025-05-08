@@ -1,0 +1,210 @@
+.work-container {
+    max-width: 800px;
+    width: 100%;
+    margin: 20px auto;
+    padding: 25px;
+    background-color: #2a2a2a;
+    /* тот же фон */
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    margin-bottom: 40px;
+}
+
+.work-title {
+    font-weight: 500;
+    font-size: 28px;
+    margin: 0 0 25px;
+    text-align: center;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #1DCD9F;
+    /* цвет акцента */
+    color: #fff;
+}
+
+.work-section {
+    margin-bottom: 30px;
+}
+
+.work-field {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    margin-bottom: 18px;
+    line-height: 1.6;
+    align-items: start;
+    gap: 25px;
+}
+
+.work-label {
+    font-weight: 500;
+    color: #e0e0e0;
+    /* светлый цвет текста */
+    padding-right: 25px;
+    white-space: nowrap;
+}
+
+.work-value {
+    word-break: break-word;
+    display: flex;
+    align-items: center;
+    min-height: 24px;
+    width: 100%;
+    flex-direction: column;
+}
+
+.work-input,
+.work-textarea {
+    width: 100%;
+    background: #232323;
+    /* темный фон */
+    color: #fff;
+    /* белый текст */
+    border: 1px solid #444;
+    /* серый бордер */
+    border-radius: 6px;
+    padding: 10px;
+    font-size: 16px;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+
+.work-input:focus,
+.work-textarea:focus {
+    border-color: #1DCD9F;
+    /* акцентный цвет */
+    outline: none;
+}
+
+.work-input::placeholder,
+.work-textarea::placeholder {
+    color: #888;
+    /* серый плейсхолдер */
+}
+
+.work-textarea {
+    min-height: 100px;
+    max-width: 100%;
+    resize: vertical;
+}
+
+.work-actions {
+    position: fixed;
+    left: 50%;
+    bottom: 0;
+    width: 100%;
+    max-width: 800px;
+    transform: translateX(-50%);
+    background: #2a2a2a;
+    /* фон как в request_form */
+    padding: 12px 25px;
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    justify-content: space-between;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    z-index: 1000;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.work-button {
+    flex: 1;
+    min-width: 120px;
+    padding: 12px;
+    margin: 0;
+    white-space: nowrap;
+    background: none;
+    color: #1DCD9F;
+    /* акцентный цвет */
+    border: 1px solid #1DCD9F;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.work-button:hover {
+    background: rgba(29, 205, 159, 0.1);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.work-button:active {
+    transform: translateY(0);
+}
+
+.work-form-error {
+    color: #e74c3c !important;
+    /* красный цвет ошибки */
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 0 2px 8px 2px !important;
+    margin-bottom: 0 !important;
+    font-size: 15px !important;
+    font-weight: 500 !important;
+    text-align: left !important;
+    min-height: 18px;
+}
+
+/* Адаптив */
+
+@media (max-width: 768px) {
+    .work-container {
+        padding: 15px;
+        margin: 15px auto;
+    }
+
+    .work-field {
+        grid-template-columns: 1fr;
+        gap: 5px;
+    }
+
+    .work-label {
+        padding-right: 0;
+    }
+
+    .work-value {
+        min-height: auto;
+    }
+
+    .work-input,
+    .work-textarea {
+        font-size: 15px;
+        padding: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+
+    .work-container {
+        margin: 10px auto 20px;
+        padding: 15px;
+    }
+
+    .work-title {
+        font-size: 24px;
+    }
+
+    .work-actions {
+        gap: 6px;
+        padding: 8px 10px;
+    }
+
+    .work-button {
+        min-width: 100px;
+        padding: 10px 6px;
+        font-size: 14px;
+    }
+
+    .work-input,
+    .work-textarea {
+        font-size: 14px;
+        padding: 6px;
+    }
+}

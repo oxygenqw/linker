@@ -45,12 +45,19 @@ type RequestsHandler interface {
 	RequestToUser(w http.ResponseWriter, r *http.Request, params httprouter.Params)
 }
 
+type WorksHandler interface {
+	ToForm(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
+	Create(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
+	Delete(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
+}
+
 type Handler struct {
 	Telegram TelegramHandler
 	Pages    PagesHandler
 	Users    UserHandler
 	Cards    CardsHandler
 	Requests RequestsHandler
+	Works    WorksHandler
 }
 
 func NewHandler(service *services.Service, renderer *renderer.TemplateRenderer, logger *logger.Logger, bot *bot.Bot) *Handler {
@@ -60,5 +67,6 @@ func NewHandler(service *services.Service, renderer *renderer.TemplateRenderer, 
 		Users:    NewUserHandler(service, renderer, logger),
 		Cards:    NewCardsHandler(service, renderer, logger),
 		Requests: NewRequestsHandler(service, renderer, logger),
+		Works:    NewWorksHandler(service, renderer, logger),
 	}
 }

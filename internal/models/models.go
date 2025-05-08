@@ -49,6 +49,13 @@ type Request struct {
 	// UpdatedAt   time.Time `json:"updated_at"`
 }
 
+type Work struct {
+	ID          uuid.UUID `json:"id"`
+	UserID      uuid.UUID `json:"user_id"`
+	Link        string    `json:"link"`
+	Description string    `json:"description"`
+}
+
 type Message struct {
 	Message string `json:"message"`
 }

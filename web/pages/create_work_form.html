@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/create_work_form.css">
+    <script src="/static/telegram.js"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <title>Добавить дипломную работу</title>
+</head>
+
+<body>
+    <div class="work-container">
+        <h1 class="work-title">Добавить дипломную работу</h1>
+        <form id="workForm">
+            <div class="work-section">
+                <div class="work-field">
+                    <label for="link" class="work-label">Ссылка на работу</label>
+                    <div class="work-value">
+                        <input type="text" id="link" name="link" class="work-input"
+                            placeholder="Введите ссылку на работу" maxlength="500" required />
+                    </div>
+                </div>
+                <div class="work-field">
+                    <label for="description" class="work-label">Описание</label>
+                    <div class="work-value">
+                        <textarea id="description" name="description" class="work-textarea"
+                            placeholder="Введите описание работы" maxlength="1000" required></textarea>
+                    </div>
+                </div>
+            </div>
+            <div id="form-error" class="work-form-error" style="display:none"></div>
+        </form>
+    </div>
+
+    <div class="work-actions">
+        <button type="submit" class="work-button" form="workForm">Добавить</button>
+        <button type="button" class="work-button" id="backButton">Назад</button>
+    </div>
+
+    <script>
+        const userId = '{{ .user_id }}';
+        const role = '{{ .role }}';
+
+        const form = document.getElementById('workForm');
+        const errorBlock = document.getElementById('form-error');
+
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            errorBlock.style.display = 'none';
+            errorBlock.textContent = '';
+
+            const link = form.link.value.trim();
+            const description = form.description.value.trim();
+
+            if (!link) {
+                errorBlock.textContent = 'Пожалуйста, введите ссылку на работу';
+                errorBlock.style.display = 'block';
+                form.link.focus();
+                return;
+            }
+
+            if (!description) {
+                errorBlock.textContent = 'Пожалуйста, введите описание работы';
+                errorBlock.style.display = 'block';
+                form.description.focus();
+                return;
+            }
+
+            try {
+                const response = await fetch(`/works/${userId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ link, description }),
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(errorText || 'Ошибка сервера');
+                }
+
+                // После успешного добавления - переход на профиль
+                if (role === 'student') {
+                    window.location.href = `/users/student/${userId}`;
+                } else if (role === 'teacher') {
+                    window.location.href = `/users/teacher/${userId}`;
+                } else {
+                    window.location.href = '/';
+                }
+            } catch (error) {
+                errorBlock.textContent = 'Ошибка: ' + error.message;
+                errorBlock.style.display = 'block';
+            }
+        });
+
+        document.getElementById('backButton').addEventListener('click', function () {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                if (role === 'student') {
+                    window.location.href = `/users/student/${userId}`;
+                } else if (role === 'teacher') {
+                    window.location.href = `/users/teacher/${userId}`;
+                } else {
+                    window.location.href = '/';
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

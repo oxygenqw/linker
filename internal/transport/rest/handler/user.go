@@ -129,8 +129,15 @@ func (h *UserHandlerImpl) StudentProfile(w http.ResponseWriter, r *http.Request,
 		return
 	}
 
+	works, err := h.service.WorkService.GetAll(student.ID)
+	if err != nil {
+		http.Error(w, "Ошибка получения работ: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 	data := map[string]any{
 		"student": student,
+		"works":   works,
 	}
 
 	h.renderer.RenderTemplate(w, "student_profile.html", data)
@@ -147,8 +154,15 @@ func (h *UserHandlerImpl) TeacherProfile(w http.ResponseWriter, r *http.Request,
 		return
 	}
 
+	works, err := h.service.WorkService.GetAll(teacher.ID)
+	if err != nil {
+		http.Error(w, "Ошибка получения работ: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 	data := map[string]any{
 		"teacher": teacher,
+		"works":   works,
 	}
 
 	h.renderer.RenderTemplate(w, "teacher_profile.html", data)
