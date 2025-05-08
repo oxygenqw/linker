@@ -42,7 +42,7 @@ type CardsHandler interface {
 
 type RequestsHandler interface {
 	ToRequestForm(w http.ResponseWriter, r *http.Request, params httprouter.Params)
-	RequestToStudent(w http.ResponseWriter, r *http.Request, params httprouter.Params)
+	RequestToUser(w http.ResponseWriter, r *http.Request, params httprouter.Params)
 }
 
 type Handler struct {

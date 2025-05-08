@@ -29,32 +29,26 @@ func (h *RequestsHandlerImpl) ToRequestForm(w http.ResponseWriter, r *http.Reque
 	h.logger.Info("[H: ToRequestForm] ", "URL: ", r.URL)
 
 	data := map[string]any{
-		"id":           params.ByName("id"),
-		"role":         params.ByName("role"),
+		"sender_id":    params.ByName("sender_id"),
 		"recipient_id": params.ByName("recipient_id"),
 	}
 
 	h.renderer.RenderTemplate(w, "request_form.html", data)
 }
 
-func (h *RequestsHandlerImpl) RequestToStudent(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+func (h *RequestsHandlerImpl) RequestToUser(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	h.logger.Info("[H: RequestToStudent] ", "URL: ", r.URL)
-	id := params.ByName("id")
+	senderID := params.ByName("sender_id")
 	recipientID := params.ByName("recipient_id")
 
-	var requestData models.Request
+	var requestData models.Message
 
 	if err := json.NewDecoder(r.Body).Decode(&requestData); err != nil {
 		http.Error(w, "Неверный формат запроса", http.StatusBadRequest)
 		return
 	}
 
-	if requestData.Message == "" {
-		http.Error(w, "Сообщение не может быть пустым", http.StatusBadRequest)
-		return
-	}
-
-	err := h.service.RequestService.CreateRequest(id, recipientID, requestData)
+	err := h.service.RequestService.SendRequest(senderID, recipientID, requestData)
 	if err != nil {
 		http.Error(w, "Ошибка сервера: "+err.Error(), http.StatusInternalServerError)
 		return
@@ -62,7 +56,6 @@ func (h *RequestsHandlerImpl) RequestToStudent(w http.ResponseWriter, r *http.Re
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{
-		"status":  "success",
 		"message": "Запрос успешно отправлен",
 	})
 }

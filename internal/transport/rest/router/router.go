@@ -48,9 +48,9 @@ func (r *Router) InitRoutes() *httprouter.Router {
 	router.GET("/teacher/profile/:id/:role/:teacher_id", r.handler.Cards.TeacherProfile)
 
 	// requests
-	router.GET("/requests/:id/:role/:recipient_id", r.handler.Requests.ToRequestForm)
+	router.GET("/requests/:sender_id/:recipient_id", r.handler.Requests.ToRequestForm)
 
-	router.POST("/requests/:id/:recipient_id", r.handler.Requests.RequestToStudent)
+	router.POST("/requests/:sender_id/:recipient_id", r.handler.Requests.RequestToUser)
 
 	// html pages
 	router.GET("/login/:user_name/:telegram_id", r.handler.Pages.Login)

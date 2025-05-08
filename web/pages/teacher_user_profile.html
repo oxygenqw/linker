@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/static/style.css">
     <script src="/static/telegram.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <title>Профиль преподавателя</title>
 </head>
 
 <body>
@@ -26,7 +27,13 @@
             </div>
             <div class="profile-field">
                 <span class="field-label">Отчество:</span>
-                <span class="field-value">{{ .teacher.MiddleName }}</span>
+                <span class="field-value">
+                    {{ if .teacher.MiddleName }}
+                    {{ .teacher.MiddleName }}
+                    {{ else }}
+                    Не указано
+                    {{ end }}
+                </span>
             </div>
         </div>
 
@@ -34,24 +41,52 @@
             <h2>Профессиональная информация</h2>
             <div class="profile-field">
                 <span class="field-label">Ученая степень:</span>
-                <span class="field-value">{{ .teacher.Degree }}</span>
+                <span class="field-value">
+                    {{ if .teacher.Degree }}
+                    {{ .teacher.Degree }}
+                    {{ else }}
+                    Не указана
+                    {{ end }}
+                </span>
             </div>
             <div class="profile-field">
                 <span class="field-label">Должность:</span>
-                <span class="field-value">{{ .teacher.Position }}</span>
+                <span class="field-value">
+                    {{ if .teacher.Position }}
+                    {{ .teacher.Position }}
+                    {{ else }}
+                    Не указана
+                    {{ end }}
+                </span>
             </div>
             <div class="profile-field">
                 <span class="field-label">Университет:</span>
-                <span class="field-value">{{ .teacher.University }}</span>
+                <span class="field-value">
+                    {{ if .teacher.University }}
+                    {{ .teacher.University }}
+                    {{ else }}
+                    Не указан
+                    {{ end }}
+                </span>
             </div>
             <div class="profile-field">
                 <span class="field-label">Факультет:</span>
-                <span class="field-value">{{ .teacher.Faculty }}</span>
+                <span class="field-value">
+                    {{ if .teacher.Faculty }}
+                    {{ .teacher.Faculty }}
+                    {{ else }}
+                    Не указан
+                    {{ end }}
+                </span>
             </div>
             <div class="profile-field">
                 <span class="field-label">Статус:</span>
                 <span class="field-value">
-                    {{ if .teacher.IsFree }}Свободен для проектов{{ else }}Занят{{ end }}
+                    {{ if .teacher.IsFree }}
+                    Свободен для проектов
+                    {{ else }}
+                    Занят
+                    {{ end }}
                 </span>
             </div>
         </div>
@@ -60,16 +95,28 @@
             <h2>Проекты и интересы</h2>
             <div class="profile-field">
                 <span class="field-label">Идеи для проектов:</span>
-                <p class="field-value">{{ .teacher.Idea }}</p>
+                <p class="field-value">
+                    {{ if .teacher.Idea }}
+                    {{ .teacher.Idea }}
+                    {{ else }}
+                    Не указаны
+                    {{ end }}
+                </p>
             </div>
             <div class="profile-field">
                 <span class="field-label">О себе:</span>
-                <p class="field-value">{{ .teacher.About }}</p>
+                <p class="field-value">
+                    {{ if .teacher.About }}
+                    {{ .teacher.About }}
+                    {{ else }}
+                    Не указано
+                    {{ end }}
+                </p>
             </div>
         </div>
 
         <div class="actions">
-            <button class="button" id="requestButton">Запрос</button>
+            <button class="button" id="toRequestFormButton">Запрос</button>
             <button class="button" id="homeButton">На главную</button>
             <button class="button" id="backButton">Назад</button>
         </div>
@@ -78,9 +125,14 @@
     <script>
         const userId = '{{ .id }}';
         const userRole = '{{ .role }}';
+        const recipientID = '{{ .teacher.ID }}';
 
         document.getElementById('homeButton').addEventListener('click', function () {
             window.location.href = `/home/${userId}/${userRole}`;
+        });
+
+        document.getElementById('toRequestFormButton').addEventListener('click', function () {
+            window.location.href = `/requests/${userId}/${recipientID}`;
         });
 
         document.getElementById('backButton').addEventListener('click', function () {

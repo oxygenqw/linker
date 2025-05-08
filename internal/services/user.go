@@ -4,10 +4,6 @@ import (
 	"github.com/Oxygenss/linker/internal/repository"
 )
 
-type UserService interface {
-	GetRole(telegramID int64) (string, error)
-}
-
 type UserServiceImpl struct {
 	repository repository.UserRepository
 }
@@ -18,6 +14,10 @@ func NewUserService(repository repository.UserRepository) *UserServiceImpl {
 	}
 }
 
-func (s *UserServiceImpl) GetRole(telegramID int64) (string, error) {
-	return s.repository.GetRole(telegramID)
+func (s *UserServiceImpl) GetRoleByID(id string) (string, error) {
+	return s.repository.GetRoleByID(id)
+}
+
+func (s *UserServiceImpl) GetRoleByTelegramID(telegramID int64) (string, error) {
+	return s.repository.GetRoleByTelegramID(telegramID)
 }

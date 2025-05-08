@@ -215,12 +215,15 @@ func (r *StudentRepositoryImpl) Create(student models.Student) (uuid.UUID, error
 		return uuid.Nil, fmt.Errorf("database connection is not initialized")
 	}
 
-	student.ID = uuid.New()
+	if student.ID == uuid.Nil {
+		student.ID = uuid.New()
+	}
 
 	query := `INSERT INTO students 
               (id, telegram_id, user_name, first_name, middle_name, last_name, github, job, idea, about,
                university, faculty, course, education) 
               VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`
+			  
 	_, err := r.db.Exec(query,
 		student.ID,
 		student.TelegramID,

@@ -8,6 +8,11 @@ import (
 	"github.com/google/uuid"
 )
 
+type UserService interface {
+	GetRoleByTelegramID(telegramID int64) (string, error)
+	GetRoleByID(id string) (string, error)
+}
+
 type StudentService interface {
 	Create(student models.Student) (uuid.UUID, error)
 	GetByTelegramID(telegramID int64) (models.Student, error)
@@ -29,7 +34,7 @@ type TeacherService interface {
 }
 
 type RequestService interface {
-	CreateRequest(senderID string, recipientID string, message models.Request) error
+	SendRequest(senderID string, recipientID string, message models.Message) error
 }
 
 type Service struct {
@@ -44,6 +49,12 @@ func NewService(repository *repository.Repository, logger *logger.Logger, bot *b
 		StudentService: NewStudentService(repository.StudentRepository),
 		TeacherService: NewTeacherService(repository.TeacherRepository),
 		UserService:    NewUserService(repository.UserRepository),
-		RequestService: NewRequestService(repository.StudentRepository, bot, *logger),
+		RequestService: NewRequestService(
+			repository.UserRepository,
+			repository.StudentRepository,
+			repository.TeacherRepository,
+			repository.RequestRepository,
+			bot,
+			*logger),
 	}
 }

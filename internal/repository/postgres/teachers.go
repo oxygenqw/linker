@@ -212,7 +212,9 @@ func (r *TeacherRepositoryImpl) Create(teacher models.Teacher) (uuid.UUID, error
 		return uuid.Nil, fmt.Errorf("database connection is not initialized")
 	}
 
-	teacher.ID = uuid.New()
+	if teacher.ID == uuid.Nil {
+		teacher.ID = uuid.New()
+	}
 
 	query := `INSERT INTO teachers 
               (id, telegram_id, user_name, first_name, middle_name, last_name, 

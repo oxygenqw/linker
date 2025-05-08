@@ -30,3 +30,12 @@ CREATE TABLE teachers (
     position VARCHAR(50),
     is_free BOOLEAN
 );
+
+CREATE TABLE requests (
+    id uuid PRIMARY KEY,
+    sender_id uuid,
+    recipient_id uuid,
+    message TEXT,
+    status VARCHAR(20),
+    created_at TIMESTAMP
+);

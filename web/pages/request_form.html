@@ -13,7 +13,7 @@
 
 <body>
     <div class="container">
-        <h1>Отправить запрос студенту</h1>
+        <h1>Отправить запрос</h1>
         <form id="requestForm">
             <div class="profile-section">
                 <h2>Сообщение</h2>
@@ -52,7 +52,7 @@
             }
 
             try {
-                const response = await fetch(`/requests/{{ .id }}/{{ .recipient_id }}`, {
+                const response = await fetch(`/requests/{{ .sender_id }}/{{ .recipient_id }}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -68,18 +68,9 @@
                 }
 
                 const result = await response.json();
+                alert(result.message || 'Запрос отправлен');
+                window.history.back();
 
-                if (window.Telegram && window.Telegram.WebApp) {
-                    window.Telegram.WebApp.showAlert(result.message || 'Запрос отправлен');
-                } else {
-                    alert(result.message || 'Запрос отправлен');
-                }
-
-                if (window.Telegram && window.Telegram.WebApp) {
-                    window.Telegram.WebApp.close();
-                } else {
-                    window.history.back();
-                }
 
             } catch (error) {
                 errorBlock.textContent = 'Ошибка: ' + error.message;

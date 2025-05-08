@@ -15,6 +15,7 @@ type Repository struct {
 	StudentRepository StudentRepository
 	TeacherRepository TeacherRepository
 	UserRepository    UserRepository
+	RequestRepository RequestRepository
 }
 
 type StudentRepository interface {
@@ -38,7 +39,12 @@ type TeacherRepository interface {
 }
 
 type UserRepository interface {
-	GetRole(telegramID int64) (string, error)
+	GetRoleByID(id string) (string, error)
+	GetRoleByTelegramID(telegramID int64) (string, error)
+}
+
+type RequestRepository interface {
+	Create(models.Request) error
 }
 
 func NewRepository(config *config.Config, logger *logger.Logger) (*Repository, error) {
@@ -62,5 +68,6 @@ func NewRepository(config *config.Config, logger *logger.Logger) (*Repository, e
 		StudentRepository: postgresRepository.StudentRepository,
 		TeacherRepository: postgresRepository.TeacherRepository,
 		UserRepository:    postgresRepository.UserRepository,
+		RequestRepository: postgresRepository.RequestRepository,
 	}, nil
 }

@@ -1,6 +1,10 @@
 package models
 
-import "github.com/google/uuid"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 type Student struct {
 	ID         uuid.UUID `json:"id"`
@@ -36,5 +40,15 @@ type Teacher struct {
 }
 
 type Request struct {
+	ID          uuid.UUID `json:"id"`
+	SenderID    uuid.UUID `json:"sender_id"`
+	RecipientID uuid.UUID `json:"recipient_id"`
+	Message     string    `json:"message"`
+	Status      string    `json:"status"`
+	CreatedAt   time.Time `json:"created_at"`
+	// UpdatedAt   time.Time `json:"updated_at"`
+}
+
+type Message struct {
 	Message string `json:"message"`
 }

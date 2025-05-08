@@ -38,7 +38,7 @@ func (h *UserHandlerImpl) TelegramAuth(w http.ResponseWriter, r *http.Request, p
 		return
 	}
 
-	role, err := h.service.UserService.GetRole(telegramID)
+	role, err := h.service.UserService.GetRoleByTelegramID(telegramID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
