@@ -76,7 +76,9 @@ func (h *WorksHandlerImpl) Create(w http.ResponseWriter, r *http.Request, ps htt
 }
 
 func (h *WorksHandlerImpl) Delete(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	workIDStr := ps.ByName("workId")
+	workIDStr := ps.ByName("id")
+	h.logger.Info("Delete work request, ID:", workIDStr)
+
 	workID, err := uuid.Parse(workIDStr)
 	if err != nil {
 		http.Error(w, `{"message":"Некорректный workId"}`, http.StatusBadRequest)

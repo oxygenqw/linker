@@ -115,6 +115,27 @@
             </div>
         </div>
 
+        <div class="profile-section">
+            <h2>Научные работы</h2>
+            {{ if .works }}
+            <div class="works-grid">
+                {{ range .works }}
+                <div class="work-card">
+                    <div class="work-card-header">
+                        <a href="{{ .Link }}" target="_blank" class="work-card-title">{{ .Link }}</a>
+                    </div>
+                    <div class="work-card-body">
+                        <p class="work-card-description">{{ .Description }}</p>
+                    </div>
+                </div>
+                {{ end }}
+            </div>
+            {{ else }}
+            <div class="field-value">Нет добавленных работ</div>
+            {{ end }}
+        </div>
+
+
         <div class="actions">
             <button class="button" id="toRequestFormButton">Запрос</button>
             <button class="button" id="homeButton">На главную</button>

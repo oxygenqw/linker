@@ -34,11 +34,19 @@ func (h *CardsHandlerImpl) StudentProfile(w http.ResponseWriter, r *http.Request
 
 	student, err := h.service.StudentService.GetByID(student_id)
 	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
+	works, err := h.service.WorkService.GetAll(student.ID)
+	if err != nil {
+		http.Error(w, "Ошибка получения работ: "+err.Error(), http.StatusInternalServerError)
+		return
 	}
 
 	data := map[string]any{
 		"student": student,
+		"works":   works,
 		"id":      id,
 		"role":    role,
 	}
@@ -55,11 +63,19 @@ func (h *CardsHandlerImpl) TeacherProfile(w http.ResponseWriter, r *http.Request
 
 	teacher, err := h.service.TeacherService.GetByID(teacher_id)
 	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
+	works, err := h.service.WorkService.GetAll(teacher.ID)
+	if err != nil {
+		http.Error(w, "Ошибка получения работ: "+err.Error(), http.StatusInternalServerError)
+		return
 	}
 
 	data := map[string]any{
 		"teacher": teacher,
+		"works":   works,
 		"id":      id,
 		"role":    role,
 	}

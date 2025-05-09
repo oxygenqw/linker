@@ -121,9 +121,8 @@
                 </p>
             </div>
         </div>
-
         <div class="profile-section">
-            <h2>Дипломные работы</h2>
+            <h2>Научные работы</h2>
             {{ if .works }}
             <div class="works-grid">
                 {{ range .works }}
@@ -139,13 +138,12 @@
                         <button class="button work-delete-button" data-work-id="{{ .ID }}">Удалить</button>
                     </div>
                 </div>
-                {{ end }}
+                {{ end }} <!-- This closing tag was missing -->
             </div>
             {{ else }}
             <div class="field-value">Нет добавленных работ</div>
             {{ end }}
         </div>
-
         <div class="actions">
             <button class="button" id="editProfileButton">Редактировать профиль</button>
             <button class="button" id="deleteProfileButton">Удалить профиль</button>
@@ -205,11 +203,7 @@
         });
 
         document.getElementById('backButton').addEventListener('click', function () {
-            if (window.history.length > 1) {
-                window.history.back();
-            } else {
-                window.location.href = `/home/${studentId}/student`;
-            }
+            window.location.href = `/home/${studentId}/student`;
         });
     </script>
 </body>

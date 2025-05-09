@@ -106,7 +106,7 @@
         </div>
 
         <div class="profile-section">
-            <h2>Дипломные работы</h2>
+            <h2>Научные работы</h2>
             {{ if .works }}
             <div class="works-grid">
                 {{ range .works }}
@@ -190,13 +190,8 @@
                 });
         });
 
-
         document.getElementById('backButton').addEventListener('click', function () {
-            if (window.history.length > 1) {
-                window.history.back();
-            } else {
-                window.location.href = `/home/${teacherId}/teacher`;
-            }
+            window.location.href = `/home/${teacherId}/teacher`;
         });
     </script>
 </body>
