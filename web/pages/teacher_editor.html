@@ -16,81 +16,81 @@
         <form id="profileForm">
             <div id="form-error" class="form-error" style="display:none"></div>
 
+            <!-- Основная информация -->
             <div class="form-group">
-                <label for="first_name">Имя</label>
-                <input type="text" id="first_name" name="first_name" value="{{ .student.FirstName }}" maxlength="50"
+                <label for="last_name">Фамилия</label>
+                <input type="text" id="last_name" name="last_name" value="{{ .teacher.LastName }}" maxlength="50"
                     required>
             </div>
 
             <div class="form-group">
-                <label for="last_name">Фамилия</label>
-                <input type="text" id="last_name" name="last_name" value="{{ .student.LastName }}" maxlength="50"
+                <label for="first_name">Имя</label>
+                <input type="text" id="first_name" name="first_name" value="{{ .teacher.FirstName }}" maxlength="50"
                     required>
             </div>
 
             <div class="form-group">
                 <label for="middle_name">Отчество</label>
-                <input type="text" id="middle_name" name="middle_name" value="{{ .student.MiddleName }}" maxlength="50">
+                <input type="text" id="middle_name" name="middle_name" value="{{ .teacher.MiddleName }}" maxlength="50">
             </div>
 
+            <!-- Академическая информация -->
             <div class="form-group">
                 <label for="university">Университет</label>
-                <input type="text" id="university" name="university" value="{{ .student.University }}" maxlength="100">
+                <input type="text" id="university" name="university" value="{{ .teacher.University }}" maxlength="100">
             </div>
 
             <div class="form-group">
                 <label for="faculty">Факультет</label>
-                <input type="text" id="faculty" name="faculty" value="{{ .student.Faculty }}" maxlength="100">
+                <input type="text" id="faculty" name="faculty" value="{{ .teacher.Faculty }}" maxlength="100">
             </div>
 
             <div class="form-group">
-                <label for="course">Курс</label>
-                <select id="course" name="course" class="form-select">
+                <label for="degree">Учёная степень</label>
+                <select id="degree" name="degree" class="form-select">
                     <option value="">Не указано</option>
-                    <option value="1 курс" {{ if eq .student.Course "1 курс" }}selected{{ end }}>1 курс</option>
-                    <option value="2 курс" {{ if eq .student.Course "2 курс" }}selected{{ end }}>2 курс</option>
-                    <option value="3 курс" {{ if eq .student.Course "3 курс" }}selected{{ end }}>3 курс</option>
-                    <option value="4 курс" {{ if eq .student.Course "4 курс" }}selected{{ end }}>4 курс</option>
-                    <option value="5 курс" {{ if eq .student.Course "5 курс" }}selected{{ end }}>5 курс</option>
-                    <option value="6 курс" {{ if eq .student.Course "6 курс" }}selected{{ end }}>6 курс</option>
+                    <option value="Кандидат наук" {{ if eq .teacher.Degree "Кандидат наук" }}selected{{ end }}>Кандидат
+                        наук</option>
+                    <option value="Доктор наук" {{ if eq .teacher.Degree "Доктор наук" }}selected{{ end }}>Доктор наук
+                    </option>
+                    <option value="PhD" {{ if eq .teacher.Degree "PhD" }}selected{{ end }}>PhD</option>
+                    <option value="Нет степени" {{ if eq .teacher.Degree "Нет степени" }}selected{{ end }}>Нет степени
+                    </option>
                 </select>
             </div>
 
             <div class="form-group">
-                <label for="education">Уровень образования</label>
-                <select id="education" name="education" class="form-select">
+                <label for="position">Должность</label>
+                <select id="position" name="position" class="form-select">
                     <option value="">Не указано</option>
-                    <option value="Бакалавриат" {{ if eq .student.Education "Бакалавриат" }}selected{{ end }}>
-                        Бакалавриат</option>
-                    <option value="Специалитет" {{ if eq .student.Education "Специалитет" }}selected{{ end }}>
-                        Специалитет</option>
-                    <option value="Магистратура" {{ if eq .student.Education "Магистратура" }}selected{{ end }}>
-                        Магистратура</option>
-                    <option value="Аспирантура" {{ if eq .student.Education "Аспирантура" }}selected{{ end }}>
-                        Аспирантура</option>
-                    <option value="Докторантура" {{ if eq .student.Education "Докторантура" }}selected{{ end }}>
-                        Докторантура</option>
+                    <option value="Профессор" {{ if eq .teacher.Position "Профессор" }}selected{{ end }}>Профессор
+                    </option>
+                    <option value="Доцент" {{ if eq .teacher.Position "Доцент" }}selected{{ end }}>Доцент</option>
+                    <option value="Старший преподаватель" {{ if eq .teacher.Position "Старший преподаватель"
+                        }}selected{{ end }}>Старший преподаватель</option>
+                    <option value="Преподаватель" {{ if eq .teacher.Position "Преподаватель" }}selected{{ end }}>
+                        Преподаватель</option>
+                    <option value="Ассистент" {{ if eq .teacher.Position "Ассистент" }}selected{{ end }}>Ассистент
+                    </option>
                 </select>
             </div>
 
             <div class="form-group">
-                <label for="github">GitHub</label>
-                <input type="text" id="github" name="github" value="{{ .student.GitHub }}" maxlength="100">
+                <label for="is_free">
+                    <input type="checkbox" id="is_free" name="is_free" {{ if .teacher.IsFree }}checked{{ end }}>
+                    Свободен для сотрудничества
+                </label>
             </div>
 
-            <div class="form-group">
-                <label for="job">Место работы</label>
-                <input type="text" id="job" name="job" value="{{ .student.Job }}" maxlength="100">
-            </div>
-
+            <!-- Профессиональная информация -->
             <div class="form-group">
                 <label for="idea">Идея проекта</label>
-                <textarea id="idea" name="idea" maxlength="1000">{{ .student.Idea }}</textarea>
+                <textarea id="idea" name="idea" maxlength="1000">{{ .teacher.Idea }}</textarea>
             </div>
 
             <div class="form-group">
                 <label for="about">О себе</label>
-                <textarea id="about" name="about" maxlength="1000">{{ .student.About }}</textarea>
+                <textarea id="about" name="about" maxlength="1000">{{ .teacher.About }}</textarea>
             </div>
         </form>
     </div>
@@ -117,6 +117,7 @@
             const faculty = form.faculty.value.trim();
             const degree = form.degree.value;
             const position = form.position.value;
+            const isFree = form.is_free.checked;
 
             const nameRegex = /^[a-zA-Zа-яА-ЯёЁ\- ]+$/;
             let errorMsg = '';
@@ -151,12 +152,6 @@
             } else if (faculty.length > 100) {
                 errorMsg = 'Название факультета/кафедры не должно превышать 100 символов';
                 errorField = form.faculty;
-            } else if (degree.length > 50) {
-                errorMsg = 'Учёная степень не должна превышать 50 символов';
-                errorField = form.degree;
-            } else if (position.length > 50) {
-                errorMsg = 'Должность не должна превышать 50 символов';
-                errorField = form.position;
             }
 
             if (errorMsg) {
@@ -178,11 +173,11 @@
                         first_name: firstName,
                         last_name: lastName,
                         middle_name: middleName,
-                        degree: degree,
-                        position: position,
                         university: university,
                         faculty: faculty,
-                        is_free: form.is_free.checked,
+                        degree: degree,
+                        position: position,
+                        is_free: isFree,
                         idea: form.idea.value,
                         about: form.about.value
                     })

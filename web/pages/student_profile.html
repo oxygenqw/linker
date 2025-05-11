@@ -12,17 +12,17 @@
 
 <body>
     <div class="container">
-        <h1>Профиль</h1>
+        <h1>Личный профиль</h1>
 
         <div class="profile-section">
             <h2>Основная информация</h2>
             <div class="profile-field">
-                <span class="field-label">Имя:</span>
-                <span class="field-value">{{ .student.FirstName }}</span>
-            </div>
-            <div class="profile-field">
                 <span class="field-label">Фамилия:</span>
                 <span class="field-value">{{ .student.LastName }}</span>
+            </div>
+            <div class="profile-field">
+                <span class="field-label">Имя:</span>
+                <span class="field-value">{{ .student.FirstName }}</span>
             </div>
             <div class="profile-field">
                 <span class="field-label">Отчество:</span>
@@ -138,7 +138,7 @@
                         <button class="button work-delete-button" data-work-id="{{ .ID }}">Удалить</button>
                     </div>
                 </div>
-                {{ end }} <!-- This closing tag was missing -->
+                {{ end }}
             </div>
             {{ else }}
             <div class="field-value">Нет добавленных работ</div>
