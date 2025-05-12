@@ -62,8 +62,11 @@ func (r *Router) InitRoutes() *httprouter.Router {
 	router.GET("/login/:user_name/:telegram_id", r.handler.Pages.Login)
 	router.GET("/home/:id/:role", r.handler.Pages.Home)
 
-	// static
-	router.ServeFiles("/static/*filepath", http.Dir("./web/static/"))
+	// css
+	router.ServeFiles("/styles/*filepath", http.Dir("./web/styles/"))
+
+	// scripts
+	router.ServeFiles("/scripts/*filepath", http.Dir("./web/scripts/"))
 
 	return router
 }

@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/cards.css">
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/styles/cards.css">
+    <link rel="stylesheet" href="/styles/style.css">
     <script src="/static/telegram.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <title>Список преподавателей</title>
@@ -101,11 +101,7 @@
         });
 
         document.getElementById('backButton').addEventListener('click', function () {
-            if (window.history.length > 1) {
-                window.history.back();
-            } else {
-                window.location.href = `/home/${userId}/${userRole}`;
-            }
+            window.location.href = `/home/${userId}/${userRole}`;
         });
     </script>
 </body>

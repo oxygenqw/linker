@@ -35,8 +35,12 @@ func (h *PagesHandlerImpl) Login(w http.ResponseWriter, r *http.Request, params 
 }
 
 func (h *PagesHandlerImpl) Home(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	h.logger.Info("[H: Home] ", "URL: ", r.URL)
+	//h.logger.Info("[H: Home] ", "URL: ", r.URL)
 
+	id := params.ByName("id")
+	role := params.ByName("role")
+	h.logger.Infof("Home handler: id=%s, role=%s", id, role)
+	
 	data := map[string]any{
 		"id":   params.ByName("id"),
 		"role": params.ByName("role"),
