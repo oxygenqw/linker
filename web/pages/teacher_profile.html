@@ -3,16 +3,17 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/styles/profile.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/styles/style.css">
-    <script src="/static/telegram.js"></script>
+    <link rel="stylesheet" href="/styles/profile.css">
+
+    <script src="/styles/telegram.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <title>Профиль преподавателя</title>
 </head>
 
 <body>
-    <div class="container">
+    <div class="container" data-teacher-id="{{ .teacher.ID }}" data-username="{{ .teacher.UserName }}"
+        data-telegram-id="{{ .teacher.TelegramID }}">
         <h1>Личный профиль</h1>
 
         <div class="profile-section">
@@ -36,41 +37,25 @@
             <div class="profile-field">
                 <span class="field-label">Ученая степень:</span>
                 <span class="field-value">
-                    {{ if .teacher.Degree }}
-                    {{ .teacher.Degree }}
-                    {{ else }}
-                    Не указана
-                    {{ end }}
+                    {{ if .teacher.Degree }}{{ .teacher.Degree }}{{ else }}Не указана{{ end }}
                 </span>
             </div>
             <div class="profile-field">
                 <span class="field-label">Должность:</span>
                 <span class="field-value">
-                    {{ if .teacher.Position }}
-                    {{ .teacher.Position }}
-                    {{ else }}
-                    Не указана
-                    {{ end }}
+                    {{ if .teacher.Position }}{{ .teacher.Position }}{{ else }}Не указана{{ end }}
                 </span>
             </div>
             <div class="profile-field">
                 <span class="field-label">Университет:</span>
                 <span class="field-value">
-                    {{ if .teacher.University }}
-                    {{ .teacher.University }}
-                    {{ else }}
-                    Не указан
-                    {{ end }}
+                    {{ if .teacher.University }}{{ .teacher.University }}{{ else }}Не указан{{ end }}
                 </span>
             </div>
             <div class="profile-field">
                 <span class="field-label">Факультет/Кафедра:</span>
                 <span class="field-value">
-                    {{ if .teacher.Faculty }}
-                    {{ .teacher.Faculty }}
-                    {{ else }}
-                    Не указан
-                    {{ end }}
+                    {{ if .teacher.Faculty }}{{ .teacher.Faculty }}{{ else }}Не указан{{ end }}
                 </span>
             </div>
             <div class="profile-field">
@@ -86,27 +71,19 @@
             <div class="profile-field">
                 <span class="field-label">Идеи для проектов:</span>
                 <p class="field-value">
-                    {{ if .teacher.Idea }}
-                    {{ .teacher.Idea }}
-                    {{ else }}
-                    Нет идей для проектов
-                    {{ end }}
+                    {{ if .teacher.Idea }}{{ .teacher.Idea }}{{ else }}Нет идей для проектов{{ end }}
                 </p>
             </div>
             <div class="profile-field">
                 <span class="field-label">О себе:</span>
                 <p class="field-value">
-                    {{ if .teacher.About }}
-                    {{ .teacher.About }}
-                    {{ else }}
-                    Информация отсутствует
-                    {{ end }}
+                    {{ if .teacher.About }}{{ .teacher.About }}{{ else }}Информация отсутствует{{ end }}
                 </p>
             </div>
         </div>
 
         <div class="profile-section">
-            <h2>Научные работы</h2>
+            <h2>Портфолио и научные работы</h2>
             {{ if .works }}
             <div class="works-grid">
                 {{ range .works }}
@@ -130,70 +107,14 @@
         </div>
 
         <div class="actions">
-            <div class="actions">
-                <button class="button" id="editProfileButton">Редактировать профиль</button>
-                <button class="button" id="deleteProfileButton">Удалить профиль</button>
-                <button class="button" id="addWorkButton">Добавить научную работу</button>
-                <button class="button" id="backButton">Назад</button>
-            </div>
+            <button class="button" id="editProfileButton">Редактировать профиль</button>
+            <button class="button" id="deleteProfileButton">Удалить профиль</button>
+            <button class="button" id="addWorkButton">Добавить научную работу</button>
+            <button class="button" id="backButton">Назад</button>
         </div>
     </div>
 
-
-    <script>
-        const teacherId = '{{ .teacher.ID }}';
-
-        document.getElementById('editProfileButton').addEventListener('click', function () {
-            window.location.href = `/teacher/edit/${teacherId}`;
-        });
-
-        document.addEventListener('click', async function (e) {
-            if (e.target.classList.contains('work-delete-button')) {
-                const workId = e.target.dataset.workId;
-                try {
-                    const response = await fetch(`/works/${workId}`, { method: 'DELETE' });
-                    if (response.ok) {
-                        window.location.reload();
-                    } else {
-                        const error = await response.text();
-                        alert('Ошибка удаления: ' + (error || 'Ошибка сервера'));
-                    }
-                } catch (error) {
-                    alert('Ошибка удаления: ' + error.message);
-                }
-            }
-            // Заглушка для редактирования
-            else if (e.target.classList.contains('work-edit-button')) {
-                alert('Редактирование пока недоступно');
-            }
-        });
-
-        document.getElementById('addWorkButton').addEventListener('click', function () {
-            window.location.href = `/works/${teacherId}`;
-        });
-
-        document.getElementById('deleteProfileButton').addEventListener('click', function () {
-            fetch(`/users/teacher/${teacherId}`, {
-                method: 'DELETE',
-            })
-                .then(response => {
-                    if (response.ok) {
-                        window.location.href = `/login/{{ .teacher.UserName }}/{{ .teacher.TelegramID }}`;
-                    } else {
-                        return response.text().then(text => {
-                            throw new Error(text || `Server error: ${response.status}`);
-                        });
-                    }
-                })
-                .catch(error => {
-                    alert('Failed to delete profile: ' + error.message);
-                });
-        });
-
-        document.getElementById('backButton').addEventListener('click', function () {
-            window.location.href = `/home/${teacherId}/teacher`;
-        });
-    </script>
+    <script type="module" src="/scripts/teacher_profile.js"></script>
 </body>
 
 </html>
