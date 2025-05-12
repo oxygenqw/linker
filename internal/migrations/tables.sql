@@ -7,6 +7,7 @@ CREATE TABLE students (
     last_name VARCHAR(50),
     university VARCHAR(100),
     faculty VARCHAR(100),
+    specialty VARCHAR(100),
     idea TEXT,
     about TEXT,
     github VARCHAR(100),

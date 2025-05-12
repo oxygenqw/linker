@@ -35,9 +35,10 @@ func (r *StudentRepositoryImpl) GetByID(id string) (models.Student, error) {
 	}
 
 	query := `SELECT id, telegram_id, user_name, first_name, middle_name, last_name, github, job, idea, about, 
-              university, faculty, course, education FROM students WHERE id = $1`
+	university, faculty, specialty, course, education FROM students WHERE id = $1`
 
 	var student models.Student
+
 	err = r.db.QueryRow(query, id).Scan(
 		&student.ID,
 		&student.TelegramID,
@@ -51,6 +52,7 @@ func (r *StudentRepositoryImpl) GetByID(id string) (models.Student, error) {
 		&student.About,
 		&student.University,
 		&student.Faculty,
+		&student.Specialty,
 		&student.Course,
 		&student.Education,
 	)
@@ -73,9 +75,10 @@ func (r *StudentRepositoryImpl) GetByTelegramID(telegramID int64) (models.Studen
 	}
 
 	query := `SELECT id, telegram_id, user_name, first_name, middle_name, last_name, github, job, idea, about,
-              university, faculty, course, education FROM students WHERE telegram_id = $1`
+          university, faculty, specialty, course, education FROM students WHERE telegram_id = $1`
 
 	var student models.Student
+
 	err := r.db.QueryRow(query, telegramID).Scan(
 		&student.ID,
 		&student.TelegramID,
@@ -89,6 +92,7 @@ func (r *StudentRepositoryImpl) GetByTelegramID(telegramID int64) (models.Studen
 		&student.About,
 		&student.University,
 		&student.Faculty,
+		&student.Specialty,
 		&student.Course,
 		&student.Education,
 	)
@@ -111,7 +115,7 @@ func (r *StudentRepositoryImpl) GetAll() ([]models.Student, error) {
 	}
 
 	query := `SELECT id, telegram_id, user_name, first_name, middle_name, last_name, github, job, idea, about,
-              university, faculty, course, education FROM students`
+          university, faculty, specialty, course, education FROM students`
 
 	rows, err := r.db.Query(query)
 	if err != nil {
@@ -135,6 +139,7 @@ func (r *StudentRepositoryImpl) GetAll() ([]models.Student, error) {
 			&student.About,
 			&student.University,
 			&student.Faculty,
+			&student.Specialty,
 			&student.Course,
 			&student.Education,
 		)
@@ -162,7 +167,7 @@ func (r *StudentRepositoryImpl) Search(query string) ([]models.Student, error) {
 	}
 
 	sqlQuery := `
-		SELECT id, first_name, middle_name, last_name, university, faculty, course, education, idea
+		SELECT id, first_name, middle_name, last_name, university, faculty, specialty, course, education, idea
 		FROM students
 		WHERE
 			last_name ILIKE '%' || $1 || '%' OR
@@ -170,6 +175,7 @@ func (r *StudentRepositoryImpl) Search(query string) ([]models.Student, error) {
 			middle_name ILIKE '%' || $1 || '%' OR
 			university ILIKE '%' || $1 || '%' OR
 			faculty ILIKE '%' || $1 || '%' OR
+			specialty ILIKE '%' || $1 || '%' OR
 			course ILIKE '%' || $1 || '%' OR
 			education ILIKE '%' || $1 || '%' OR
 			idea ILIKE '%' || $1 || '%'
@@ -191,6 +197,7 @@ func (r *StudentRepositoryImpl) Search(query string) ([]models.Student, error) {
 			&student.LastName,
 			&student.University,
 			&student.Faculty,
+			&student.Specialty,
 			&student.Course,
 			&student.Education,
 			&student.Idea,
@@ -220,10 +227,10 @@ func (r *StudentRepositoryImpl) Create(student models.Student) (uuid.UUID, error
 	}
 
 	query := `INSERT INTO students 
-              (id, telegram_id, user_name, first_name, middle_name, last_name, github, job, idea, about,
-               university, faculty, course, education) 
-              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`
-			  
+	(id, telegram_id, user_name, first_name, middle_name, last_name, github, job, idea, about,
+	 university, faculty, specialty, course, education) 
+	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)`
+
 	_, err := r.db.Exec(query,
 		student.ID,
 		student.TelegramID,
@@ -237,6 +244,7 @@ func (r *StudentRepositoryImpl) Create(student models.Student) (uuid.UUID, error
 		student.About,
 		student.University,
 		student.Faculty,
+		student.Specialty,
 		student.Course,
 		student.Education,
 	)
@@ -267,9 +275,10 @@ func (r *StudentRepositoryImpl) Update(student models.Student) error {
 		about = $7,
 		university = $8,
 		faculty = $9,
-		course = $10,
-		education = $11
-	WHERE id = $12
+		specialty = $10,
+		course = $11,
+		education = $12
+	WHERE id = $13
 	`
 
 	result, err := r.db.Exec(query,
@@ -282,6 +291,7 @@ func (r *StudentRepositoryImpl) Update(student models.Student) error {
 		student.About,
 		student.University,
 		student.Faculty,
+		student.Specialty,
 		student.Course,
 		student.Education,
 		student.ID,

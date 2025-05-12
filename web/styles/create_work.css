@@ -4,7 +4,6 @@
     margin: 20px auto;
     padding: 25px;
     background-color: #2a2a2a;
-    /* тот же фон */
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     margin-bottom: 40px;
@@ -17,7 +16,6 @@
     text-align: center;
     padding-bottom: 15px;
     border-bottom: 1px solid #1DCD9F;
-    /* цвет акцента */
     color: #fff;
 }
 
@@ -37,7 +35,6 @@
 .work-label {
     font-weight: 500;
     color: #e0e0e0;
-    /* светлый цвет текста */
     padding-right: 25px;
     white-space: nowrap;
 }
@@ -55,11 +52,8 @@
 .work-textarea {
     width: 100%;
     background: #232323;
-    /* темный фон */
     color: #fff;
-    /* белый текст */
     border: 1px solid #444;
-    /* серый бордер */
     border-radius: 6px;
     padding: 10px;
     font-size: 16px;
@@ -70,14 +64,12 @@
 .work-input:focus,
 .work-textarea:focus {
     border-color: #1DCD9F;
-    /* акцентный цвет */
     outline: none;
 }
 
 .work-input::placeholder,
 .work-textarea::placeholder {
     color: #888;
-    /* серый плейсхолдер */
 }
 
 .work-textarea {
@@ -94,7 +86,6 @@
     max-width: 800px;
     transform: translateX(-50%);
     background: #2a2a2a;
-    /* фон как в request_form */
     padding: 12px 25px;
     display: flex;
     flex-direction: row;
@@ -114,7 +105,6 @@
     white-space: nowrap;
     background: none;
     color: #1DCD9F;
-    /* акцентный цвет */
     border: 1px solid #1DCD9F;
     border-radius: 6px;
     font-size: 16px;
@@ -137,7 +127,6 @@
 
 .work-form-error {
     color: #e74c3c !important;
-    /* красный цвет ошибки */
     background: transparent !important;
     border: none !important;
     border-radius: 0 !important;
@@ -148,8 +137,6 @@
     text-align: left !important;
     min-height: 18px;
 }
-
-/* Адаптив */
 
 @media (max-width: 768px) {
     .work-container {

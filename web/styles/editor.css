@@ -49,6 +49,7 @@ h1 {
 .form-group textarea {
     min-height: 120px;
     resize: vertical;
+    text-align: justify;
 }
 
 .form-group input[type="text"]:focus,

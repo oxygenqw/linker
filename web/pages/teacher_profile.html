@@ -35,18 +35,6 @@
         <div class="profile-section">
             <h2>Профессиональная информация</h2>
             <div class="profile-field">
-                <span class="field-label">Ученая степень:</span>
-                <span class="field-value">
-                    {{ if .teacher.Degree }}{{ .teacher.Degree }}{{ else }}Не указана{{ end }}
-                </span>
-            </div>
-            <div class="profile-field">
-                <span class="field-label">Должность:</span>
-                <span class="field-value">
-                    {{ if .teacher.Position }}{{ .teacher.Position }}{{ else }}Не указана{{ end }}
-                </span>
-            </div>
-            <div class="profile-field">
                 <span class="field-label">Университет:</span>
                 <span class="field-value">
                     {{ if .teacher.University }}{{ .teacher.University }}{{ else }}Не указан{{ end }}
@@ -59,9 +47,21 @@
                 </span>
             </div>
             <div class="profile-field">
+                <span class="field-label">Ученая степень:</span>
+                <span class="field-value">
+                    {{ if .teacher.Degree }}{{ .teacher.Degree }}{{ else }}Не указана{{ end }}
+                </span>
+            </div>
+            <div class="profile-field">
+                <span class="field-label">Должность:</span>
+                <span class="field-value">
+                    {{ if .teacher.Position }}{{ .teacher.Position }}{{ else }}Не указана{{ end }}
+                </span>
+            </div>
+            <div class="profile-field">
                 <span class="field-label">Статус:</span>
                 <span class="field-value">
-                    {{ if .teacher.IsFree }}Свободен для проектов{{ else }}Занят{{ end }}
+                    {{ if .teacher.IsFree }}Готов к сотрудничеству{{ else }}Не готов к сотрудничеству{{ end }}
                 </span>
             </div>
         </div>
@@ -69,9 +69,9 @@
         <div class="profile-section">
             <h2>Проекты и интересы</h2>
             <div class="profile-field">
-                <span class="field-label">Идеи для проектов:</span>
+                <span class="field-label">Идеи для проекта:</span>
                 <p class="field-value">
-                    {{ if .teacher.Idea }}{{ .teacher.Idea }}{{ else }}Нет идей для проектов{{ end }}
+                    {{ if .teacher.Idea }}{{ .teacher.Idea }}{{ else }}Не указана{{ end }}
                 </p>
             </div>
             <div class="profile-field">
@@ -102,7 +102,7 @@
                 {{ end }}
             </div>
             {{ else }}
-            <div class="field-value">Нет добавленных работ</div>
+            <div class="field-value">Тут пока ничего нет</div>
             {{ end }}
         </div>
 

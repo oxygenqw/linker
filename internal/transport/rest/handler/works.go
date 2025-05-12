@@ -40,7 +40,7 @@ func (h *WorksHandlerImpl) ToForm(w http.ResponseWriter, r *http.Request, ps htt
 		"role":    role,
 	}
 
-	h.renderer.RenderTemplate(w, "create_work_form.html", data)
+	h.renderer.RenderTemplate(w, "create_work.html", data)
 }
 
 func (h *WorksHandlerImpl) Create(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {

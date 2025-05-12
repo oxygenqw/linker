@@ -4,14 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/styles/editor.css">
     <link rel="stylesheet" href="/styles/style.css">
-    <script src="/static/telegram.js"></script>
+    <link rel="stylesheet" href="/styles/editor.css">
+
+    <script src="/styles/telegram.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 
 <body>
-    <div class="container">
+    <div class="container" data-student-id="{{ .student.ID }}">
         <h1>Редактирование профиля</h1>
         <form id="profileForm">
             <div id="form-error" class="form-error" style="display:none"></div>
@@ -39,14 +40,19 @@
             </div>
 
             <div class="form-group">
-                <label for="faculty">Факультет</label>
+                <label for="specialty">Специальность</label>
+                <input type="text" id="specialty" name="specialty" value="{{ .student.Specialty }}" maxlength="100">
+            </div>
+
+            <div class="form-group">
+                <label for="faculty">Кафедра</label>я
                 <input type="text" id="faculty" name="faculty" value="{{ .student.Faculty }}" maxlength="100">
             </div>
 
             <div class="form-group">
                 <label for="course">Курс</label>
                 <select id="course" name="course" class="form-select">
-                    <option value="">Не указано</option>
+                    <option value="">Не указан</option>
                     <option value="1 курс" {{ if eq .student.Course "1 курс" }}selected{{ end }}>1 курс</option>
                     <option value="2 курс" {{ if eq .student.Course "2 курс" }}selected{{ end }}>2 курс</option>
                     <option value="3 курс" {{ if eq .student.Course "3 курс" }}selected{{ end }}>3 курс</option>
@@ -59,7 +65,7 @@
             <div class="form-group">
                 <label for="education">Уровень образования</label>
                 <select id="education" name="education" class="form-select">
-                    <option value="">Не указано</option>
+                    <option value="">Не указан</option>
                     <option value="Бакалавриат" {{ if eq .student.Education "Бакалавриат" }}selected{{ end }}>
                         Бакалавриат</option>
                     <option value="Специалитет" {{ if eq .student.Education "Специалитет" }}selected{{ end }}>
@@ -84,7 +90,7 @@
             </div>
 
             <div class="form-group">
-                <label for="idea">Идея проекта</label>
+                <label for="idea">Идеи для проекта</label>
                 <textarea id="idea" name="idea" maxlength="1000">{{ .student.Idea }}</textarea>
             </div>
 
@@ -100,113 +106,7 @@
         <button class="button" id="backButton">Назад</button>
     </div>
 
-    <script>
-        const studentId = '{{ .student.ID }}';
-        const form = document.getElementById('profileForm');
-
-        document.getElementById('saveButton').addEventListener('click', async function () {
-
-            document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
-            const errorBlock = document.getElementById('form-error');
-            errorBlock.style.display = 'none';
-            errorBlock.textContent = '';
-
-
-            const firstName = form.first_name.value.trim();
-            const lastName = form.last_name.value.trim();
-            const middleName = form.middle_name.value.trim();
-            const university = form.university.value.trim();
-            const faculty = form.faculty.value.trim();
-            const github = form.github.value.trim();
-            const job = form.job.value.trim();
-
-
-            const nameRegex = /^[a-zA-Zа-яА-ЯёЁ\- ]+$/;
-            let errorMsg = '';
-            let errorField = null;
-
-            if (!firstName) {
-                errorMsg = 'Пожалуйста, введите имя';
-                errorField = form.first_name;
-            } else if (firstName.length > 50) {
-                errorMsg = 'Имя не должно превышать 50 символов';
-                errorField = form.first_name;
-            } else if (!nameRegex.test(firstName)) {
-                errorMsg = 'Имя может содержать только буквы';
-                errorField = form.first_name;
-            } else if (!lastName) {
-                errorMsg = 'Пожалуйста, введите фамилию';
-                errorField = form.last_name;
-            } else if (lastName.length > 50) {
-                errorMsg = 'Фамилия не должна превышать 50 символов';
-                errorField = form.last_name;
-            } else if (!nameRegex.test(lastName)) {
-                errorMsg = 'Фамилия может содержать только буквы';
-                errorField = form.last_name;
-            } else if (middleName && (middleName.length > 50 || !nameRegex.test(middleName))) {
-                errorMsg = middleName.length > 50
-                    ? 'Отчество не должно превышать 50 символов'
-                    : 'Отчество может содержать только буквы';
-                errorField = form.middle_name;
-            } else if (university.length > 100) {
-                errorMsg = 'Название университета не должно превышать 100 символов';
-                errorField = form.university;
-            } else if (faculty.length > 100) {
-                errorMsg = 'Название факультета не должно превышать 100 символов';
-                errorField = form.faculty;
-            } else if (github.length > 100) {
-                errorMsg = 'GitHub не должен превышать 100 символов';
-                errorField = form.github;
-            } else if (job.length > 100) {
-                errorMsg = 'Место работы не должно превышать 100 символов';
-                errorField = form.job;
-            }
-
-            if (errorMsg) {
-                if (errorField) errorField.classList.add('input-error');
-                errorBlock.textContent = errorMsg;
-                errorBlock.style.display = 'block';
-                if (errorField) errorField.focus();
-                return;
-            }
-
-            try {
-                const response = await fetch(`/users/student`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        id: studentId,
-                        first_name: firstName,
-                        last_name: lastName,
-                        middle_name: middleName,
-                        university: university,
-                        faculty: faculty,
-                        course: form.course.value,
-                        education: form.education.value,
-                        github: github,
-                        job: job,
-                        idea: form.idea.value,
-                        about: form.about.value
-                    })
-                });
-
-                if (response.ok) {
-                    window.location.href = `/users/student/${studentId}`;
-                } else {
-                    const error = await response.text();
-                    throw new Error(error || 'Ошибка сервера');
-                }
-            } catch (error) {
-                errorBlock.textContent = 'Ошибка: ' + error.message;
-                errorBlock.style.display = 'block';
-            }
-        });
-
-        document.getElementById('backButton').addEventListener('click', function () {
-            window.location.href = `/users/student/${studentId}`;
-        });
-    </script>
+    <script type="module" src="/scripts/student_editor.js"></script>
+</body>
 
 </html>

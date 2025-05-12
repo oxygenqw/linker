@@ -3,16 +3,16 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/styles/profile.css">
     <link rel="stylesheet" href="/styles/style.css">
-    <script src="/static/telegram.js"></script>
+
+    <script src="/styles/telegram.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <title>Профиль студента</title>
 </head>
 
 <body>
-    <div class="container">
+    <div class="container" data-user-id="{{ .id }}" data-user-role="{{ .role }}" data-recipient-id="{{ .student.ID }}">
         <h1>Профиль студента</h1>
 
         <div class="profile-section">
@@ -44,10 +44,10 @@
                 </span>
             </div>
             <div class="profile-field">
-                <span class="field-label">Факультет:</span>
+                <span class="field-label">Специальность:</span>
                 <span class="field-value">
-                    {{ if .student.Faculty }}
-                    {{ .student.Faculty }}
+                    {{ if .student.Specialty }}
+                    {{ .student.Specialty }}
                     {{ else }}
                     Не указан
                     {{ end }}
@@ -68,6 +68,16 @@
                 <span class="field-value">
                     {{ if .student.Education }}
                     {{ .student.Education }}
+                    {{ else }}
+                    Не указан
+                    {{ end }}
+                </span>
+            </div>
+            <div class="profile-field">
+                <span class="field-label">Кафедра:</span>
+                <span class="field-value">
+                    {{ if .student.Faculty }}
+                    {{ .student.Faculty }}
                     {{ else }}
                     Не указан
                     {{ end }}
@@ -102,7 +112,7 @@
         <div class="profile-section">
             <h2>Проекты и интересы</h2>
             <div class="profile-field">
-                <span class="field-label">Идея проекта:</span>
+                <span class="field-label">Идеи для проекта:</span>
                 <p class="field-value">
                     {{ if .student.Idea }}
                     {{ .student.Idea }}
@@ -124,7 +134,7 @@
         </div>
 
         <div class="profile-section">
-            <h2>Научные работы</h2>
+            <h2>Портфолио и научные работы</h2>
             {{ if .works }}
             <div class="works-grid">
                 {{ range .works }}
@@ -139,10 +149,9 @@
                 {{ end }}
             </div>
             {{ else }}
-            <div class="field-value">Нет добавленных работ</div>
+            <div class="field-value">Тут пока ничего нет</div>
             {{ end }}
         </div>
-
 
         <div class="actions">
             <button class="button" id="toRequestFormButton">Запрос</button>
@@ -151,23 +160,7 @@
         </div>
     </div>
 
-    <script>
-        const userId = '{{ .id }}';
-        const userRole = '{{ .role }}';
-        const recipientID = '{{ .student.ID }}'
-
-        document.getElementById('homeButton').addEventListener('click', function () {
-            window.location.href = `/home/${userId}/${userRole}`;
-        });
-
-        document.getElementById('toRequestFormButton').addEventListener('click', function () {
-            window.location.href = `/requests/${userId}/${recipientID}`;
-        });
-
-        document.getElementById('backButton').addEventListener('click', function () {
-            window.location.href = `/students/${userId}/${userRole}`;
-        });
-    </script>
+    <script type="module" src="/scripts/student_user_profile.js"></script>
 </body>
 
 </html>

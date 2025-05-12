@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/styles/style.css">
+    <link rel="stylesheet" href="/styles/create_work.css">
+
+    <script src="/styles/telegram.js"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+
+<body>
+    <div class="work-container" data-user-id="{{ .user_id }}" data-role="{{ .role }}">
+        <h1 class="work-title">Добавить научную работу</h1>
+        <form id="workForm">
+            <div class="work-section">
+                <div class="work-field">
+                    <label for="link" class="work-label">Ссылка на работу</label>
+                    <div class="work-value">
+                        <input type="text" id="link" name="link" class="work-input"
+                            placeholder="Введите ссылку на работу" maxlength="500" required />
+                    </div>
+                </div>
+                <div class="work-field">
+                    <label for="description" class="work-label">Описание</label>
+                    <div class="work-value">
+                        <textarea id="description" name="description" class="work-textarea"
+                            placeholder="Введите описание работы" maxlength="1000" required></textarea>
+                    </div>
+                </div>
+            </div>
+            <div id="form-error" class="work-form-error" style="display:none"></div>
+        </form>
+    </div>
+
+    <div class="work-actions">
+        <button type="submit" class="work-button" form="workForm">Добавить</button>
+        <button type="button" class="work-button" id="backButton">Назад</button>
+    </div>
+
+    <script type="module" src="/scripts/create_work.js"></script>
+</body>
+
+</html>

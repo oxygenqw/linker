@@ -3,20 +3,20 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/styles/cards.css">
     <link rel="stylesheet" href="/styles/style.css">
-    <script src="/static/telegram.js"></script>
+
+    <script src="/styles/telegram.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <title>Список студентов</title>
 </head>
 
 <body>
-    <div class="container">
+    <div class="container" data-user-id="{{ .id }}" data-user-role="{{ .role }}">
         <div class="header-search-card">
             <h1>Список студентов</h1>
             <div class="search-container">
-                <input type="text" id="studentSearch" placeholder="Поиск по студентам..." class="search-input">
+                <input type="text" id="studentSearch" placeholder="Поиск по студентам..." class="search-input" />
                 <button type="button" id="searchBtn" class="button">Найти</button>
             </div>
         </div>
@@ -31,19 +31,19 @@
                             }}</span>
                     </div>
                     <div class="info-row">
-                        <span class="label">Факультет:</span>
-                        <span class="info-value">{{ if .Faculty }}{{ .Faculty }}{{ else }}Не указан{{ end }}</span>
+                        <span class="label">Специальность:</span>
+                        <span class="info-value">{{ if .Specialty }}{{ .Specialty }}{{ else }}Не указана{{ end }}</span>
                     </div>
                     <div class="info-row">
                         <span class="label">Курс:</span>
-                        <span class="info-value">{{ if .Course }}{{ .Course }}{{ else }}Не указано{{ end }}</span>
+                        <span class="info-value">{{ if .Course }}{{ .Course }}{{ else }}Не указан{{ end }}</span>
                     </div>
                     <div class="info-row">
                         <span class="label">Уровень образования:</span>
                         <span class="info-value">{{ if .Education }}{{ .Education }}{{ else }}Не указан{{ end }}</span>
                     </div>
                     <div class="info-row">
-                        <span class="label">Проектная идея:</span>
+                        <span class="label">Идеи для проекта:</span>
                         <span class="info-value">{{ if .Idea }}{{ .Idea }}{{ else }}Не указана{{ end }}</span>
                     </div>
                     <div class="button-container">
@@ -65,39 +65,7 @@
         <button class="button" id="backButton">Назад</button>
     </div>
 
-    <script>
-        const userId = '{{ .id }}';
-        const userRole = '{{ .role }}';
-
-        document.getElementById('profile').addEventListener('click', function () {
-            if (userRole === 'student') {
-                window.location.href = `/users/student/${userId}`;
-            } else if (userRole === 'teacher') {
-                window.location.href = `/users/teacher/${userId}`;
-            }
-        });
-
-        document.querySelectorAll('.details-btn').forEach(function (btn) {
-            btn.addEventListener('click', function () {
-                const id = btn.getAttribute('data-id');
-                const role = btn.getAttribute('data-role');
-                const studentId = btn.getAttribute('data-student-id');
-                window.location.href = `/student/profile/${id}/${role}/${studentId}`;
-            });
-        });
-
-        document.getElementById('searchBtn').addEventListener('click', function () {
-            const query = document.getElementById('studentSearch').value.trim();
-            const id = '{{ $.id }}';
-            const role = '{{ $.role }}';
-            window.location.href = `/students/${id}/${role}?search=${encodeURIComponent(query)}`;
-        });
-
-        document.getElementById('backButton').addEventListener('click', function () {
-            window.location.href = `/home/${userId}/${userRole}`;
-        });
-
-    </script>
+    <script type="module" src="/scripts/students.js"></script>
 </body>
 
 </html>

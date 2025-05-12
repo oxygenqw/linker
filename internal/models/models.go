@@ -15,6 +15,7 @@ type Student struct {
 	MiddleName string    `json:"middle_name"`
 	University string    `json:"university"`
 	Faculty    string    `json:"faculty"`
+	Specialty  string    `json:"specialty"`
 	Idea       string    `json:"idea"`
 	About      string    `json:"about"`
 	GitHub     string    `json:"github"`

@@ -1,17 +1,16 @@
 import { disableButtons, enableButtons } from './utils.js';
 
-const container = document.querySelector('.container');
-
-const studentId = container.dataset.studentId;
-const userName = container.dataset.username;
-const telegramId = container.dataset.telegramId;
-
 const editProfileButton = document.getElementById('editProfileButton');
 const deleteProfileButton = document.getElementById('deleteProfileButton');
 const addWorkButton = document.getElementById('addWorkButton');
 const backButton = document.getElementById('backButton');
 
 const buttons = [editProfileButton, deleteProfileButton, addWorkButton, backButton];
+
+const container = document.querySelector('.container');
+const studentId = container.dataset.studentId;
+const userName = container.dataset.username;
+const telegramId = container.dataset.telegramId;
 
 editProfileButton.addEventListener('click', () => {
     disableButtons(buttons);

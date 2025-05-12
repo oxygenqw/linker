@@ -6,17 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/styles/editor.css">
     <link rel="stylesheet" href="/styles/style.css">
-    <script src="/static/telegram.js"></script>
+
+    <script src="/styles/telegram.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 
 <body>
-    <div class="container">
+    <div class="container" data-teacher-id="{{ .teacher.ID }}">
         <h1>Редактирование профиля</h1>
         <form id="profileForm">
             <div id="form-error" class="form-error" style="display:none"></div>
 
-            <!-- Основная информация -->
             <div class="form-group">
                 <label for="last_name">Фамилия</label>
                 <input type="text" id="last_name" name="last_name" value="{{ .teacher.LastName }}" maxlength="50"
@@ -34,26 +34,24 @@
                 <input type="text" id="middle_name" name="middle_name" value="{{ .teacher.MiddleName }}" maxlength="50">
             </div>
 
-            <!-- Академическая информация -->
             <div class="form-group">
                 <label for="university">Университет</label>
                 <input type="text" id="university" name="university" value="{{ .teacher.University }}" maxlength="100">
             </div>
 
             <div class="form-group">
-                <label for="faculty">Факультет</label>
+                <label for="faculty">Факультет/Кафедра</label>
                 <input type="text" id="faculty" name="faculty" value="{{ .teacher.Faculty }}" maxlength="100">
             </div>
 
             <div class="form-group">
                 <label for="degree">Учёная степень</label>
                 <select id="degree" name="degree" class="form-select">
-                    <option value="">Не указано</option>
+                    <option value="">Не указана</option>
                     <option value="Кандидат наук" {{ if eq .teacher.Degree "Кандидат наук" }}selected{{ end }}>Кандидат
                         наук</option>
                     <option value="Доктор наук" {{ if eq .teacher.Degree "Доктор наук" }}selected{{ end }}>Доктор наук
                     </option>
-                    <option value="PhD" {{ if eq .teacher.Degree "PhD" }}selected{{ end }}>PhD</option>
                     <option value="Нет степени" {{ if eq .teacher.Degree "Нет степени" }}selected{{ end }}>Нет степени
                     </option>
                 </select>
@@ -62,7 +60,7 @@
             <div class="form-group">
                 <label for="position">Должность</label>
                 <select id="position" name="position" class="form-select">
-                    <option value="">Не указано</option>
+                    <option value="">Не указана</option>
                     <option value="Профессор" {{ if eq .teacher.Position "Профессор" }}selected{{ end }}>Профессор
                     </option>
                     <option value="Доцент" {{ if eq .teacher.Position "Доцент" }}selected{{ end }}>Доцент</option>
@@ -76,15 +74,14 @@
             </div>
 
             <div class="form-group">
-                <label for="is_free">
+                <label>
                     <input type="checkbox" id="is_free" name="is_free" {{ if .teacher.IsFree }}checked{{ end }}>
-                    Свободен для сотрудничества
+                    Готов к сотрудничеству
                 </label>
             </div>
 
-            <!-- Профессиональная информация -->
             <div class="form-group">
-                <label for="idea">Идея проекта</label>
+                <label for="idea">Идеи для проекта</label>
                 <textarea id="idea" name="idea" maxlength="1000">{{ .teacher.Idea }}</textarea>
             </div>
 
@@ -100,105 +97,7 @@
         <button class="button" id="backButton">Назад</button>
     </div>
 
-    <script>
-        const teacherId = '{{ .teacher.ID }}';
-        const form = document.getElementById('profileForm');
-
-        document.getElementById('saveButton').addEventListener('click', async function () {
-            document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
-            const errorBlock = document.getElementById('form-error');
-            errorBlock.style.display = 'none';
-            errorBlock.textContent = '';
-
-            const firstName = form.first_name.value.trim();
-            const lastName = form.last_name.value.trim();
-            const middleName = form.middle_name.value.trim();
-            const university = form.university.value.trim();
-            const faculty = form.faculty.value.trim();
-            const degree = form.degree.value;
-            const position = form.position.value;
-            const isFree = form.is_free.checked;
-
-            const nameRegex = /^[a-zA-Zа-яА-ЯёЁ\- ]+$/;
-            let errorMsg = '';
-            let errorField = null;
-
-            if (!firstName) {
-                errorMsg = 'Пожалуйста, введите имя';
-                errorField = form.first_name;
-            } else if (firstName.length > 50) {
-                errorMsg = 'Имя не должно превышать 50 символов';
-                errorField = form.first_name;
-            } else if (!nameRegex.test(firstName)) {
-                errorMsg = 'Имя может содержать только буквы';
-                errorField = form.first_name;
-            } else if (!lastName) {
-                errorMsg = 'Пожалуйста, введите фамилию';
-                errorField = form.last_name;
-            } else if (lastName.length > 50) {
-                errorMsg = 'Фамилия не должна превышать 50 символов';
-                errorField = form.last_name;
-            } else if (!nameRegex.test(lastName)) {
-                errorMsg = 'Фамилия может содержать только буквы';
-                errorField = form.last_name;
-            } else if (middleName && (middleName.length > 50 || !nameRegex.test(middleName))) {
-                errorMsg = middleName.length > 50
-                    ? 'Отчество не должно превышать 50 символов'
-                    : 'Отчество может содержать только буквы';
-                errorField = form.middle_name;
-            } else if (university.length > 100) {
-                errorMsg = 'Название университета не должно превышать 100 символов';
-                errorField = form.university;
-            } else if (faculty.length > 100) {
-                errorMsg = 'Название факультета/кафедры не должно превышать 100 символов';
-                errorField = form.faculty;
-            }
-
-            if (errorMsg) {
-                if (errorField) errorField.classList.add('input-error');
-                errorBlock.textContent = errorMsg;
-                errorBlock.style.display = 'block';
-                if (errorField) errorField.focus();
-                return;
-            }
-
-            try {
-                const response = await fetch(`/users/teacher`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        id: teacherId,
-                        first_name: firstName,
-                        last_name: lastName,
-                        middle_name: middleName,
-                        university: university,
-                        faculty: faculty,
-                        degree: degree,
-                        position: position,
-                        is_free: isFree,
-                        idea: form.idea.value,
-                        about: form.about.value
-                    })
-                });
-
-                if (response.ok) {
-                    window.location.href = `/users/teacher/${teacherId}`;
-                } else {
-                    const error = await response.text();
-                    throw new Error(error || 'Ошибка сервера');
-                }
-            } catch (error) {
-                errorBlock.textContent = 'Ошибка: ' + error.message;
-                errorBlock.style.display = 'block';
-            }
-        });
-
-        document.getElementById('backButton').addEventListener('click', function () {
-            window.location.href = `/users/teacher/${teacherId}`;
-        });
-    </script>
+    <script type="module" src="/scripts/teacher_editor.js"></script>
 </body>
 
 </html>
