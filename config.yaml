@@ -1,6 +1,6 @@
 TELEGRAM:
   BOT_TOKEN: ""
-  APP_URL: "https://linker.loca.lt"
+  APP_URL: "https://linker.ru.tuna.am"
 SERVER:
   HOST: ""
   PORT: "8080"

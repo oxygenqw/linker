@@ -2,17 +2,17 @@
 <html lang="ru">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/styles/style.css">
-    <link rel="stylesheet" href="/styles/request_form.css">
-    <script src="/static/telegram.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/styles/style.css" />
+    <link rel="stylesheet" href="/styles/request_form.css" />
+
+    <script src="/styles/telegram.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <title>Запрос</title>
 </head>
 
 <body>
-    <div class="container">
+    <div class="container" data-sender-id="{{ .sender_id }}" data-recipient-id="{{ .recipient_id }}" data-user-role="{{ .user_role }}">
         <h1>Запрос</h1>
         <form id="requestForm">
             <div class="profile-section">
@@ -20,12 +20,11 @@
                 <div class="profile-field">
                     <label for="message" class="field-label">Текст сообщения:</label>
                     <div class="field-value">
-                        <textarea id="message" name="message" required
-                            placeholder="Введите ваше сообщение..."></textarea>
+                        <textarea id="message" name="message" required placeholder="Введите ваше сообщение..."></textarea>
                     </div>
                 </div>
             </div>
-            <div id="form-error" class="form-error" style="display: none;"></div>
+            <div id="form-error" class="form-error" style="display:none;"></div>
             <div class="actions">
                 <button type="submit" class="button">Отправить</button>
                 <button type="button" class="button" id="backButton">Назад</button>
@@ -33,57 +32,7 @@
         </form>
     </div>
 
-    <script>
-        document.getElementById('requestForm').addEventListener('submit', async function (e) {
-            e.preventDefault();
-
-            document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
-            const errorBlock = document.getElementById('form-error');
-            errorBlock.style.display = 'none';
-            errorBlock.textContent = '';
-
-            const message = document.getElementById('message').value.trim();
-
-            if (!message) {
-                errorBlock.textContent = 'Пожалуйста, введите сообщение';
-                errorBlock.style.display = 'block';
-                document.getElementById('message').focus();
-                return;
-            }
-
-            try {
-                const response = await fetch(`/requests/{{ .sender_id }}/{{ .recipient_id }}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        message: message
-                    })
-                });
-
-                if (!response.ok) {
-                    const error = await response.json();
-                    throw new Error(error.message || 'Ошибка сервера');
-                }
-
-                const result = await response.json();
-                alert(result.message || 'Запрос отправлен');
-                window.history.back();
-
-
-            } catch (error) {
-                errorBlock.textContent = 'Ошибка: ' + error.message;
-                errorBlock.style.display = 'block';
-                console.error('Ошибка отправки запроса:', error);
-            }
-        });
-
-        // TODO: Save back button
-        document.getElementById('backButton').addEventListener('click', function () {
-            window.history.back();
-        });
-    </script>
+    <script type="module" src="/scripts/request.js"></script>
 </body>
 
 </html>
