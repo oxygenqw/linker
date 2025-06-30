@@ -8,6 +8,7 @@ import (
 	"github.com/Oxygenss/linker/internal/repository"
 	"github.com/Oxygenss/linker/pkg/logger"
 	"github.com/Oxygenss/linker/pkg/telegram/bot"
+	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/google/uuid"
 )
 
@@ -44,17 +45,19 @@ func (s *RequestServiceImpl) SendRequest(senderID string, recipientID string, re
 	if err != nil {
 		return fmt.Errorf("invalid sender ID: %w", err)
 	}
-	
+
 	recipientUUID, err := uuid.Parse(recipientID)
 	if err != nil {
 		return fmt.Errorf("invalid recipient ID: %w", err)
 	}
 
-	var senderUsername string
 	senderRole, err := s.userRepository.GetRoleByID(senderID)
 	if err != nil {
 		return fmt.Errorf("failed to get sender role: %w", err)
 	}
+
+	var senderUsername string
+	var profileURL string
 
 	switch senderRole {
 	case "student":
@@ -63,26 +66,42 @@ func (s *RequestServiceImpl) SendRequest(senderID string, recipientID string, re
 			return fmt.Errorf("failed to get sender student data: %w", err)
 		}
 		senderUsername = student.UserName
+
+		profileURL = fmt.Sprintf(
+			"https://linker.loca.lt/student/profile/%s/%s/%s",
+			senderID,
+			"student",
+			student.ID,
+		)
+
 	case "teacher":
 		teacher, err := s.teacherRepository.GetByID(senderID)
 		if err != nil {
 			return fmt.Errorf("failed to get sender teacher data: %w", err)
 		}
 		senderUsername = teacher.UserName
+
+		profileURL = fmt.Sprintf(
+			"https://linker.loca.lt/teacher/profile/%s/%s/%s",
+			senderID,
+			"teacher",
+			teacher.ID,
+		)
 	default:
 		return fmt.Errorf("unknown sender role: %s", senderRole)
 	}
 
-	role, err := s.userRepository.GetRoleByID(recipientID)
+	recipientRole, err := s.userRepository.GetRoleByID(recipientID)
 	if err != nil {
 		return fmt.Errorf("failed to get recipient role: %w", err)
 	}
-	if role == "" {
+	if recipientRole == "" {
 		return fmt.Errorf("recipient not found")
 	}
 
 	var telegramID int64
-	switch role {
+
+	switch recipientRole {
 	case "student":
 		student, err := s.studentRepository.GetByID(recipientID)
 		if err != nil {
@@ -96,7 +115,7 @@ func (s *RequestServiceImpl) SendRequest(senderID string, recipientID string, re
 		}
 		telegramID = teacher.TelegramID
 	default:
-		return fmt.Errorf("unknown recipient role: %s", role)
+		return fmt.Errorf("unknown recipient role: %s", recipientRole)
 	}
 
 	if telegramID == 0 {
@@ -116,9 +135,34 @@ func (s *RequestServiceImpl) SendRequest(senderID string, recipientID string, re
 		return fmt.Errorf("failed to save request to database: %w", err)
 	}
 
-	messageText := fmt.Sprintf("✉️ Новый запрос от @%s:\n\n%s", senderUsername, request.Message)
+	messageText := fmt.Sprintf(
+		"✉️ Новый запрос от @%s: \n%s\n",
+		senderUsername,
+		request.Message,
+	)
 
-	if _, err := s.bot.SendMessage(telegramID, messageText, nil); err != nil {
+	callbackData := fmt.Sprintf("reject_request:%s", req.ID.String())
+
+	opts := &gotgbot.SendMessageOpts{
+		ReplyMarkup: gotgbot.InlineKeyboardMarkup{
+			InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
+				{
+					{
+						Text: "Перейти в профиль отправителя",
+						Url:  profileURL,
+					},
+				},
+				{
+					{
+						Text:         "Отклонить",
+						CallbackData: callbackData,
+					},
+				},
+			},
+		},
+	}
+
+	if _, err := s.bot.SendMessage(telegramID, messageText, opts); err != nil {
 		s.logger.Error("Failed to send Telegram message", "error", err)
 		return fmt.Errorf("failed to send Telegram message: %w", err)
 	}
@@ -127,5 +171,6 @@ func (s *RequestServiceImpl) SendRequest(senderID string, recipientID string, re
 		"sender", senderUsername,
 		"recipient", telegramID,
 		"requestID", req.ID)
+
 	return nil
 }

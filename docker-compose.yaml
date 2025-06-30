@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   postgres:
     image: postgres:15
@@ -6,6 +8,16 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: linker
+      POSTGRES_PASSWORD: linker_password
+      POSTGRES_DB: linker_db
+      POSTGRES_HOST_AUTH_METHOD: md5
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U linker -d linker_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     networks:
       - linker_network
 
@@ -22,7 +34,9 @@ services:
       DB_PASSWORD: linker_password
       DB_NAME: linker_db
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
     networks:
       - linker_network
 

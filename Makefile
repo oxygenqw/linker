@@ -13,4 +13,5 @@ logs:
 logs-linker:
 	docker-compose logs -f linker
 
-rebuild: build start
+rebuild: build run
+	
